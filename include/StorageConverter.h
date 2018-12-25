@@ -27,6 +27,8 @@ namespace icdl{
         virtual StoragePtr float32_to_float32_convert(StoragePtr storage,
                                                   const TensorMemLayout& src_mem_layout, 
                                                   const TensorMemLayout& target_mem_layout) const = 0;
+        
+        virtual ~StorageConverter(){}
     };
 
     class DefaultStorageConverter;

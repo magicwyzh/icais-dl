@@ -92,9 +92,9 @@ TEST(StorageTest, InitTest){
     for(size_t i = 0; i < float_cpu_storage->get_data_num(); i++){
         fp_raw_ptr[i] = normal_dist(gen);
     }
-    StoragePtr cloned_float_storage = float_cpu_storage->clone();
+    auto cloned_float_storage = float_cpu_storage->clone();
     float* cloned_fp_raw_ptr = static_cast<float*>(cloned_float_storage->data_ptr());
-    StoragePtr copied_float_storage = float_cpu_storage;
+    auto copied_float_storage = float_cpu_storage;
     StoragePtr copied_float_storage2(float_cpu_storage);
     // for copied tensor, should just be shallow copy
     EXPECT_EQ(copied_float_storage->data_ptr(), float_cpu_storage->data_ptr());
@@ -118,9 +118,9 @@ TEST(StorageTest, InitTest){
         fix8_raw_ptr[i] = uniform_int_dist(gen);
     }
 
-    StoragePtr cloned_fix8_storage = fix8_cpu_storage->clone();
+    auto cloned_fix8_storage = fix8_cpu_storage->clone();
     int8_t* cloned_fix8_raw_ptr = static_cast<int8_t*>(cloned_fix8_storage->data_ptr());
-    StoragePtr copied_fix8_storage = fix8_cpu_storage;
+    auto copied_fix8_storage = fix8_cpu_storage;
     StoragePtr copied_fix8_storage2(fix8_cpu_storage);
     EXPECT_EQ(copied_fix8_storage, fix8_cpu_storage);
     EXPECT_EQ(copied_fix8_storage2, fix8_cpu_storage);

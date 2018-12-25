@@ -38,6 +38,7 @@ namespace icdl{
         bool own_memory(){
             return own_memory_;
         }
+        virtual ~TensorStorage(){}
     protected:
         void set_memory_ownership(bool owned){
             own_memory_ = owned;
