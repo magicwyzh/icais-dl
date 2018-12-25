@@ -43,12 +43,12 @@ namespace icdl{
         void set_memory_ownership(bool owned){
             own_memory_ = owned;
         }
-        size_t num_data_ = 0; // to indicate how many corresponding type data in the storage
-        TensorDataLocation data_location_ = TensorDataLocation::INVALID_LOCATION; 
-        FixpointRepresent data_represent_ = {0, 0, 0}; // for float, this is all set to zero
-        std::shared_ptr<void> aux_info_ = nullptr; 
+        size_t num_data_{0}; // to indicate how many corresponding type data in the storage
+        TensorDataLocation data_location_{TensorDataLocation::INVALID_LOCATION}; 
+        FixpointRepresent data_represent_{0, 0, 0}; // for float, this is all set to zero
+        std::shared_ptr<void> aux_info_{nullptr}; 
         // the own_memory_ means this storage should take care of memory deallocation.
-        bool own_memory_ = true;
+        bool own_memory_{true};
     };
 
     // always dense! dont use aux_info

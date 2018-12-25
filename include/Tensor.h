@@ -7,11 +7,11 @@ namespace icdl{
 
     class Tensor{
     private:
-        TensorSize size_ = {};
-        StoragePtr storage_ = nullptr;
-        TensorMemLayout mem_layout_ = TensorMemLayout::INVALID_LAYOUT;
-        TensorDataDescriptor data_descriptor_ = TensorDataDescriptor();
-        OptionalTensorInfo opt_info_ = OptionalTensorInfo();
+        TensorSize size_{};
+        StoragePtr storage_{nullptr};
+        TensorMemLayout mem_layout_{TensorMemLayout::INVALID_LAYOUT};
+        TensorDataDescriptor data_descriptor_{TensorDataDescriptor()};
+        OptionalTensorInfo opt_info_{OptionalTensorInfo()};
 
         void convert_to_fixpoint(const StorageConverter& storage_converter, 
                                  const FixpointRepresent & target_fix_represent, 

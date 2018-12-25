@@ -51,10 +51,10 @@ namespace icdl{
     };
 
     struct FloatpointRepresent{
-        size_t total_bits = 32;
-        bool is_signed = true;
-        size_t exp_bits = 8;
-        size_t mantissa_bits = 23;
+        size_t total_bits{32};
+        bool is_signed{true};
+        size_t exp_bits{8};
+        size_t mantissa_bits{23};
         FloatpointRepresent(): total_bits(32), is_signed(true), exp_bits(8), mantissa_bits(23){}
         FloatpointRepresent(bool fp16): total_bits(16), is_signed(true), exp_bits(5), mantissa_bits(15){}
         FloatpointRepresent(size_t _total_bits, size_t _is_signed, size_t _exp_bits, size_t _mantissa_bits):
@@ -70,7 +70,7 @@ namespace icdl{
 
     class TensorDataDescriptor{
     private:
-        TensorDataType dtype_ = TensorDataType::INVALID_DTYPE;
+        TensorDataType dtype_{TensorDataType::INVALID_DTYPE};
         DataRepresent represent_;
     public:
         TensorDataDescriptor(const FloatpointRepresent& float_represent);
