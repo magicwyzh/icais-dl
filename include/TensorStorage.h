@@ -62,7 +62,7 @@ namespace icdl{
         }
         virtual StoragePtr clone() const;
         //constructor
-        Float32TensorStorage(size_t num_element, TensorDataLocation data_loc = CPU_MEMORY);
+        Float32TensorStorage(size_t num_element, TensorDataLocation data_loc = kCPUMem);
         //from blob
         Float32TensorStorage(float* blob_ptr, const size_t num_element);
         Float32TensorStorage(const Float32TensorStorage& rhs) = delete; //dont copy it.
@@ -90,7 +90,7 @@ namespace icdl{
         }
         virtual StoragePtr clone() const;
         //constructor
-        FixpointTensorStorage(size_t num_element, const FixpointRepresent& data_represent, TensorDataLocation data_loc = CPU_MEMORY);
+        FixpointTensorStorage(size_t num_element, const FixpointRepresent& data_represent, TensorDataLocation data_loc = kCPUMem);
         FixpointTensorStorage(const FixpointTensorStorage& rhs) = delete; // dont copy
         //from blob
         FixpointTensorStorage(int8_t* blob_ptr, const size_t num_element, const FixpointRepresent& data_represent);

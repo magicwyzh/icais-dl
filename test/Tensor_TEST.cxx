@@ -58,21 +58,21 @@ TEST(TensorTest, InitTest){
 
 TEST(StorageTest, InitTest){
     size_t num_data = 3*3*3*32; //e.g., weight tensor
-    TensorDataLocation tensor_loc = CPU_MEMORY;
+    TensorDataLocation tensor_loc = kCPUMem;
     /******* TEST 1 *************/
     // just test whether they are correctly init with those input args.
     StoragePtr float_cpu_storage(new icdl::Float32TensorStorage(num_data, tensor_loc));
     EXPECT_NE(nullptr, float_cpu_storage->data_ptr());
     EXPECT_EQ(tensor_loc, float_cpu_storage->get_data_location());
     EXPECT_EQ(num_data, float_cpu_storage->get_data_num());
-    tensor_loc = ACCELERATOR_MEMORY;
+    tensor_loc = kAccMem;
     StoragePtr float_accelerator_storage(new icdl::Float32TensorStorage(num_data, tensor_loc));
     EXPECT_NE(nullptr, float_accelerator_storage->data_ptr());
     EXPECT_EQ(tensor_loc, float_accelerator_storage->get_data_location());
     EXPECT_EQ(num_data, float_accelerator_storage->get_data_num());
 
     FixpointRepresent fix_repre(8, true, 0);
-    tensor_loc = CPU_MEMORY;
+    tensor_loc = kCPUMem;
     StoragePtr fix8_cpu_storage(new icdl::FixpointTensorStorage(num_data, fix_repre, tensor_loc));
     EXPECT_NE(nullptr, fix8_cpu_storage->data_ptr());
     EXPECT_EQ(num_data, fix8_cpu_storage->get_data_num());

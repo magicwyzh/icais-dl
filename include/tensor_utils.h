@@ -9,31 +9,31 @@
 namespace icdl{
     using TensorSize = std::vector<size_t>;
 
-    typedef enum {
+    enum class TensorDataLocation{
         CPU_MEMORY,
         ACCELERATOR_MEMORY,
         INVALID_LOCATION
-    } TensorDataLocation;
+    } ;
 
-    typedef enum{
+    enum class TensorMemLayout{
         DENSE_LAYOUT,
         SPARSE_LAYOUT,
         INVALID_LAYOUT
-    } TensorMemLayout ;
+    };
 
     //FLOAT_32, FLOAT_16, FIXPOINT
-    typedef enum {
+    enum class TensorDataType{
         FLOAT_32,
         FLOAT_16,
         FIXPOINT,
         INVALID_DTYPE
-    } TensorDataType;
+    };
 
-    typedef enum{
+    enum class TensorDimLayout4D{
         NCHW,
         NHWC,
         NOT_AVAILABLE
-    } TensorDimLayout4D;
+    };
     const std::string enum_to_string(const TensorDataType& enum_val);
     const std::string enum_to_string(const TensorDataLocation& enum_val);
     const std::string enum_to_string(const TensorMemLayout& enum_val);

@@ -135,7 +135,7 @@ namespace icdl{
             return 0;
         }
         size_t num_element = 1;
-        for(auto dim : size_){
+        for(auto& dim : size_){
             num_element *= dim;
         }
         return num_element;
