@@ -1,6 +1,6 @@
 #ifndef __ICDL_ACCELERATOR_MEMORY_H__
 #define __ICDL_ACCELERATOR_MEMORY_H__
-#include "utils.h"
+#include "tensor_utils.h"
 #include <cstddef>
 #include <cstring>
 namespace icdl{

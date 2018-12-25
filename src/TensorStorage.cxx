@@ -1,6 +1,6 @@
 #include "TensorStorage.h"
 #include <string.h>
-#include "utils.h"
+#include "tensor_utils.h"
 #include "accelerator_memory.h"
 namespace icdl{
     FixpointRepresent invalid_fix_represent;
@@ -20,8 +20,13 @@ namespace icdl{
         }
     }
 
+
+    Float32TensorStorage::Float32TensorStorage(float* blob_ptr, const size_t num_element):TensorStorage(num_element, TensorDataLocation::CPU_MEMORY, invalid_fix_represent), data_ptr_(blob_ptr){
+        set_memory_ownership(false);
+    }
+
     Float32TensorStorage::~Float32TensorStorage(){
-        if(data_ptr_ != nullptr){
+        if(data_ptr_ != nullptr && own_memory_ == true){
             if(data_location_ == CPU_MEMORY){
                 delete[] data_ptr_;
             }
@@ -46,11 +51,11 @@ namespace icdl{
             : TensorStorage(num_element, data_loc, data_represent), data_ptr_(nullptr){
         if(data_loc == CPU_MEMORY){
             size_t num_byte_per_data = data_represent.num_byte_up_round();
-            data_ptr_ = new uint8_t[num_element*num_byte_per_data];
+            data_ptr_ = new int8_t[num_element*num_byte_per_data];
         }
         else if(data_loc == ACCELERATOR_MEMORY){
             void * p = accelerator_memory_malloc(data_represent, num_element); 
-            data_ptr_ = static_cast<uint8_t*>(p);
+            data_ptr_ = static_cast<int8_t*>(p);
         }
         // insanity check
         if(data_ptr_ == nullptr){
@@ -62,8 +67,13 @@ namespace icdl{
         }
     }
 
+    FixpointTensorStorage::FixpointTensorStorage(int8_t* blob_ptr, const size_t num_element, const FixpointRepresent& data_represent)
+        : TensorStorage(num_element, TensorDataLocation::CPU_MEMORY, invalid_fix_represent), data_ptr_(blob_ptr){
+        set_memory_ownership(false);
+    }
+
     FixpointTensorStorage::~FixpointTensorStorage(){
-        if(data_ptr_ != nullptr){
+        if(data_ptr_ != nullptr && own_memory_ == true){
             if(data_location_ == CPU_MEMORY){
                 delete[] data_ptr_;
             }
