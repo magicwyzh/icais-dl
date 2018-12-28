@@ -5,6 +5,211 @@
 #include <iostream>
 using namespace icdl;
 
+TEST(TensorTest, Float2FixConvertTest){
+    std::random_device rd{};
+    std::mt19937 gen{rd()};
+    std::normal_distribution<> normal_dist{0,2}; //mean=0, std_dev=2
+    auto float_tensor = Tensor({2,3,32,32}, TensorDataDescriptor().dtype(kFloat32));
+    auto data_ptr_float = static_cast<float*>(float_tensor.data_ptr());
+
+    // random init
+    for(size_t i = 0; i < float_tensor.nelement(); i++){
+        data_ptr_float[i] = normal_dist(gen);
+    }
+    FixpointRepresent fix_repr_12b{12, true, 8};
+    FixpointRepresent fix_repr_8b{8, true, 4};
+    auto fix_descript = TensorDataDescriptor(fix_repr_12b);
+    auto fix_tensor_12b = float_tensor.convert_to(fix_descript);
+    auto data_ptr_int16 = static_cast<int16_t*>(fix_tensor_12b.data_ptr());
+    EXPECT_EQ(fix_tensor_12b.nelement(), float_tensor.nelement());
+    EXPECT_EQ(fix_tensor_12b.dtype(), kFixpoint);
+    EXPECT_NE(fix_tensor_12b.data_ptr(), float_tensor.data_ptr());
+    for(size_t i = 0; i < fix_tensor_12b.nelement();i++){
+        EXPECT_EQ(
+            DefaultStorageConverter::single_data_flo32_to_fixp(data_ptr_float[i], fix_repr_12b),
+            data_ptr_int16[i]
+        );
+    }
+    auto fix_tensor_8b = float_tensor.convert_to(TensorDataDescriptor(fix_repr_8b));
+    auto data_ptr_int8 = static_cast<int8_t*>(fix_tensor_8b.data_ptr());
+    for(size_t i = 0; i < fix_tensor_8b.nelement(); i++){
+        EXPECT_EQ(
+            static_cast<int8_t>(DefaultStorageConverter::single_data_flo32_to_fixp(data_ptr_float[i], fix_repr_8b)),
+            data_ptr_int8[i]
+        );
+    }
+    auto x = Tensor({2,3,32,32}, TensorDataDescriptor().dtype(kFloat32));
+    auto old_data_ptr = x.data_ptr();
+    x = x.convert_to(fix_descript);
+    auto new_data_ptr = x.data_ptr();
+    EXPECT_NE(old_data_ptr, new_data_ptr);
+}
+
+
+TEST(TensorTest, Fix2FloatConvertTest){
+    std::random_device rd{};
+    std::mt19937 gen{rd()};
+    std::uniform_int_distribution<int8_t> uniform_int_dist{-128, 127};
+    auto int8_tensor = Tensor({1,3,32,32}, TensorDataDescriptor().dtype(kFixpoint).represent({8, true, 3}));
+    auto data_ptr_int8 = static_cast<int8_t*>(int8_tensor.data_ptr());
+    EXPECT_EQ(int8_tensor.dtype(), kFixpoint);
+
+    // random init
+    for(size_t i = 0; i < int8_tensor.nelement(); i++){
+        data_ptr_int8[i] = uniform_int_dist(gen);
+    }    
+    auto float_tensor = int8_tensor.convert_to(TensorDataDescriptor().dtype(kFloat32));
+    auto data_ptr_float = static_cast<float*>(float_tensor.data_ptr());
+    for(size_t i = 0; i < int8_tensor.nelement(); i++){
+        auto temp = DefaultStorageConverter::single_data_fixp_to_flo32(data_ptr_int8[i], int8_tensor.get_data_descript().get_represent().fix_point);
+        EXPECT_EQ(
+            temp,
+            data_ptr_float[i]
+        );
+    }    
+}
+
+TEST(TensorTest, Fix2FixConvertTest){
+    std::random_device rd{};
+    std::mt19937 gen{rd()};
+    std::uniform_int_distribution<int16_t> uniform_int_dist{-1024, 1023};
+    auto int12_tensor = Tensor({8,3,32,32}, TensorDataDescriptor().dtype(kFixpoint).represent({12, true, 6}));
+    auto data_ptr_int12 = static_cast<int16_t*>(int12_tensor.data_ptr());
+
+    // random init
+    for(size_t i = 0; i < int12_tensor.nelement(); i++){
+        data_ptr_int12[i] = uniform_int_dist(gen);
+        EXPECT_EQ(data_ptr_int12[i] < 1024, true);
+    }    
+
+    auto int6_tensor = int12_tensor.convert_to(TensorDataDescriptor().dtype(kFixpoint).represent({6, true, 3}));
+
+    auto data_ptr_int6 = static_cast<int8_t*>(int6_tensor.data_ptr());
+
+    for(size_t i = 0; i < int12_tensor.nelement(); i++){
+        auto origin_data_16b = DefaultStorageConverter::fixpoint_to_int16(&data_ptr_int12[i], int12_tensor.get_data_descript().get_represent().fix_point, 0);
+        auto temp = DefaultStorageConverter::single_data_fixp_to_fixp(origin_data_16b, int12_tensor.get_data_descript().get_represent().fix_point, int6_tensor.get_data_descript().get_represent().fix_point);
+        auto temp_8b = static_cast<int8_t>(temp);
+        EXPECT_EQ(
+            temp_8b,
+            data_ptr_int6[i]
+        );
+    }    
+}
+
+TEST(DefaultStorageConverter, fix2int16Test){
+    int32_t mem_for_test = 0xfffffe73;//fe73=1111_1110_0111_0011
+    auto cvt = [](const void* data_ptr, const FixpointRepresent& fix_repr,  const size_t bit_offset = 0){
+        return static_cast<uint16_t>(DefaultStorageConverter::fixpoint_to_int16(data_ptr, fix_repr, bit_offset));
+    };
+    //FixpointRepresent fix_repr{8, true,0};
+    // get lower 8 bits directly
+    EXPECT_EQ(cvt(&mem_for_test, {8, true, 0}), 0b01110011);
+    EXPECT_EQ(cvt(&mem_for_test, {6, true, 0}), 0b1111111111110011);// the 6-th bit is 1 and it is signed
+    EXPECT_EQ(cvt(&mem_for_test, {6, false, 0}), 0b00110011);
+    EXPECT_EQ(cvt(&mem_for_test, {16, true, 0}), 0xfe73);
+    EXPECT_EQ(cvt(&mem_for_test, {16, false, 0}), 0xfe73);
+    EXPECT_EQ(cvt(&mem_for_test, {10, true, 0}), 0b1111111001110011);
+    EXPECT_EQ(cvt(&mem_for_test, {10, false, 0}), 0b0000001001110011);
+    // compact memory
+    EXPECT_EQ(cvt(&mem_for_test, {8, true, 0},  2), 0b1111111110011100);
+    EXPECT_EQ(cvt(&mem_for_test, {8, false,0},  2), 0b0000000010011100);
+    EXPECT_EQ(cvt(&mem_for_test, {6, true, 0},  2), 0b0000000000011100);
+    EXPECT_EQ(cvt(&mem_for_test, {6, true, 0},  1), 0b1111111111111001);
+    EXPECT_EQ(cvt(&mem_for_test, {10, false, 0}, 1), 0b0000001100111001);
+    EXPECT_EQ(cvt(&mem_for_test, {10, true, 0},  2), 0b1111111110011100);
+}
+
+TEST(DefaultStorageConverterTest, SingleDataConvertTest){
+    //auto& converter = DefaultStorageConverter::get();
+    FixpointRepresent fix_represent_frac_1(5, true, 1);
+    FixpointRepresent fix_represent_frac_n1(5, true, -1);
+    /*****Float to fix point test**********/
+    // 5.8125 = (sign) + 101.1101
+    EXPECT_EQ(
+        DefaultStorageConverter::single_data_flo32_to_fixp(5.8125, fix_represent_frac_1),
+        12
+    );
+    EXPECT_EQ(
+        DefaultStorageConverter::single_data_flo32_to_fixp(-5.8125, fix_represent_frac_1),
+        -12
+    );
+    EXPECT_EQ(
+        DefaultStorageConverter::single_data_flo32_to_fixp(5.8125, fix_represent_frac_n1),
+        3
+    );
+    EXPECT_EQ(
+        DefaultStorageConverter::single_data_flo32_to_fixp(-5.8125, fix_represent_frac_n1),
+        -3
+    );
+    // 0.59375 = 0.100110
+    EXPECT_EQ(
+        DefaultStorageConverter::single_data_flo32_to_fixp(0.59375, fix_represent_frac_1),
+        1
+    );
+    EXPECT_EQ(
+        DefaultStorageConverter::single_data_flo32_to_fixp(-0.59375, fix_represent_frac_1),
+        -1
+    );
+    // round to zero
+    EXPECT_EQ(
+        DefaultStorageConverter::single_data_flo32_to_fixp(0.59375, fix_represent_frac_n1),
+        0
+    );
+    EXPECT_EQ(
+        DefaultStorageConverter::single_data_flo32_to_fixp(-0.59375, fix_represent_frac_n1),
+        0
+    );
+    // 29.8125=sign+11101.1101, quantize to 5bits, should saturate.
+    EXPECT_EQ(
+        DefaultStorageConverter::single_data_flo32_to_fixp(29.8125, fix_represent_frac_1),
+        15
+    );
+    EXPECT_EQ(
+        DefaultStorageConverter::single_data_flo32_to_fixp(-29.8125, fix_represent_frac_1),
+        -16
+    );
+    
+    /*** Fixpoint to Float Test****/
+    FixpointRepresent repr{8, true, 4};
+    auto fix2float = [](const int16_t src_data, const FixpointRepresent& fix_represent){
+        return DefaultStorageConverter::single_data_fixp_to_flo32(src_data, fix_represent);
+    };
+
+    EXPECT_EQ(
+        fix2float(53, repr),//0011.0101=53
+        3.3125
+    );
+    EXPECT_EQ(
+        fix2float(-53, repr),//-0011.0101=-53
+        -3.3125
+    );
+    FixpointRepresent repr2{8, true, -4};
+    EXPECT_EQ(
+        fix2float(53, repr2),//0011.0101
+        848
+    );
+    EXPECT_EQ(
+        fix2float(-53, repr2),//-0011.0101
+        -848
+    );
+
+    /*** Fixpoint to Fixpoint Test***/
+    // dont change total_bits. just shift and truncate(floor)
+    auto fix2fix = [](const int16_t src_data, 
+                    const FixpointRepresent& src_fix_represent, 
+                    const FixpointRepresent& dst_fix_represent){
+        return DefaultStorageConverter::single_data_fixp_to_fixp(src_data, src_fix_represent, dst_fix_represent);
+    };
+    // from 4 frac bits to 2 frac bits
+    EXPECT_EQ(
+        fix2fix(0b01100110, {8, true, 4}, {8, true, 2}),
+        0b00011001
+    );
+    
+}
+
+
 // Only dense tensor in CPU Mem are tested.
 TEST(TensorTest, InitTest){
 

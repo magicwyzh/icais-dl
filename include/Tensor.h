@@ -13,12 +13,12 @@ namespace icdl{
         TensorDataDescriptor data_descriptor_{TensorDataDescriptor()};
         OptionalTensorInfo opt_info_{OptionalTensorInfo()};
 
-        void convert_to_fixpoint(const StorageConverter& storage_converter, 
+        Tensor convert_to_fixpoint(const StorageConverter& storage_converter, 
                                  const FixpointRepresent & target_fix_represent, 
-                                 const TensorMemLayout& target_mem_layout);
+                                 const TensorMemLayout& target_mem_layout) const;
 
-        void convert_to_float32(const StorageConverter& storage_converter, 
-                              const TensorMemLayout& target_mem_layout);
+        Tensor convert_to_float32(const StorageConverter& storage_converter, 
+                              const TensorMemLayout& target_mem_layout) const;
         
     public:
         TensorDataType dtype() const;
@@ -36,25 +36,21 @@ namespace icdl{
         */
 
         // simplified ver. no layout change
-        // should also be able to be used as:
-        // Tensor t;
-        // t.convert_to("FLOAT32");
-        void convert_to(const TensorDataDescriptor& descriptor);
+        Tensor convert_to(const TensorDataDescriptor& descriptor) const;
 
-        void convert_to(const TensorDataDescriptor& descriptor, 
-                        const TensorMemLayout& target_mem_layout);
+        Tensor convert_to(const TensorDataDescriptor& descriptor, 
+                        const TensorMemLayout& target_mem_layout) const;
 
-        void convert_to(const TensorDataDescriptor& descriptor, 
+        Tensor convert_to(const TensorDataDescriptor& descriptor, 
                         const TensorMemLayout& target_mem_layout,
-                        const StorageConverter& storage_converter);
+                        const StorageConverter& storage_converter) const;
         
         /** Constructors**/
-        // a = icdl::Tensor({3,3,3}, "FLOAT32");
-        // a = icdl::Tensor({3,3,3}, TensorDataDescriptor().dtype(TensorDataType::FIXPOINT).represent({8, true, 0}));
+        // a = icdl::Tensor({3,3,3}, TensorDataDescriptor().dtype(kFixpoint).represent({8, true, 0}));
         Tensor(const TensorSize& tensor_size, 
                const TensorDataDescriptor& data_descriptor,
-               const TensorDataLocation& location = TensorDataLocation::CPU_MEMORY,
-               const TensorMemLayout& mem_layout = TensorMemLayout::DENSE_LAYOUT, 
+               const TensorDataLocation& location = kCPUMem,
+               const TensorMemLayout& mem_layout = kDense, 
                const OptionalTensorInfo optional_info = OptionalTensorInfo());
         // construct a tensor from existing blob, the storage will not own the memory.
         // by default we consider the tensor is in CPU memory and with dense layout
@@ -67,7 +63,13 @@ namespace icdl{
                const TensorMemLayout& mem_layout = TensorMemLayout::DENSE_LAYOUT,
                const OptionalTensorInfo optional_info = OptionalTensorInfo()
                );
-        
+        Tensor() = default;
+        Tensor(Tensor&& other) = default;
+        Tensor& operator=(Tensor&& other) = default;
+        Tensor(const Tensor & other) = default;
+        // return a new Tensor sharing the storage with current Tensor.
+        Tensor view(const TensorSize& tensor_size) const;
+
         bool operator==(const Tensor& rhs) const;
         bool operator!=(const Tensor& rhs) const;
     };

@@ -41,6 +41,9 @@ namespace icdl{
         size_t total_bits = 0;
         bool is_signed = false;
         int frac_point_location = 0;
+        inline int32_t bit_mask() const{
+            return (1 << total_bits) - 1;
+        }
         FixpointRepresent():total_bits(0), is_signed(false), frac_point_location(0){}
         FixpointRepresent(size_t bits, bool sign, int frac_loc)
         :total_bits(bits), is_signed(sign), frac_point_location(frac_loc){}

@@ -10,10 +10,50 @@ namespace icdl{
     class TensorStorage;
     using StoragePtr = std::shared_ptr<TensorStorage>;
 
-    // Though there may be different kinds of TensorStorage, we should mainly manipulate a 
-    // smart pointer to the TensorStorage rather than directly use the Float32TensorStorage/FixpointTensorStorage...
+    ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ///                         TensorStorage
+    ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    /// Though there may be different kinds of TensorStorage, we should mainly 
+    /// manipulate a  smart pointer to the TensorStorage rather than directly
+    /// use the Float32TensorStorage/FixpointTensorStorage...
+    ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ///                     Use of Raw Ptr for Data
+    ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    /// The following reasons are taken into consideration that why we just use
+    /// raw pointer to the data rather than something like smart pointer or 
+    /// std::vector/std::array, etc.
+    /// 1. The underlying data may come from many different sources, e.g., 
+    /// the storage is created by the user, under which circumstance
+    /// the storage itself should take care of mem alloc/dealloc, another example
+    /// is that the underlying data is from other different data types, like 
+    /// opencv::Mat, and if we want to avoid memory copy from it, the storage should
+    /// not own the memory. Thus, it is not good to make it has a smart pointer that 
+    /// will manage the memory.
+    /// 2. Why dont use std::vector? Firstly, the std::vector may do some memory copy
+    /// when the data is from ..., like opencv::Mat. It should be avoided. Secondly,
+    /// for some fix-point data representation, it is possible that each element of the
+    /// storage is not aligned. So i think it will not be good to use std::vector.
+    /// 3. I used to consider that i can just let the constructor with blob_ptr just to copy
+    /// data from the blob_ptr, which may introduce some overhead but can make the 
+    /// underlying pointer to be smart pointer like std::unique_ptr, and then it maybe 
+    /// possible to not take care of memory alloc/dealloc. But actually, smart pointer is 
+    /// also not a good choice for array according to <<Effective Modern C++>>. Besides, when
+    /// the storage is actually pointing to data in the accelerator memory, the default 
+    /// memory deallocator in smart pointer is incorrect. And till now I have no idea how the 
+    /// accelelrator memory should be allocated/deallocated in some FPGA SoC, and whether the
+    /// CPU is able to manipulate them is not sure. I think it is quite related to the implementation
+    /// of the accelerator memory. For example, when the accelerator memory is just an on-chip
+    /// SRAM in the PL part of a Xilinx FPGA, then CPU has the chance to do something to it. 
+    /// However, when the accelerator memory is the independent DRAM for PL part, whether CPU
+    /// has access to it depends on how the DDR interface is implemented and whether the interface
+    /// is also connected to the CPU or just the accelerator. Thus, it may be possible that the
+    /// storage class here is just to maintain the pointer but never manipulate around it. And
+    /// the customized accelerator memory alloc/dealloc interface should take care of it. 
+    /// In the end, here the raw pointer is chosen for flexibility.
+    ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     class TensorStorage {
-        friend class TensorDataLoader; // to fill the storage of a tensor with either a file or other things...
+        // to fill the storage of a tensor with either a file or other things...
+        friend class TensorDataLoader; 
         friend class StorageConverter;
     public:
         virtual void* data_ptr() const = 0;
@@ -28,6 +68,7 @@ namespace icdl{
         FixpointRepresent get_data_represent() const{
             return data_represent_;
         }
+
         // im not quite sure what this should be used.
         // but for sparse Storage this may be of some use.
         virtual void* aux_info_ptr() const{
@@ -49,6 +90,7 @@ namespace icdl{
         std::shared_ptr<void> aux_info_{nullptr}; 
         // the own_memory_ means this storage should take care of memory deallocation.
         bool own_memory_{true};
+        TensorDataDescriptor data_descriptor_{};
     };
 
     // always dense! dont use aux_info
@@ -95,12 +137,13 @@ namespace icdl{
         //from blob
         FixpointTensorStorage(int8_t* blob_ptr, const size_t num_element, const FixpointRepresent& data_represent);
         ~FixpointTensorStorage();
-
+        
     private:
         int8_t* data_ptr_ = nullptr;
     };
 
-    // The following are forwarding function to just let me not to write very long function name std::make_shared....
+    // The following are perfectly forwarding function to just let me not to write very long 
+    // function name std::make_shared....
     template <typename... Args>
     auto f32_storage_make(Args&&... args) -> decltype(std::make_shared<Float32TensorStorage>(std::forward<Args>(args)...)) {
     return std::make_shared<Float32TensorStorage>(std::forward<Args>(args)...);

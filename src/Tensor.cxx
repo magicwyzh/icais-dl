@@ -45,9 +45,11 @@ namespace icdl{
         return storage_->aux_info_ptr();
     }
 
-    void Tensor::convert_to_fixpoint(const StorageConverter& storage_converter,const FixpointRepresent & target_fix_represent,  const TensorMemLayout& target_mem_layout){
-        if(this->dtype() == TensorDataType::FIXPOINT){
-            storage_ =  storage_converter.fix_to_fix_convert(
+    Tensor Tensor::convert_to_fixpoint(const StorageConverter& storage_converter,const FixpointRepresent & target_fix_represent,  const TensorMemLayout& target_mem_layout) const{
+        Tensor new_tensor;
+        StoragePtr new_storage;
+        if(this->dtype() == kFixpoint){
+            new_storage = storage_converter.fix_to_fix_convert(
                 storage_,
                 this->storage_->get_data_represent(),//src_fix_represent
                 target_fix_represent, //target_fix_represent
@@ -55,8 +57,8 @@ namespace icdl{
                 target_mem_layout
             );
         }
-        else if(this->dtype() == TensorDataType::FLOAT_32){
-            storage_ = storage_converter.float32_to_fix_convert(
+        else if(this->dtype() == kFloat32){
+            new_storage = storage_converter.float32_to_fix_convert(
                 storage_,
                 target_fix_represent, 
                 this->get_mem_layout(),
@@ -68,23 +70,32 @@ namespace icdl{
             exit(EXIT_FAILURE);
         }
         // post-processing some info and check
-        assert(storage_->get_data_type() == TensorDataType::FIXPOINT);
-        this->mem_layout_ = target_mem_layout;
-        assert(storage_->get_data_represent() == target_fix_represent);
-        
+        assert(new_storage->get_data_type() == kFixpoint);
+        new_tensor.mem_layout_ = target_mem_layout;
+        new_tensor.size_ = size_;
+        new_tensor.data_descriptor_ = TensorDataDescriptor().dtype(kFixpoint).represent(target_fix_represent);
+        assert(new_storage->get_data_represent() == target_fix_represent);
+        new_tensor.storage_ = new_storage;
+
+        return new_tensor;
     }
 
-    void Tensor::convert_to_float32(const StorageConverter& storage_converter, const TensorMemLayout& target_mem_layout){
-        if(this->dtype() == TensorDataType::FIXPOINT){
-            storage_ = storage_converter.fix_to_float32_convert(
+    Tensor Tensor::convert_to_float32(const StorageConverter& storage_converter, const TensorMemLayout& target_mem_layout) const{
+        //create a new tensor
+        //Tensor new_tensor(*this);
+        Tensor new_tensor;
+        StoragePtr new_storage;
+        if(this->dtype() == kFixpoint){
+            new_storage = storage_converter.fix_to_float32_convert(
                 storage_,
                 this->storage_->get_data_represent(), //src_fix_represent
                 this->get_mem_layout(), 
                 target_mem_layout
             );
+            
         }
-        else if(this->dtype() == TensorDataType::FLOAT_32){
-            storage_ = storage_converter.float32_to_float32_convert(
+        else if(this->dtype() == kFloat32){
+            new_storage = storage_converter.float32_to_float32_convert(
                 storage_,
                 this->get_mem_layout(),
                 target_mem_layout
@@ -94,40 +105,46 @@ namespace icdl{
             std::cerr << "Try to Convert an INVALID Tensor to Floatpoint" << std::endl;
             exit(EXIT_FAILURE);
         }
-        this->mem_layout_ = target_mem_layout;
-        assert(storage_->get_data_type() == TensorDataType::FLOAT_32);
+        new_tensor.storage_ = new_storage;
+        new_tensor.mem_layout_ = target_mem_layout;
+        new_tensor.data_descriptor_.dtype(kFloat32);
+        new_tensor.data_descriptor_.represent(FloatpointRepresent());
+        new_tensor.size_ = size_;
+        assert(new_tensor.storage_->get_data_type() == kFloat32);
+
+        return new_tensor;
     }
 
-    void Tensor::convert_to(const TensorDataDescriptor& descriptor, const TensorMemLayout& target_mem_layout, const StorageConverter& storage_converter){
-        if(descriptor.get_dtype() == TensorDataType::FLOAT_32){
-            convert_to_float32(
+    Tensor Tensor::convert_to(const TensorDataDescriptor& descriptor, const TensorMemLayout& target_mem_layout, const StorageConverter& storage_converter) const{
+        if(descriptor.get_dtype() == kFloat32){
+            return convert_to_float32(
                 storage_converter,
                 target_mem_layout
             );
         }
-        else if(descriptor.get_dtype() == TensorDataType::FIXPOINT){
-            convert_to_fixpoint(
+        else if(descriptor.get_dtype() == kFixpoint){
+            return convert_to_fixpoint(
                 storage_converter,
                 descriptor.get_represent().fix_point,
                 target_mem_layout
             );
         }
         else{
-            if(descriptor.get_dtype() == TensorDataType::FLOAT_16){
+            if(descriptor.get_dtype() == kFloat16){
                 std::cerr << "FLOAT16 is not supported now. Dont convert to FLOAT16!" << std::endl;
             }
             std::cerr << "Invalid TensorDataType for conversion!" << std::endl;
             exit(EXIT_FAILURE);
         }
-        assert(storage_->get_data_type() == descriptor.get_dtype());
+        //assert(storage_->get_data_type() == descriptor.get_dtype());
     }
 
-    void Tensor::convert_to(const TensorDataDescriptor& descriptor){
-        convert_to(descriptor, mem_layout_);
+    Tensor Tensor::convert_to(const TensorDataDescriptor& descriptor) const{
+        return convert_to(descriptor, mem_layout_);
     }
 
-    void Tensor::convert_to(const TensorDataDescriptor& descriptor, const TensorMemLayout& target_mem_layout){
-        convert_to(descriptor, target_mem_layout, DefaultStorageConverter::get());
+    Tensor Tensor::convert_to(const TensorDataDescriptor& descriptor, const TensorMemLayout& target_mem_layout) const{
+        return convert_to(descriptor, target_mem_layout, DefaultStorageConverter::get());
     }
     
     size_t Tensor::nelement(){
@@ -220,5 +237,11 @@ namespace icdl{
 
     bool Tensor::operator!=(const Tensor& rhs) const{
         return !operator==(rhs);
+    }
+
+    Tensor Tensor::view(const TensorSize& tensor_size) const{
+        Tensor new_tensor(*this);//default constructor.
+        new_tensor.size_ = tensor_size;
+        return new_tensor;
     }
 }//namespace icdl
