@@ -59,7 +59,7 @@ namespace icdl{
         size_t exp_bits{8};
         size_t mantissa_bits{23};
         FloatpointRepresent(): total_bits(32), is_signed(true), exp_bits(8), mantissa_bits(23){}
-        FloatpointRepresent(bool fp16): total_bits(16), is_signed(true), exp_bits(5), mantissa_bits(15){}
+        FloatpointRepresent(bool fp16): total_bits(16), is_signed(true), exp_bits(5), mantissa_bits(11){}
         FloatpointRepresent(size_t _total_bits, size_t _is_signed, size_t _exp_bits, size_t _mantissa_bits):
             total_bits(_total_bits), is_signed(_is_signed), exp_bits(_exp_bits), mantissa_bits(_mantissa_bits){}
         bool operator==(const FloatpointRepresent& rhs) const;
@@ -117,5 +117,18 @@ namespace icdl{
     constexpr auto kSparse = TensorMemLayout::SPARSE_LAYOUT;
     constexpr auto kNCHW = TensorDimLayout4D::NCHW;
     constexpr auto kNHWC = TensorDimLayout4D::NHWC;
+
+    inline TensorDataDescriptor Float32Descriptor(){
+        return TensorDataDescriptor().dtype(kFloat32);
+    }
+    inline TensorDataDescriptor Float16Descriptor(){
+        return TensorDataDescriptor().dtype(kFloat16);
+    }
+    inline TensorDataDescriptor FixpointDescriptor(const size_t total_bits, const bool is_signed, const int frac_point){
+        return TensorDataDescriptor(total_bits, is_signed, frac_point);
+    }
+    inline TensorDataDescriptor FixpointDescriptor(const FixpointRepresent& fix_represent){
+        return TensorDataDescriptor(fix_represent);
+    }
 }
 #endif

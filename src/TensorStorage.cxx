@@ -5,7 +5,7 @@
 namespace icdl{
     FixpointRepresent invalid_fix_represent;
     Float32TensorStorage::Float32TensorStorage(size_t num_element, TensorDataLocation data_loc)
-        :TensorStorage(num_element, data_loc, invalid_fix_represent), data_ptr_(nullptr){
+        :TensorStorage(num_element, data_loc, Float32Descriptor()), data_ptr_(nullptr){
         if(data_loc == kCPUMem){
             data_ptr_ = new float[num_element];
         }
@@ -20,8 +20,9 @@ namespace icdl{
         }
     }
 
-
-    Float32TensorStorage::Float32TensorStorage(float* blob_ptr, const size_t num_element):TensorStorage(num_element, TensorDataLocation::CPU_MEMORY, invalid_fix_represent), data_ptr_(blob_ptr){
+    Float32TensorStorage::Float32TensorStorage(float* blob_ptr, const size_t num_element)
+        :TensorStorage(num_element, TensorDataLocation::CPU_MEMORY, Float32Descriptor()), 
+        data_ptr_(blob_ptr){
         set_memory_ownership(false);
     }
 
@@ -49,6 +50,7 @@ namespace icdl{
 
     FixpointTensorStorage::FixpointTensorStorage(size_t num_element, const FixpointRepresent& data_represent, TensorDataLocation data_loc)
             : TensorStorage(num_element, data_loc, data_represent), data_ptr_(nullptr){
+        data_descriptor_.dtype(kFixpoint);
         if(data_loc == kCPUMem){
             size_t num_byte_per_data = data_represent.num_byte_up_round();
             data_ptr_ = new int8_t[num_element*num_byte_per_data];
@@ -68,7 +70,8 @@ namespace icdl{
     }
 
     FixpointTensorStorage::FixpointTensorStorage(int8_t* blob_ptr, const size_t num_element, const FixpointRepresent& data_represent)
-        : TensorStorage(num_element, TensorDataLocation::CPU_MEMORY, invalid_fix_represent), data_ptr_(blob_ptr){
+        : TensorStorage(num_element, kCPUMem, data_represent), data_ptr_(blob_ptr){
+        data_descriptor_.dtype(kFixpoint);
         set_memory_ownership(false);
     }
 
@@ -84,15 +87,17 @@ namespace icdl{
     }
 
     StoragePtr FixpointTensorStorage::clone() const{
-        FixpointTensorStorage* fixpoint_storage = new FixpointTensorStorage(num_data_, data_represent_, data_location_);
+        auto fixp_represent = data_descriptor_.get_represent().fix_point;
+        FixpointTensorStorage* fixpoint_storage = new FixpointTensorStorage(num_data_, 
+            fixp_represent, data_location_);
 
         if(data_location_ == kCPUMem){
-            size_t total_byte = num_data_ * data_represent_.num_byte_up_round();
+            size_t total_byte = num_data_ * fixp_represent.num_byte_up_round();
             //size_t total_byte = num_data_ * (data_represent_.total_bits + 8 - 1) / 8;
             memcpy(fixpoint_storage->data_ptr_, data_ptr_, total_byte);
         }
         else if(data_location_ == kAccMem){
-            accelerator_memory_copy(fixpoint_storage->data_ptr_, data_ptr_, data_represent_, num_data_);
+            accelerator_memory_copy(fixpoint_storage->data_ptr_, data_ptr_, fixp_represent, num_data_);
         }
         return StoragePtr(fixpoint_storage);
     }

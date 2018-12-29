@@ -10,7 +10,6 @@ namespace icdl{
         TensorSize size_{};
         StoragePtr storage_{nullptr};
         TensorMemLayout mem_layout_{TensorMemLayout::INVALID_LAYOUT};
-        TensorDataDescriptor data_descriptor_{TensorDataDescriptor()};
         OptionalTensorInfo opt_info_{OptionalTensorInfo()};
 
         Tensor convert_to_fixpoint(const StorageConverter& storage_converter, 
@@ -29,12 +28,10 @@ namespace icdl{
         size_t nelement();
         void* data_ptr() const;
         void* aux_info_ptr() const;
-        /* change data type from float-to-fixpoint or fixpoint-to-fixpoint, etc. 
-        if change to fixpoint, then the fix_represent should be used.
-        This will change the underlying storage. But how to change dtype is 
-        up to the implementation.
-        */
 
+        /* change data type from float-to-fixpoint or fixpoint-to-fixpoint, etc. 
+        *   Retrun a new tensor, the underlying storage is changed.
+        */
         // simplified ver. no layout change
         Tensor convert_to(const TensorDataDescriptor& descriptor) const;
 
@@ -46,7 +43,7 @@ namespace icdl{
                         const StorageConverter& storage_converter) const;
         
         /** Constructors**/
-        // a = icdl::Tensor({3,3,3}, TensorDataDescriptor().dtype(kFixpoint).represent({8, true, 0}));
+        // a = icdl::Tensor({3,3,3}, FixpointDescriptor(8, true, 0));
         Tensor(const TensorSize& tensor_size, 
                const TensorDataDescriptor& data_descriptor,
                const TensorDataLocation& location = kCPUMem,

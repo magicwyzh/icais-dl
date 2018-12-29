@@ -58,15 +58,34 @@ namespace icdl{
     public:
         virtual void* data_ptr() const = 0;
         virtual StoragePtr clone() const = 0;
-        virtual TensorDataType get_data_type() const = 0;
+        virtual TensorDataType get_data_type() const{
+            return data_descriptor_.get_dtype();
+        }
         size_t get_data_num() const{
             return num_data_;
         }
         TensorDataLocation get_data_location() const{
             return data_location_;
         }
+        // deprecated.
         FixpointRepresent get_data_represent() const{
-            return data_represent_;
+            //return data_represent_;
+            if(get_data_type()!=kFixpoint){
+                std::cout<< "Warning: Try to get the fixpoint represent from a " << 
+                enum_to_string(get_data_type()) << " Tensor." << std::endl;
+            }
+            return data_descriptor_.get_represent().fix_point;
+        }
+        FloatpointRepresent get_float_data_represent() const{
+            if(get_data_type()!=kFloat32 || get_data_type()!=kFloat16){
+                std::cout<< "Warning: Try to get the floatpoint represent from a " << 
+                enum_to_string(get_data_type()) << " Tensor." << std::endl;
+            }
+            return data_descriptor_.get_represent().flo_point;
+        }
+
+        TensorDataDescriptor get_data_descriptor() const{
+            return data_descriptor_;
         }
 
         // im not quite sure what this should be used.
@@ -74,8 +93,16 @@ namespace icdl{
         virtual void* aux_info_ptr() const{
             return aux_info_.get();
         }
-        TensorStorage(size_t num_data, const TensorDataLocation& data_loc, const FixpointRepresent& data_repre): 
-            num_data_(num_data), data_location_(data_loc), data_represent_(data_repre), aux_info_(nullptr), own_memory_(true){}
+
+       TensorStorage(size_t num_data, const TensorDataLocation& data_loc, const FixpointRepresent& fixp_data_repre): 
+            num_data_(num_data), data_location_(data_loc), 
+            data_descriptor_(FixpointDescriptor(fixp_data_repre)),
+            aux_info_(nullptr), own_memory_(true){}
+        
+        TensorStorage(size_t num_data, const TensorDataLocation& data_loc, const TensorDataDescriptor data_descriptor):
+            num_data_(num_data), data_location_(data_loc), 
+            data_descriptor_(data_descriptor), 
+            aux_info_(nullptr), own_memory_(true){}
         bool own_memory(){
             return own_memory_;
         }
@@ -86,11 +113,12 @@ namespace icdl{
         }
         size_t num_data_{0}; // to indicate how many corresponding type data in the storage
         TensorDataLocation data_location_{TensorDataLocation::INVALID_LOCATION}; 
-        FixpointRepresent data_represent_{0, 0, 0}; // for float, this is all set to zero
+        TensorDataDescriptor data_descriptor_{};
+        
         std::shared_ptr<void> aux_info_{nullptr}; 
         // the own_memory_ means this storage should take care of memory deallocation.
         bool own_memory_{true};
-        TensorDataDescriptor data_descriptor_{};
+        
     };
 
     // always dense! dont use aux_info
@@ -99,9 +127,7 @@ namespace icdl{
         virtual void * data_ptr() const{
             return static_cast<void*>(data_ptr_);
         }
-        virtual TensorDataType get_data_type() const override{
-            return kFloat32;
-        }
+
         virtual StoragePtr clone() const;
         //constructor
         Float32TensorStorage(size_t num_element, TensorDataLocation data_loc = kCPUMem);
@@ -127,9 +153,7 @@ namespace icdl{
         virtual void* data_ptr() const{
             return static_cast<void*>(data_ptr_);
         }
-        virtual TensorDataType get_data_type() const override{
-            return kFixpoint;
-        }
+
         virtual StoragePtr clone() const;
         //constructor
         FixpointTensorStorage(size_t num_element, const FixpointRepresent& data_represent, TensorDataLocation data_loc = kCPUMem);

@@ -9,7 +9,7 @@ TEST(TensorTest, Float2FixConvertTest){
     std::random_device rd{};
     std::mt19937 gen{rd()};
     std::normal_distribution<> normal_dist{0,2}; //mean=0, std_dev=2
-    auto float_tensor = Tensor({2,3,32,32}, TensorDataDescriptor().dtype(kFloat32));
+    auto float_tensor = Tensor({2,3,32,32}, Float32Descriptor());
     auto data_ptr_float = static_cast<float*>(float_tensor.data_ptr());
 
     // random init
@@ -38,7 +38,7 @@ TEST(TensorTest, Float2FixConvertTest){
             data_ptr_int8[i]
         );
     }
-    auto x = Tensor({2,3,32,32}, TensorDataDescriptor().dtype(kFloat32));
+    auto x = Tensor({2,3,32,32}, Float32Descriptor());
     auto old_data_ptr = x.data_ptr();
     x = x.convert_to(fix_descript);
     auto new_data_ptr = x.data_ptr();
@@ -50,7 +50,7 @@ TEST(TensorTest, Fix2FloatConvertTest){
     std::random_device rd{};
     std::mt19937 gen{rd()};
     std::uniform_int_distribution<int8_t> uniform_int_dist{-128, 127};
-    auto int8_tensor = Tensor({1,3,32,32}, TensorDataDescriptor().dtype(kFixpoint).represent({8, true, 3}));
+    auto int8_tensor = Tensor({1,3,32,32}, FixpointDescriptor(8, true, 3));
     auto data_ptr_int8 = static_cast<int8_t*>(int8_tensor.data_ptr());
     EXPECT_EQ(int8_tensor.dtype(), kFixpoint);
 
@@ -58,7 +58,7 @@ TEST(TensorTest, Fix2FloatConvertTest){
     for(size_t i = 0; i < int8_tensor.nelement(); i++){
         data_ptr_int8[i] = uniform_int_dist(gen);
     }    
-    auto float_tensor = int8_tensor.convert_to(TensorDataDescriptor().dtype(kFloat32));
+    auto float_tensor = int8_tensor.convert_to(Float32Descriptor());
     auto data_ptr_float = static_cast<float*>(float_tensor.data_ptr());
     for(size_t i = 0; i < int8_tensor.nelement(); i++){
         auto temp = DefaultStorageConverter::single_data_fixp_to_flo32(data_ptr_int8[i], int8_tensor.get_data_descript().get_represent().fix_point);
@@ -73,7 +73,7 @@ TEST(TensorTest, Fix2FixConvertTest){
     std::random_device rd{};
     std::mt19937 gen{rd()};
     std::uniform_int_distribution<int16_t> uniform_int_dist{-1024, 1023};
-    auto int12_tensor = Tensor({8,3,32,32}, TensorDataDescriptor().dtype(kFixpoint).represent({12, true, 6}));
+    auto int12_tensor = Tensor({8,3,32,32}, FixpointDescriptor(12, true, 6));
     auto data_ptr_int12 = static_cast<int16_t*>(int12_tensor.data_ptr());
 
     // random init
@@ -82,7 +82,7 @@ TEST(TensorTest, Fix2FixConvertTest){
         EXPECT_EQ(data_ptr_int12[i] < 1024, true);
     }    
 
-    auto int6_tensor = int12_tensor.convert_to(TensorDataDescriptor().dtype(kFixpoint).represent({6, true, 3}));
+    auto int6_tensor = int12_tensor.convert_to(FixpointDescriptor(6, true, 3));
 
     auto data_ptr_int6 = static_cast<int8_t*>(int6_tensor.data_ptr());
 
@@ -213,7 +213,7 @@ TEST(DefaultStorageConverterTest, SingleDataConvertTest){
 // Only dense tensor in CPU Mem are tested.
 TEST(TensorTest, InitTest){
 
-    Tensor images_float({1,3,32,32}, TensorDataDescriptor().dtype(kFloat32));
+    Tensor images_float({1,3,32,32}, Float32Descriptor());
     EXPECT_EQ(images_float.dtype(), kFloat32);
     EXPECT_EQ(images_float.size(), TensorSize({1,3,32,32}));
     EXPECT_EQ(images_float.get_data_location(), kCPUMem);
@@ -226,7 +226,7 @@ TEST(TensorTest, InitTest){
 
 
     /*The following two initilizations should be the same except for the underlying storage*/
-    Tensor images_fixpoint({8,3,32,32}, TensorDataDescriptor().dtype(kFixpoint).represent({8, true, 0}));
+    Tensor images_fixpoint({8,3,32,32}, FixpointDescriptor(8, true, 0));
     Tensor images_fix_init_with_brace({8,3,32,32}, {8, true, 0});
     // Firstly test one of the tensor is initialized as expected
     TensorDataDescriptor descript(FixpointRepresent(8, true, 0));

@@ -6,7 +6,7 @@ namespace icdl{
         if(storage_ == nullptr){
             return TensorDataType::INVALID_DTYPE;
         }
-            return storage_->get_data_type();
+        return storage_->get_data_type();
     }
 
     TensorSize Tensor::size() const{
@@ -28,7 +28,7 @@ namespace icdl{
     }
 
     TensorDataDescriptor Tensor::get_data_descript() const{
-        return data_descriptor_;
+        return storage_->get_data_descriptor();
     }
 
     void* Tensor::data_ptr() const{
@@ -73,7 +73,6 @@ namespace icdl{
         assert(new_storage->get_data_type() == kFixpoint);
         new_tensor.mem_layout_ = target_mem_layout;
         new_tensor.size_ = size_;
-        new_tensor.data_descriptor_ = TensorDataDescriptor().dtype(kFixpoint).represent(target_fix_represent);
         assert(new_storage->get_data_represent() == target_fix_represent);
         new_tensor.storage_ = new_storage;
 
@@ -107,8 +106,6 @@ namespace icdl{
         }
         new_tensor.storage_ = new_storage;
         new_tensor.mem_layout_ = target_mem_layout;
-        new_tensor.data_descriptor_.dtype(kFloat32);
-        new_tensor.data_descriptor_.represent(FloatpointRepresent());
         new_tensor.size_ = size_;
         assert(new_tensor.storage_->get_data_type() == kFloat32);
 
@@ -163,7 +160,7 @@ namespace icdl{
                    const TensorDataLocation& location,
                    const TensorMemLayout& mem_layout,
                    const OptionalTensorInfo optional_info)
-        : size_(tensor_size), mem_layout_(mem_layout), data_descriptor_(data_descriptor),  opt_info_(optional_info){
+        : size_(tensor_size), mem_layout_(mem_layout),  opt_info_(optional_info){
         
         if(mem_layout_ != kDense){
             std::cerr << "Try to create a Tensor with invalid memory layout: " << enum_to_string(mem_layout) << ". Only Dense layout is supported now!" << std::endl;
@@ -197,7 +194,7 @@ namespace icdl{
                const TensorDataLocation& location,
                const TensorMemLayout& mem_layout,
                const OptionalTensorInfo optional_info)
-        : size_(tensor_size),  mem_layout_(mem_layout), data_descriptor_(data_descriptor), opt_info_(optional_info){
+        : size_(tensor_size),  mem_layout_(mem_layout),  opt_info_(optional_info){
         
         if(mem_layout_ != kDense){
             std::cerr << "Try to create a Tensor with invalid memory layout: " << enum_to_string(mem_layout) << ". Only Dense layout is supported now!" << std::endl;
@@ -225,7 +222,6 @@ namespace icdl{
         if(size_==rhs.size_ &&
             storage_ == rhs.storage_&&
             mem_layout_ == rhs.mem_layout_&&
-            data_descriptor_ == rhs.data_descriptor_ &&
             opt_info_ == rhs.opt_info_
         ){
             return true;

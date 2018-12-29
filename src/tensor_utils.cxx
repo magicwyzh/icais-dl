@@ -48,6 +48,9 @@ namespace icdl{
     }
     TensorDataDescriptor& TensorDataDescriptor::dtype(const TensorDataType& type_of_data){
         dtype_ = type_of_data;
+        if(dtype_ != kFixpoint){
+            represent_.flo_point = FloatpointRepresent(dtype_ == kFloat16);
+        }
         return *this;
     }
 
@@ -58,7 +61,7 @@ namespace icdl{
     }
 
     TensorDataDescriptor& TensorDataDescriptor::represent(const FixpointRepresent& fix_represent){
-        assert(dtype_ == TensorDataType::FIXPOINT);
+        assert(dtype_ == kFixpoint);
         represent_.fix_point = fix_represent;
         return *this;
     }
@@ -87,22 +90,7 @@ namespace icdl{
     }
     TensorDataDescriptor::TensorDataDescriptor(): dtype_(TensorDataType::INVALID_DTYPE){}
 
-    /* dont use this, will be confusing when constructing tensor
-    TensorDataDescriptor::TensorDataDescriptor(const std::string & type_str){
-        std::transform(type_str.begin(), type_str.end(), type_str.begin(), ::toupper);
-        assert(type_str == "FLOAT32" || type_str == "FLOAT16");
-        if(type_str == "FLOAT32"){
-            dtype_ = TensorDataType::FLOAT_32;
-            represent_.flo_point = FloatpointRepresent();
-        }
-        else{
-            dtype_ = TensorDataType::FLOAT_16;
-            represent_.flo_point = FloatpointRepresent(true);
-            std::cerr << "FLOAT_16 is not supported now!" << std::endl;
-            exit(EXIT_FAILURE);
-        }
-    }
-    */
+
     TensorDataDescriptor::TensorDataDescriptor(const size_t total_bits, const bool is_signed, const int frac_point){
         dtype_ = TensorDataType::FIXPOINT;
         represent_.fix_point = FixpointRepresent(total_bits, is_signed,frac_point);
@@ -123,4 +111,5 @@ namespace icdl{
             return true;
         }
     }
+
 }//namespace icdl
