@@ -70,6 +70,8 @@ namespace icdl{
         bool operator==(const Tensor& rhs) const;
         bool operator!=(const Tensor& rhs) const;
     };
+
+    using TensorList = std::vector<Tensor>;
 }//namespace icdl
 
 
