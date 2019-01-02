@@ -56,6 +56,8 @@ namespace icdl{
         friend class TensorDataLoader; 
         friend class StorageConverter;
     public:
+        // cannot copy this
+        TensorStorage(const TensorStorage& rhs) = delete;
         virtual void* data_ptr() const = 0;
         virtual StoragePtr clone() const = 0;
         virtual TensorDataType get_data_type() const{
