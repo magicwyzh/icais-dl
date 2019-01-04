@@ -4,6 +4,7 @@
 #include <memory>
 #include "icdl.h"
 #include "test_utils.h"
+#include <chrono>
 
 class SeqGraphTestCommon : public TestUtils{
 public:

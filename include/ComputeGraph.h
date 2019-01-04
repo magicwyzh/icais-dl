@@ -24,8 +24,7 @@ namespace icdl{
         // each operator should have its name... and the name should shows the nesting relationships in the _compute_nodes
         // name should be like: res1->block1->conv1
         std::vector<std::pair<std::string, std::shared_ptr<Operator>>> get_ops_recursively() const;
-        // just for experiments to see whether std::move is useful and correct.
-        std::vector<std::pair<std::string, std::shared_ptr<Operator>>> get_ops_recursively_no_move() const;
+        
         // get the _compute_nodes directly.
         OrderedDict<std::string, ComputeNode>& get_children_nodes();
         ComputeNode& get_child_node(const std::string& node_name);

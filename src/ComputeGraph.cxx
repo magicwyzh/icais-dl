@@ -41,31 +41,6 @@ namespace icdl{
         return results;
     }
 
-    std::vector<std::pair<std::string, std::shared_ptr<Operator>>> DynamicComputeGraph::get_ops_recursively_no_move() const{
-        std::vector<std::pair<std::string, ComputeNode>> pairs = _compute_nodes.pairs();
-        std::vector<std::pair<std::string, std::shared_ptr<Operator>>> results;
-        for(auto& name_node_pair : pairs){
-            auto& name = name_node_pair.first;
-            auto& node = name_node_pair.second;
-            if(node.get_node_type()==ComputeGraphNodeType::COMPUTE_GRAPH){
-                // concat
-                auto sub_graph_ops = node.get_sub_graph_ptr()->get_ops_recursively_no_move(); //recursively
-                for(auto& sub_graph_pair: sub_graph_ops){
-                    auto demangled_name = name + "->" + sub_graph_pair.first;
-                    results.emplace_back(std::make_pair(std::move(demangled_name), std::move(sub_graph_pair.second)));
-                }
-            }
-            else if(node.get_node_type() == ComputeGraphNodeType::OPERATOR){
-                // is the std::move right?
-                results.emplace_back(std::make_pair(std::move(name), std::move(node.get_op_ptr())));
-            }
-            else{
-                std::cerr << "Find a node in compute graph that is neither op type nor compute_graph type"<<std::endl;
-            }
-        }
-        return results;
-    }
-
     OrderedDict<std::string, ComputeNode>&  DynamicComputeGraph::get_children_nodes(){
         return _compute_nodes;
     }
