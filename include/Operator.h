@@ -2,16 +2,21 @@
 #define __ICDL_OPERATOR_H__
 #include "OperatorImpl.h"
 namespace icdl{
+    class Operator;
     using OpImplPtr = std::shared_ptr<OperatorImpl>;
+    using OperatorList = std::vector<std::shared_ptr<Operator>>;
     class Operator{
     protected:
         OpImplPtr _impl;
     public:
         TensorList operator()(TensorList & inputs){
+            return apply(inputs);
+        }
+        TensorList apply(TensorList& inputs){
             return _impl->apply(this, inputs);
         }
         // would be better to override this function to give a pretty name.
-        virtual std::string name() const{
+        virtual std::string type_name() const{
             return typeid(*this).name();
         }
         void reset_impl(OpImplPtr impl_ptr){

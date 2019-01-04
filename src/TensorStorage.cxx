@@ -90,7 +90,7 @@ namespace icdl{
         auto fixp_represent = data_descriptor_.get_represent().fix_point;
         FixpointTensorStorage* fixpoint_storage = new FixpointTensorStorage(num_data_, 
             fixp_represent, data_location_);
-
+            
         if(data_location_ == kCPUMem){
             size_t total_byte = num_data_ * fixp_represent.num_byte_up_round();
             //size_t total_byte = num_data_ * (data_represent_.total_bits + 8 - 1) / 8;

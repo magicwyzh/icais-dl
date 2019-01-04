@@ -144,7 +144,7 @@ namespace icdl{
         return convert_to(descriptor, target_mem_layout, DefaultStorageConverter::get());
     }
     
-    size_t Tensor::nelement(){
+    size_t Tensor::nelement() const{
         if(size_.size() == 0){
             return 0;
         }

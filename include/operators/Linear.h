@@ -4,6 +4,10 @@
 #include "Operator.h"
 #include "arg_utils.h"
 #include "tensor_utils.h"
+#include "op_shared_ptr_gen.h"
+/*
+* fc1 = std::make_shared<icdl::op::Linear>(3, 10, makeLinearPytorchImpl());
+*/
 namespace icdl{ namespace op{
     // properties: in_, out_, with_bias_
     // methods: LinearOptions in(const size_t&), LinearOptions in(size_t&&), const size_t& in(){return in_;}
@@ -36,7 +40,7 @@ namespace icdl{ namespace op{
                 const TensorDataLocation& param_location = kCPUMem,
                 const TensorMemLayout& param_mem_layout = kDense);
         
-        virtual std::string name() const override{
+        virtual std::string type_name() const override{
             return "Linear";
         }
         virtual std::vector<TensorSize> output_size(const std::vector<TensorSize>& input_sizes) const{
@@ -60,7 +64,11 @@ namespace icdl{ namespace op{
             return _bias;
         }
     };
-}}//namespace icdl::op
+
+    
+}
+    OP_SHARED_PTR_MAKE(Linear); //generate a function called "icdl::LinearOpMake->std::shared_ptr<Operator>"
+}//namespace icdl::op
 
 
 #endif

@@ -15,6 +15,6 @@ link_directories(
 )
 #target_compile_options(test_all PRIVATE -Wall -fPIC -Werror)
 #target_link_libraries(test_all icdl /usr/local/lib/libgtest.a pthread torch caffe2 c10)
-target_link_libraries(test_all icdl gtest pthread)
+target_link_libraries(test_all icdl gtest gtest_main pthread)
 
 

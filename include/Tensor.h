@@ -25,7 +25,7 @@ namespace icdl{
         TensorDataLocation get_data_location() const;
         TensorMemLayout get_mem_layout() const;
         TensorDataDescriptor get_data_descript() const;
-        size_t nelement();
+        size_t nelement() const;
         void* data_ptr() const;
         void* aux_info_ptr() const;
 
