@@ -18,7 +18,7 @@ Things can be customized for users according to their hardware design:
    * OperatorImpls: Depends on how the accelerator is designed
 
 Build a model and use it:
-```
+```cpp
 #include "icdl.h"
 class ResidualBlock: public icdl::DynamicComputeGraph{
 public: 
