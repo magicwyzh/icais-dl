@@ -23,7 +23,8 @@ Build a model and use it:
 class ResidualBlock: public icdl::DynamicComputeGraph{
 public: 
     ResidualBlock(){
-        // makeLinearPytorchImpl is a factory func provides a backend engine for a specific operator. The user should provide their own implementations. Here we just call it a 'PytorchImpl' which calls pytorch's APIs.
+        // makeLinearPytorchImpl is a factory func provides a backend engine for a specific operator. 
+        //The user should provide their own implementations. Here we just call it a 'PytorchImpl' which calls pytorch's APIs.
         add_compute_node("conv1", icdl::Conv2dOpMake(3, 10, 3, icdl::op::makeLinearPytorchImpl()));
         add_compute_node("ReLU1", icdl::ReLUOpMake(icdl::op::makeReluPytorchImpl()));
         add_compute_node("ResAdd", icdl::EltAddOpMake(icdl::op::makeEltAddPytorchImpl()));
@@ -50,7 +51,7 @@ class Model: public icdl::SeqDyComputeGraph{
 int main(){
     Model model;
     // fixpoint tensor with 8bit per data, signed, 0 fractional bit.
-    auto image = icdl::Tensor({1,3,32,32}, icdl::TensorDescriptor().dtype(kFixpoint).descript({8, true, 0}));
+    auto image = icdl::Tensor({1,3,32,32}, icdl::FixpointTensorDescriptor(8, true, 0)));
     // pre-processing for image...
     // ...
     auto results = model(image);
