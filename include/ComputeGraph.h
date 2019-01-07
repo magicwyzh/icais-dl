@@ -6,6 +6,7 @@
 #include <string>
 #include "Operator.h"
 #include <vector>
+#include "protos/ComputeGraph.pb.h"
 namespace icdl{
     class ComputeGraph{
     public:
@@ -24,7 +25,11 @@ namespace icdl{
         // each operator should have its name... and the name should shows the nesting relationships in the _compute_nodes
         // name should be like: res1->block1->conv1
         std::vector<std::pair<std::string, std::shared_ptr<Operator>>> get_ops_recursively() const;
-        
+        void deserialize(const icdl_proto::GraphParams& graph_proto);
+        void deserialize(const std::string in_file_name);
+        std::shared_ptr<icdl_proto::GraphParams> serialize() const;
+        void serialize(const std::string& out_file_name) const;
+        std::string demangle_param_name(const std::string op_name, const std::string& param_name) const;
         // get the _compute_nodes directly.
         OrderedDict<std::string, ComputeNode>& get_children_nodes();
         ComputeNode& get_child_node(const std::string& node_name);

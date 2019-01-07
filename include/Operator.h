@@ -8,6 +8,10 @@ namespace icdl{
     class Operator{
     protected:
         OpImplPtr _impl;
+        std::vector<std::pair<std::string, Tensor*>> _saved_tensors;
+        void _register_tensor(const std::string& tensor_name, Tensor* tensor_ptr){
+            _saved_tensors.emplace_back(std::make_pair(tensor_name, tensor_ptr));
+        }
     public:
         TensorList operator()(TensorList & inputs){
             return apply(inputs);
@@ -26,6 +30,10 @@ namespace icdl{
         virtual std::vector<TensorSize> output_size(const std::vector<TensorSize>& input_sizes) const = 0;
         virtual TensorSize output_size(const TensorSize& input_size) const = 0;
         virtual ~Operator() = default;
+
+        std::vector<std::pair<std::string, Tensor*>> get_saved_tensors(){
+            return _saved_tensors;
+        }
     };
 }//namespace icdl
 #endif

@@ -9,16 +9,19 @@ SET(CMAKE_CXX_FLAGS_RELEASE "$ENV{CXXFLAGS} -O3 -Wall")
 set(PYTORCH_LIB_DIR "/home/wyzh/libtorch")
 
 include_directories(
+"/home/wyzh/tools_install/include"
 "${PROJECT_SOURCE_DIR}/include"
+"${PROJECT_SOURCE_DIR}/include/protos"
 "${PYTORCH_LIB_DIR}/include"
 "${PYTORCH_LIB_DIR}/include/torch/csrc/api/include"
 "/usr/local/include"
 )
 
 link_directories(
+"/home/wyzh/tools_install/lib"
+"/usr/local/lib"
 "${PYTORCH_LIB_DIR}/lib"
 "${PROJECT_BINARY_DIR}/lib"
-"/usr/local/lib"
 )
 # We use the MACRO -D_GLIBCXX_USE_CXX11_ABI=0 is because: when we use the libtorch from binary package
 # rather than build from source, the libtorch is built with GCC4.9 and the C++11 ABI is the old version.

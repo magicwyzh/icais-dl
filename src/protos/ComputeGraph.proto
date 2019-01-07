@@ -1,0 +1,6 @@
+syntax = "proto3";
+package icdl_proto;
+import "Tensor.proto";
+message GraphParams{
+    map<string, Tensor> graph_params = 1;
+}

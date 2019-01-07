@@ -3,6 +3,18 @@
 #include "tensor_utils.h"
 #include "accelerator_memory.h"
 namespace icdl{
+
+    void TensorStorage::deserialize(const icdl_proto::TensorStorage& storage_proto){
+        assert(data_location_ == kCPUMem);
+        auto my_ptr = data_ptr();
+        auto proto_ptr = storage_proto.data().c_str();
+        memcpy(my_ptr, proto_ptr, get_total_bytes());
+    }
+    icdl_proto::TensorStorage TensorStorage::serialize() const{
+        icdl_proto::TensorStorage s;
+        s.set_data(data_ptr(), get_total_bytes());
+        return s;
+    }
     FixpointRepresent invalid_fix_represent;
     Float32TensorStorage::Float32TensorStorage(size_t num_element, TensorDataLocation data_loc)
         :TensorStorage(num_element, data_loc, Float32Descriptor()), data_ptr_(nullptr){

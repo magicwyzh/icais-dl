@@ -10,7 +10,7 @@ class SeqGraphTestCommon : public TestUtils{
 public:
 static const int64_t batch_size = 2;
 static const int64_t in_size = 8;
-static const int64_t out_size = 10;
+static const int64_t out_size = 7;
 };
 const int64_t SeqGraphTestCommon::batch_size;
 const int64_t SeqGraphTestCommon::in_size;
@@ -165,7 +165,24 @@ TEST(ComputeGraphTest, AddNodeTest){
     EXPECT_EQ(nodes_in_graph["block1"].get_node_type(), icdl::ComputeGraphNodeType::COMPUTE_GRAPH);
 }
 
+TEST_F(SeqGraphTest, SeDeserilaizeResultsCompareTest){
+    auto origin_model_out = icdl_model(icdl_input)[0];
 
+    icdl_model.serialize("test.icdl_model");
+
+    auto new_icdl_model = ICDLModel();
+    new_icdl_model.deserialize("test.icdl_model");
+
+    auto new_model_out = new_icdl_model(icdl_input)[0];
+
+    EXPECT_EQ(origin_model_out.nelement(), new_model_out.nelement());
+    auto p_old = static_cast<float*>(origin_model_out.data_ptr());
+    auto p_new = static_cast<float*>(new_model_out.data_ptr());
+    for(size_t i = 0; i < origin_model_out.nelement(); i++){
+        EXPECT_FLOAT_EQ(p_old[i], p_new[i]);
+    }
+
+}
 TEST_F(SeqGraphTest, ForwardTest){
     auto pytorch_output = pytorch_forward();
     auto icdl_output = icdl_model(icdl_input);

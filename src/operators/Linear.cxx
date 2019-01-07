@@ -16,7 +16,9 @@ namespace icdl{namespace op{
         : Operator(linear_impl),  _options(options) {
         if(options.with_bias()){
             _bias = Tensor({options.out()}, options.param_descriptor(), param_location, param_mem_layout);
+            _register_tensor("bias", &_bias);
         }
         _weight = Tensor({options.out(), options.in()},  options.param_descriptor(), param_location, param_mem_layout);
+        _register_tensor("weight", &_weight);
     }
 }}//namespace icdl::op

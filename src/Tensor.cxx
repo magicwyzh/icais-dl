@@ -44,6 +44,76 @@ namespace icdl{
         }
         return storage_->aux_info_ptr();
     }
+    icdl_proto::Tensor Tensor::serialize() const{
+        icdl_proto::Tensor t;
+        switch(dtype()){
+            case kFloat32: 
+                t.set_dtype(icdl_proto::Tensor_TensorDataType::Tensor_TensorDataType_FLOAT_32);
+                break;
+            case kFloat16:
+                t.set_dtype(icdl_proto::Tensor_TensorDataType::Tensor_TensorDataType_FLOAT_16);
+                break;
+            case kFixpoint:
+                t.set_dtype(icdl_proto::Tensor_TensorDataType::Tensor_TensorDataType_FIXPOINT);
+                break;
+            case TensorDataType::INVALID_DTYPE:
+                t.set_dtype(icdl_proto::Tensor_TensorDataType::Tensor_TensorDataType_INVALID_DTYPE);
+                break;
+            default:
+                throw std::runtime_error("Unknown Data Type for serialization");
+                break;
+        }
+        switch(get_mem_layout()){
+            case kDense:
+                t.set_mem_layout(icdl_proto::Tensor_TensorMemLayout_DENSE_LAYOUT);
+                break;
+            case kSparse:
+                t.set_mem_layout(icdl_proto::Tensor_TensorMemLayout_SPARSE_LAYOUT);
+                break;
+            case TensorMemLayout::INVALID_LAYOUT:
+                t.set_mem_layout(icdl_proto::Tensor_TensorMemLayout_INVALID_LAYOUT);
+                break;
+            default:
+                throw std::runtime_error("Unknowm mem layout for serilization");
+                break;
+        }
+        for(auto dim : size_){
+            t.add_tensor_size(dim);
+        }
+        
+        (*t.mutable_storage()) = storage_->serialize();
+        return t;
+    }
+
+    void Tensor::deserialize(const icdl_proto::Tensor& tensor_proto){
+        // sanity check...
+        assert(static_cast<size_t>(tensor_proto.tensor_size_size()) == size_.size());
+        for(size_t i = 0; i < size_.size(); i++){
+            assert(size_[i] == tensor_proto.tensor_size(i));
+        }
+        TensorDataType proto_data_type;
+        TensorMemLayout proto_layout;
+        switch(tensor_proto.dtype()){
+            case icdl_proto::Tensor::TensorDataType::Tensor_TensorDataType_FLOAT_32: proto_data_type = kFloat32; break;
+            case icdl_proto::Tensor::TensorDataType::Tensor_TensorDataType_FLOAT_16: proto_data_type = kFloat16; break;
+            case icdl_proto::Tensor::TensorDataType::Tensor_TensorDataType_FIXPOINT: proto_data_type = kFixpoint; break;
+            case icdl_proto::Tensor::TensorDataType::Tensor_TensorDataType_INVALID_DTYPE: proto_data_type = TensorDataType::INVALID_DTYPE;break;
+            default: {
+                throw std::runtime_error("The protobuf's TensorDataType is not compatible with the definition in icdl source.");
+            }
+        }
+
+        switch(tensor_proto.mem_layout()){
+            case icdl_proto::Tensor_TensorMemLayout_DENSE_LAYOUT: proto_layout = kDense; break;
+            case icdl_proto::Tensor_TensorMemLayout_INVALID_LAYOUT: proto_layout = TensorMemLayout::INVALID_LAYOUT;break;
+            case icdl_proto::Tensor_TensorMemLayout_SPARSE_LAYOUT: proto_layout = kSparse; break;
+            default: {
+                throw(std::runtime_error("The protobuf's TensorMemLayout is not compatible with the definition in icdl source."));
+            }
+        }
+        assert(proto_data_type == dtype() && proto_layout == mem_layout_);
+        storage_->deserialize(tensor_proto.storage());
+    }
 
     Tensor Tensor::convert_to_fixpoint(const StorageConverter& storage_converter,const FixpointRepresent & target_fix_represent,  const TensorMemLayout& target_mem_layout) const{
         Tensor new_tensor;

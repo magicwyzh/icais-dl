@@ -6,6 +6,7 @@
 #include "accelerator_memory.h"
 #include <iostream>
 #include <cstdlib>
+#include "protos/Tensor.pb.h"
 namespace icdl{
     class TensorStorage;
     using StoragePtr = std::shared_ptr<TensorStorage>;
@@ -66,6 +67,7 @@ namespace icdl{
         size_t get_data_num() const{
             return num_data_;
         }
+        virtual size_t get_total_bytes() const = 0;
         TensorDataLocation get_data_location() const{
             return data_location_;
         }
@@ -109,6 +111,9 @@ namespace icdl{
             return own_memory_;
         }
         virtual ~TensorStorage(){}
+
+        void deserialize(const icdl_proto::TensorStorage& storage_proto);
+        icdl_proto::TensorStorage serialize() const;
     protected:
         void set_memory_ownership(bool owned){
             own_memory_ = owned;
@@ -129,7 +134,9 @@ namespace icdl{
         virtual void * data_ptr() const{
             return static_cast<void*>(data_ptr_);
         }
-
+        virtual size_t get_total_bytes() const override{
+            return get_data_num()*sizeof(float);
+        }
         virtual StoragePtr clone() const;
         //constructor
         Float32TensorStorage(size_t num_element, TensorDataLocation data_loc = kCPUMem);
@@ -155,7 +162,10 @@ namespace icdl{
         virtual void* data_ptr() const{
             return static_cast<void*>(data_ptr_);
         }
-
+        virtual size_t get_total_bytes() const override{
+            size_t num_byte_per_data = data_descriptor_.get_represent().fix_point.num_byte_up_round();
+            return num_byte_per_data * get_data_num();
+        }
         virtual StoragePtr clone() const;
         //constructor
         FixpointTensorStorage(size_t num_element, const FixpointRepresent& data_represent, TensorDataLocation data_loc = kCPUMem);

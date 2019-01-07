@@ -1,6 +1,74 @@
 #include "ComputeGraph.h"
-
+#include <fstream>
+#include <iostream>
+#include "protos/ComputeGraph.pb.h"
 namespace icdl{
+
+    std::string DynamicComputeGraph::demangle_param_name(const std::string op_name, 
+        const std::string& param_name) const{
+        return op_name + "." + param_name;
+    }
+    void DynamicComputeGraph::serialize(const std::string& out_file_name) const{
+        GOOGLE_PROTOBUF_VERIFY_VERSION;
+        std::fstream output(out_file_name, std::ios::out| std::ios::trunc| std::ios::binary);
+        auto graph_proto = serialize();
+        graph_proto->SerializeToOstream(&output);
+        google::protobuf::ShutdownProtobufLibrary();
+    }
+
+    std::shared_ptr<icdl_proto::GraphParams> DynamicComputeGraph::serialize() const{
+        auto proto = std::make_shared<icdl_proto::GraphParams>() ;
+        auto named_ops = get_ops_recursively();
+        for(auto& named_op: named_ops){
+            auto& op_name = named_op.first;
+            auto& op = named_op.second;
+            for(auto named_param: op->get_saved_tensors()){
+                auto& param_name = named_param.first;
+                auto& tensor = named_param.second;
+                const auto demangled_name = demangle_param_name(op_name, param_name);
+                (*proto->mutable_graph_params())[demangled_name] = tensor->serialize();
+            }
+        }
+        return proto;
+    }
+    void DynamicComputeGraph::deserialize(const std::string in_file_name){
+        GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+        icdl_proto::GraphParams p;
+        std::fstream input(in_file_name, std::ios::in | std::ios::binary);
+        p.ParseFromIstream(&input);
+        deserialize(p);
+        google::protobuf::ShutdownProtobufLibrary();
+    }
+    void DynamicComputeGraph::deserialize(const icdl_proto::GraphParams& graph_proto){
+        auto named_ops = get_ops_recursively();
+        std::vector<std::pair<std::string, std::string>> params_not_filled;
+        for(auto& named_op: named_ops){
+            auto& op_name = named_op.first;
+            auto& op = named_op.second;
+            for(auto named_param: op->get_saved_tensors()){
+                auto& param_name = named_param.first;
+                auto& tensor = named_param.second;
+                const auto demangled_name = demangle_param_name(op_name, param_name);
+                auto& graph_params_map = graph_proto.graph_params();
+                // may throw assertion error or key not found error
+                try{
+                    tensor->deserialize(graph_params_map.at(demangled_name));
+                }
+                catch(std::exception& e){
+                    params_not_filled.emplace_back(std::make_pair(demangled_name, e.what()));
+                }
+            }
+        }
+        if(params_not_filled.size()!=0){
+            std::cerr << "Caught error when deserializing for params: "<<std::endl;
+            for(auto p : params_not_filled){
+                std::cerr<< "param: " << p.first
+                << ", error msg: " << p.second << std::endl;
+            }
+            throw(std::runtime_error("Cannot deserialize for a graph."));
+        }
+    }
 
     TensorList ComputeGraph::operator()(TensorList& inputs){
         return apply(inputs);
@@ -50,7 +118,7 @@ namespace icdl{
     }
 
     TensorList SeqDyGraph::apply(TensorList& inputs) {
-        auto& x = inputs;
+        auto x = inputs;
         for(auto node : _compute_nodes.items()){
             x = node.value().apply(x);
         }
