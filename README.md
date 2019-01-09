@@ -65,9 +65,9 @@ int main(){
 # TODO
 ICDL is in developing and how it will be like in the future is not quite clear now.
 Here are something in the to-do list now:
-* Provide model load/save APIs that reads/write model params via protobuf.
+* ~~Provide model load/save APIs that reads/write model params via protobuf.~~
 
-    * So that we dont need to always play with random/uninitialized params...
+    * ~~So that we dont need to always play with random/uninitialized params...~~
 * Provide more operators like Conv2d, Activation, etc. The first goal is to provide all operators in Yolo. 
 
     * NN Ops: Conv2d, ReLU, BatchNorm, Yolo, Concat, ResAdd
