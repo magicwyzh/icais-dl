@@ -15,6 +15,8 @@ Things can be customized for users according to their hardware design:
    * Memory layout: Dense vs. Sparse
    * Location: CPUMemory vs. AcceleratorMemory
    * AcceleratorMemory's Allocator/DeAllocator (like GPU Memory)
+* Operator:
+   * Operator: Add new operator, e.g., describe conv-BN-Relu as one operator if the accelerator's computational primitive is something like this.
    * OperatorImpls: Depends on how the accelerator is designed
 
 Build a model and use it:
@@ -23,9 +25,9 @@ Build a model and use it:
 class ResidualBlock: public icdl::DynamicComputeGraph{
 public: 
     ResidualBlock(){
-        // makeLinearPytorchImpl is a factory func provides a backend engine for a specific operator. 
+        // makeConv2dPytorchImpl is a factory func provides a backend engine for a specific operator. 
         //The user should provide their own implementations. Here we just call it a 'PytorchImpl' which calls pytorch's APIs.
-        add_compute_node("conv1", icdl::Conv2dOpMake(3, 10, 3, icdl::op::makeLinearPytorchImpl()));
+        add_compute_node("conv1", icdl::Conv2dOpMake(3, 10, 3, icdl::op::makeConv2dPytorchImpl()));
         add_compute_node("ReLU1", icdl::ReLUOpMake(icdl::op::makeReluPytorchImpl()));
         add_compute_node("ResAdd", icdl::EltAddOpMake(icdl::op::makeEltAddPytorchImpl()));
     }
@@ -41,8 +43,8 @@ public:
 class Model: public icdl::SeqDyComputeGraph{
     Model(){
         add_compute_node({
-            {"Conv1", icdl::Conv2dOpMake(3, 10, 3, icdl::op::makeLinearPytorchImpl())},
-            {"Conv2", icdl::Conv2dOpMake(10, 3, 3, icdl::op::makeLinearPytorchImpl())}
+            {"Conv1", icdl::Conv2dOpMake(3, 10, 3, icdl::op::makeConv2dPytorchImpl())},
+            {"Conv2", icdl::Conv2dOpMake(10, 3, 3, icdl::op::makeConv2dPytorchImpl())}
         });
         add_compute_node("ResBlock1", std::make_shared<ResidualBlock>());
     }
@@ -65,19 +67,30 @@ int main(){
 # TODO
 ICDL is in developing and how it will be like in the future is not quite clear now.
 Here are something in the to-do list now:
-* ~~Provide model load/save APIs that reads/write model params via protobuf.~~
+* Provide model load/save APIs that reads/write model params via protobuf.
 
     * ~~So that we dont need to always play with random/uninitialized params...~~
+    * Python script that can transform dict (as the GraphParams Protobuf to ICDL-recognizable protobuf file.)
 * Provide more operators like Conv2d, Activation, etc. The first goal is to provide all operators in Yolo. 
 
     * NN Ops: Conv2d, ReLU, BatchNorm, Yolo, Concat, ResAdd
-    * Image PreProcessing Ops (and implementations): Image Loads, normalization.
-* Provide some APIs that can be used for hardware simulator backend to record a model's performance.
-
-    * Compute complexities for each operator.
-    * Number of operations count.
-    * Time/Cycle Logging APIs.
-    * ...Others? Not clear now.
+    * Utils Op: FixpointTensor Data Conversion, including fix-to-float and vice versa, and fixpoint with different decimal point.
+    * Image PreProcessing Ops (and implementations): normalization, etc.
+* Dynamic backend APIs:
+    * Let the model can change their OperatorImpl, not fixed when model definition. E.g., the first conv of Res50 with 7x7 kernel size is run on cpu while others conv with 1x1&3x3 run on DLA. Backend of each Op should be able to change. The model definition should not show too much info about OperatorImpl. Currently the way is not good.
 * Scripts that transforms models in framework like Darknet/Pytorch to ICDL model.
-
     * Not clear now.
+* Profiling APIs
+    * Compute Complexities APIs for each operator
+    * Time/Cycle Logging APIs (can be used by hardware simulator backend)
+    * Not quite clear now, but expect that after a graph has run for some times, it can then generates some performance profiling info/forms/timeline, etc. 
+    ```cpp
+        ResNet50 model();
+        model.profile(true);
+        output = model(image);
+        model.profiling_results("res50.icdl_prof");
+    ```
+* Some pre-defined models (~low priority~)
+    * ResNet-18
+    * MobileNet
+    * Darknet-53(YoloV3)
