@@ -26,7 +26,7 @@ namespace icdl{
         void reset_impl(OpImplPtr impl_ptr){
             _impl = impl_ptr;
         }
-        Operator(const OpImplPtr& impl): _impl(impl){}
+        Operator(const OpImplPtr& impl = makeEmptyOperatorImpl()): _impl(impl){}
         virtual std::vector<TensorSize> output_size(const std::vector<TensorSize>& input_sizes) const = 0;
         virtual TensorSize output_size(const TensorSize& input_size) const = 0;
         virtual ~Operator() = default;

@@ -78,6 +78,7 @@ Here are something in the to-do list now:
     * Image PreProcessing Ops (and implementations): normalization, etc.
 * Dynamic backend APIs:
     * Let the model can change their OperatorImpl, not fixed when model definition. E.g., the first conv of Res50 with 7x7 kernel size is run on cpu while others conv with 1x1&3x3 run on DLA. Backend of each Op should be able to change. The model definition should not show too much info about OperatorImpl. Currently the way is not good.
+    * ~~By default the operator constructor should use emptyOperatorImpl.~~
 * Scripts that transforms models in framework like Darknet/Pytorch to ICDL model.
     * Not clear now.
 * Profiling APIs
