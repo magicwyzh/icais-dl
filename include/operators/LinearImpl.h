@@ -17,7 +17,8 @@ namespace icdl{ namespace op{
         }
     };
     // factory function
-    std::unique_ptr<OperatorImpl> makeLinearPytorchImpl();
+    //std::unique_ptr<OperatorImpl> makeLinearPytorchImpl();
+    OP_IMPL_FACTORY_REGISTER(LinearPytorchImpl);
 #endif
 }}
 #endif

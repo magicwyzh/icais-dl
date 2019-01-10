@@ -67,7 +67,7 @@ namespace icdl{ namespace op{
 
     
 }
-    OP_SHARED_PTR_MAKE(Linear); //generate a function called "icdl::LinearOpMake->std::shared_ptr<Operator>"
+    OP_FACTORY_REGISTER(Linear); //generate a function called "icdl::LinearOpMake->std::shared_ptr<Operator>"
 }//namespace icdl::op
 
 

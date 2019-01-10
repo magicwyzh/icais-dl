@@ -3,7 +3,16 @@
 #include "Tensor.h"
 #include <memory>
 #include <exception>
+
 namespace icdl{
+#define OP_IMPL_FACTORY_REGISTER(IMPL_NAME) \
+    template<typename... Args> \
+    std::unique_ptr<OperatorImpl> make##IMPL_NAME(Args&&... args){\
+        std::unique_ptr<OperatorImpl> pInv;\
+        pInv.reset(new IMPL_NAME(std::forward<Args>(args)...));\
+        return pInv;\
+    }
+
     class Operator;
     class OperatorImpl {
     private:
@@ -18,18 +27,12 @@ namespace icdl{
     };
     
     class EmptyOperatorImpl: public OperatorImpl{
-        virtual TensorList apply(Operator* op, TensorList& inputs) override{
-            std::string s = op->type_name() + " Operator is using empty Impl!";
-            throw std::runtime_error(s);
-        }
+        virtual TensorList apply(Operator* op, TensorList& inputs) override;
         virtual std::string name() const{
             return "EmptyOperatorImpl";
         }
     };
-    std::unique_ptr<OperatorImpl> makeEmptyOperatorImpl(){
-        std::unique_ptr<OperatorImpl> pInv;
-        pInv.reset(new EmptyOperatorImpl);
-        return pInv;
-    }
+
+    OP_IMPL_FACTORY_REGISTER(EmptyOperatorImpl);
 }//namespace icdl
 #endif

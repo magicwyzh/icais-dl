@@ -36,10 +36,6 @@ namespace icdl{namespace  op{
 
         return TensorList({icdl_output});
     }
-    std::unique_ptr<OperatorImpl> makeLinearPytorchImpl(){
-        std::unique_ptr<OperatorImpl> pInv;
-        pInv.reset(new LinearPytorchImpl);
-        return pInv;
-    }
+
 #endif
 }} //namespace icdl::op
