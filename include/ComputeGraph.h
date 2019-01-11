@@ -7,6 +7,7 @@
 #include "Operator.h"
 #include <vector>
 #include "protos/ComputeGraph.pb.h"
+
 namespace icdl{
     class ComputeGraph{
     public:
@@ -21,6 +22,8 @@ namespace icdl{
         virtual void add_compute_node(const std::string& name, const ComputeNode& node);
         virtual void add_compute_node(const std::string& name, const std::shared_ptr<Operator>& op_ptr);
         virtual void add_compute_node(const std::string& name, const std::shared_ptr<DynamicComputeGraph>& sub_graph_ptr);
+        bool profile(bool is_profile);
+        std::vector<std::pair<std::string,ProfileResults>> get_profiling_results() const;
         // to get ptrs to all operators inside a graph. use this to do something like serilization...
         // each operator should have its name... and the name should shows the nesting relationships in the _compute_nodes
         // name should be like: res1->block1->conv1
@@ -29,7 +32,7 @@ namespace icdl{
         void deserialize(const std::string in_file_name);
         std::shared_ptr<icdl_proto::GraphParams> serialize() const;
         void serialize(const std::string& out_file_name) const;
-        std::string demangle_param_name(const std::string op_name, const std::string& param_name) const;
+        std::string demangle_param_name(const std::string& op_name, const std::string& param_name) const;
         // get the _compute_nodes directly.
         OrderedDict<std::string, ComputeNode>& get_children_nodes();
         ComputeNode& get_child_node(const std::string& node_name);

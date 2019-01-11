@@ -4,7 +4,27 @@
 #include "protos/ComputeGraph.pb.h"
 namespace icdl{
 
-    std::string DynamicComputeGraph::demangle_param_name(const std::string op_name, 
+    bool DynamicComputeGraph::profile(bool is_profile){
+        auto named_ops = get_ops_recursively();
+        for(auto named_op : named_ops){
+            auto op = named_op.second;
+            op->profile(is_profile);
+        }
+        return is_profile;
+    }
+
+    std::vector<std::pair<std::string,ProfileResults>> DynamicComputeGraph::get_profiling_results() const{
+        auto named_ops = get_ops_recursively();
+        std::vector<std::pair<std::string,ProfileResults>> prof_results;
+        for(auto named_op: named_ops){
+            prof_results.emplace_back(
+                std::make_pair(named_op.first, named_op.second->get_profile_results())
+            );
+        }
+        return prof_results;
+    }
+
+    std::string DynamicComputeGraph::demangle_param_name(const std::string& op_name, 
         const std::string& param_name) const{
         return op_name + "." + param_name;
     }

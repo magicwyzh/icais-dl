@@ -4,7 +4,6 @@
 #include "Operator.h"
 #include "arg_utils.h"
 #include "tensor_utils.h"
-#include "op_shared_ptr_gen.h"
 /*
 * fc1 = std::make_shared<icdl::op::Linear>(3, 10, makeLinearPytorchImpl());
 */

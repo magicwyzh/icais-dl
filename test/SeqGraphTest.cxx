@@ -205,6 +205,23 @@ TEST_F(SeqGraphTest, GetNodeTest){
     EXPECT_EQ(nodes["fc4"].get_node_type(), icdl::ComputeGraphNodeType::OPERATOR);
 }
 
+TEST_F(SeqGraphTest, ProfilerTest){
+    icdl_model.profile(false);
+    auto profiling_results1 = icdl_model.get_profiling_results();
+    for(auto& prof_result1 : profiling_results1){
+        auto& result1 = prof_result1.second;
+        EXPECT_EQ(result1.get_time_duration_us().count(), 0);
+    }
+
+    icdl_model.profile(true);
+    auto icdl_output = icdl_model(icdl_input);
+    auto profiling_results = icdl_model.get_profiling_results();
+    for(auto& prof_result : profiling_results){
+        auto& result = prof_result.second;
+        EXPECT_GT(result.get_time_duration_us().count(), 0);
+    }
+}
+
 TEST_F(SeqGraphTest, GetOperatorsTest){
     auto expect_names = std::vector<std::string>{
         "fc1", 
