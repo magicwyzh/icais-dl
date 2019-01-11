@@ -36,4 +36,12 @@ namespace icdl{
     ProfileResults Operator::get_profile_results(){
         return _prof_results;
     }
+
+    std::vector<TensorSize> Operator::output_size(const std::vector<TensorSize>& input_sizes) const{
+        std::vector<TensorSize> sizes;
+        for(auto& i_size : input_sizes){
+            sizes.emplace_back(output_size(i_size));
+        }
+        return sizes;
+    }
 }// namespace icdl

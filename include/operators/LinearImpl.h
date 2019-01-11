@@ -20,5 +20,5 @@ namespace icdl{ namespace op{
     //std::unique_ptr<OperatorImpl> makeLinearPytorchImpl();
     OP_IMPL_FACTORY_REGISTER(LinearPytorchImpl);
 #endif
-}}
+}}//namespace icdl::op
 #endif

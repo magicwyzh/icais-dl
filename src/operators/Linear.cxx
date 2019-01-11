@@ -6,11 +6,10 @@ namespace icdl{namespace op{
                    const TensorDataDescriptor& param_descriptor,
                    const TensorDataLocation& param_location,
                    const TensorMemLayout& param_mem_layout)
-        : Linear(LinearOptions(in, out,  param_descriptor), linear_impl){}
+        : Linear(LinearOptions(in, out).param_descriptor(param_descriptor), linear_impl,  param_location, param_mem_layout){}
 
     Linear::Linear(const LinearOptions& options, 
                     OpImplPtr linear_impl, 
-                    const TensorDataDescriptor& param_descriptor,
                     const TensorDataLocation& param_location,
                     const TensorMemLayout& param_mem_layout)
         : Operator(linear_impl),  _options(options) {

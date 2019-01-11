@@ -1,7 +1,7 @@
 #include "operators/LinearImpl.h"
 #include "operators/Linear.h"
-#ifdef PYTORCH_BACKEND_ENABLE
 #include "tensor_utils.h"
+#ifdef PYTORCH_BACKEND_ENABLE
 #include "torch/torch.h"
 #include "operators/pytorch_backend_utils.h"
 #endif
@@ -26,7 +26,7 @@ namespace icdl{namespace  op{
         auto input_torch_tensor = icdl_tensor_to_pytorch_tensor(inputs[0]);
         // core computation.
         auto pytorch_output = torch::linear(input_torch_tensor, weight_torch_tensor, bias_torch_tensor);
-        // Allocate ICDL Tensor Memory for coping from PyTorch
+        // Allocate ICDL Tensor Memory for copying from PyTorch
         auto icdl_output = icdl::Tensor(linear_op_ptr->output_size(inputs[0].size()),
                                         Float32Descriptor());
         assert(TensorSize_eq_at_IntList(icdl_output.size(), pytorch_output.sizes()));

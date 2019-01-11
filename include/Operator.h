@@ -31,6 +31,8 @@ namespace icdl{
         bool profile(bool is_profile);
         std::vector<std::pair<std::string, Tensor*>> get_saved_tensors();
         ProfileResults get_profile_results();
+        virtual TensorSize output_size(const TensorSize& input_size) const = 0;
+        virtual std::vector<TensorSize> output_size(const std::vector<TensorSize>& input_sizes) const;
     };
 
 #define OP_FACTORY_REGISTER(OPNAME) \
