@@ -16,8 +16,25 @@
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
 
-extern PROTOBUF_INTERNAL_EXPORT_Tensor_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_TensorStorage_Tensor_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_Tensor_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_FixpointRepresent_Tensor_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_Tensor_2eproto ::google::protobuf::internal::SCCInfo<0> scc_info_FloatpointRepresent_Tensor_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_Tensor_2eproto ::google::protobuf::internal::SCCInfo<1> scc_info_TensorStorage_Tensor_2eproto;
+extern PROTOBUF_INTERNAL_EXPORT_Tensor_2eproto ::google::protobuf::internal::SCCInfo<2> scc_info_TensorDataDescriptor_Tensor_2eproto;
 namespace icdl_proto {
+class FixpointRepresentDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<FixpointRepresent> _instance;
+} _FixpointRepresent_default_instance_;
+class FloatpointRepresentDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<FloatpointRepresent> _instance;
+} _FloatpointRepresent_default_instance_;
+class TensorDataDescriptorDefaultTypeInternal {
+ public:
+  ::google::protobuf::internal::ExplicitlyConstructed<TensorDataDescriptor> _instance;
+  const ::icdl_proto::FixpointRepresent* fix_point_;
+  const ::icdl_proto::FloatpointRepresent* flo_point_;
+} _TensorDataDescriptor_default_instance_;
 class TensorStorageDefaultTypeInternal {
  public:
   ::google::protobuf::internal::ExplicitlyConstructed<TensorStorage> _instance;
@@ -27,6 +44,50 @@ class TensorDefaultTypeInternal {
   ::google::protobuf::internal::ExplicitlyConstructed<Tensor> _instance;
 } _Tensor_default_instance_;
 }  // namespace icdl_proto
+static void InitDefaultsFixpointRepresent_Tensor_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::icdl_proto::_FixpointRepresent_default_instance_;
+    new (ptr) ::icdl_proto::FixpointRepresent();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::icdl_proto::FixpointRepresent::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_FixpointRepresent_Tensor_2eproto =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsFixpointRepresent_Tensor_2eproto}, {}};
+
+static void InitDefaultsFloatpointRepresent_Tensor_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::icdl_proto::_FloatpointRepresent_default_instance_;
+    new (ptr) ::icdl_proto::FloatpointRepresent();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::icdl_proto::FloatpointRepresent::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<0> scc_info_FloatpointRepresent_Tensor_2eproto =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsFloatpointRepresent_Tensor_2eproto}, {}};
+
+static void InitDefaultsTensorDataDescriptor_Tensor_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::icdl_proto::_TensorDataDescriptor_default_instance_;
+    new (ptr) ::icdl_proto::TensorDataDescriptor();
+    ::google::protobuf::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::icdl_proto::TensorDataDescriptor::InitAsDefaultInstance();
+}
+
+::google::protobuf::internal::SCCInfo<2> scc_info_TensorDataDescriptor_Tensor_2eproto =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 2, InitDefaultsTensorDataDescriptor_Tensor_2eproto}, {
+      &scc_info_FixpointRepresent_Tensor_2eproto.base,
+      &scc_info_FloatpointRepresent_Tensor_2eproto.base,}};
+
 static void InitDefaultsTensorStorage_Tensor_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -38,8 +99,9 @@ static void InitDefaultsTensorStorage_Tensor_2eproto() {
   ::icdl_proto::TensorStorage::InitAsDefaultInstance();
 }
 
-::google::protobuf::internal::SCCInfo<0> scc_info_TensorStorage_Tensor_2eproto =
-    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 0, InitDefaultsTensorStorage_Tensor_2eproto}, {}};
+::google::protobuf::internal::SCCInfo<1> scc_info_TensorStorage_Tensor_2eproto =
+    {{ATOMIC_VAR_INIT(::google::protobuf::internal::SCCInfoBase::kUninitialized), 1, InitDefaultsTensorStorage_Tensor_2eproto}, {
+      &scc_info_TensorDataDescriptor_Tensor_2eproto.base,}};
 
 static void InitDefaultsTensor_Tensor_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -57,37 +119,72 @@ static void InitDefaultsTensor_Tensor_2eproto() {
       &scc_info_TensorStorage_Tensor_2eproto.base,}};
 
 void InitDefaults_Tensor_2eproto() {
+  ::google::protobuf::internal::InitSCC(&scc_info_FixpointRepresent_Tensor_2eproto.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_FloatpointRepresent_Tensor_2eproto.base);
+  ::google::protobuf::internal::InitSCC(&scc_info_TensorDataDescriptor_Tensor_2eproto.base);
   ::google::protobuf::internal::InitSCC(&scc_info_TensorStorage_Tensor_2eproto.base);
   ::google::protobuf::internal::InitSCC(&scc_info_Tensor_Tensor_2eproto.base);
 }
 
-::google::protobuf::Metadata file_level_metadata_Tensor_2eproto[2];
+::google::protobuf::Metadata file_level_metadata_Tensor_2eproto[5];
 const ::google::protobuf::EnumDescriptor* file_level_enum_descriptors_Tensor_2eproto[2];
 constexpr ::google::protobuf::ServiceDescriptor const** file_level_service_descriptors_Tensor_2eproto = nullptr;
 
 const ::google::protobuf::uint32 TableStruct_Tensor_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::FixpointRepresent, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::FixpointRepresent, total_bits_),
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::FixpointRepresent, is_signed_),
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::FixpointRepresent, frac_point_location_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::FloatpointRepresent, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::FloatpointRepresent, total_bits_),
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::FloatpointRepresent, is_signed_),
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::FloatpointRepresent, exp_bits_),
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::FloatpointRepresent, mantissa_bits_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::TensorDataDescriptor, _internal_metadata_),
+  ~0u,  // no _extensions_
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::TensorDataDescriptor, _oneof_case_[0]),
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::TensorDataDescriptor, dtype_),
+  offsetof(::icdl_proto::TensorDataDescriptorDefaultTypeInternal, fix_point_),
+  offsetof(::icdl_proto::TensorDataDescriptorDefaultTypeInternal, flo_point_),
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::TensorDataDescriptor, data_represent_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::icdl_proto::TensorStorage, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::icdl_proto::TensorStorage, data_),
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::TensorStorage, data_descriptor_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::icdl_proto::Tensor, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::icdl_proto::Tensor, dtype_),
   PROTOBUF_FIELD_OFFSET(::icdl_proto::Tensor, storage_),
   PROTOBUF_FIELD_OFFSET(::icdl_proto::Tensor, tensor_size_),
   PROTOBUF_FIELD_OFFSET(::icdl_proto::Tensor, mem_layout_),
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, sizeof(::icdl_proto::TensorStorage)},
-  { 6, -1, sizeof(::icdl_proto::Tensor)},
+  { 0, -1, sizeof(::icdl_proto::FixpointRepresent)},
+  { 8, -1, sizeof(::icdl_proto::FloatpointRepresent)},
+  { 17, -1, sizeof(::icdl_proto::TensorDataDescriptor)},
+  { 26, -1, sizeof(::icdl_proto::TensorStorage)},
+  { 33, -1, sizeof(::icdl_proto::Tensor)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
+  reinterpret_cast<const ::google::protobuf::Message*>(&::icdl_proto::_FixpointRepresent_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::icdl_proto::_FloatpointRepresent_default_instance_),
+  reinterpret_cast<const ::google::protobuf::Message*>(&::icdl_proto::_TensorDataDescriptor_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::icdl_proto::_TensorStorage_default_instance_),
   reinterpret_cast<const ::google::protobuf::Message*>(&::icdl_proto::_Tensor_default_instance_),
 };
@@ -95,26 +192,36 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
 ::google::protobuf::internal::AssignDescriptorsTable assign_descriptors_table_Tensor_2eproto = {
   {}, AddDescriptors_Tensor_2eproto, "Tensor.proto", schemas,
   file_default_instances, TableStruct_Tensor_2eproto::offsets,
-  file_level_metadata_Tensor_2eproto, 2, file_level_enum_descriptors_Tensor_2eproto, file_level_service_descriptors_Tensor_2eproto,
+  file_level_metadata_Tensor_2eproto, 5, file_level_enum_descriptors_Tensor_2eproto, file_level_service_descriptors_Tensor_2eproto,
 };
 
 const char descriptor_table_protodef_Tensor_2eproto[] =
-  "\n\014Tensor.proto\022\nicdl_proto\"\035\n\rTensorStor"
-  "age\022\014\n\004data\030\001 \001(\014\"\316\002\n\006Tensor\0220\n\005dtype\030\001 "
-  "\001(\0162!.icdl_proto.Tensor.TensorDataType\022*"
-  "\n\007storage\030\002 \001(\0132\031.icdl_proto.TensorStora"
-  "ge\022\023\n\013tensor_size\030\003 \003(\004\0226\n\nmem_layout\030\004 "
-  "\001(\0162\".icdl_proto.Tensor.TensorMemLayout\""
-  "M\n\016TensorDataType\022\014\n\010FLOAT_32\020\000\022\014\n\010FLOAT"
-  "_16\020\001\022\014\n\010FIXPOINT\020\002\022\021\n\rINVALID_DTYPE\020\003\"J"
-  "\n\017TensorMemLayout\022\020\n\014DENSE_LAYOUT\020\000\022\021\n\rS"
-  "PARSE_LAYOUT\020\001\022\022\n\016INVALID_LAYOUT\020\002b\006prot"
-  "o3"
+  "\n\014Tensor.proto\022\nicdl_proto\"W\n\021FixpointRe"
+  "present\022\022\n\ntotal_bits\030\001 \001(\r\022\021\n\tis_signed"
+  "\030\002 \001(\010\022\033\n\023frac_point_location\030\003 \001(\005\"e\n\023F"
+  "loatpointRepresent\022\022\n\ntotal_bits\030\001 \001(\r\022\021"
+  "\n\tis_signed\030\002 \001(\010\022\020\n\010exp_bits\030\003 \001(\r\022\025\n\rm"
+  "antissa_bits\030\004 \001(\r\"\241\002\n\024TensorDataDescrip"
+  "tor\022>\n\005dtype\030\001 \001(\0162/.icdl_proto.TensorDa"
+  "taDescriptor.TensorDataType\0222\n\tfix_point"
+  "\030\002 \001(\0132\035.icdl_proto.FixpointRepresentH\000\022"
+  "4\n\tflo_point\030\003 \001(\0132\037.icdl_proto.Floatpoi"
+  "ntRepresentH\000\"M\n\016TensorDataType\022\014\n\010FLOAT"
+  "_32\020\000\022\014\n\010FLOAT_16\020\001\022\014\n\010FIXPOINT\020\002\022\021\n\rINV"
+  "ALID_DTYPE\020\003B\020\n\016data_represent\"X\n\rTensor"
+  "Storage\022\014\n\004data\030\001 \001(\014\0229\n\017data_descriptor"
+  "\030\002 \001(\0132 .icdl_proto.TensorDataDescriptor"
+  "\"\315\001\n\006Tensor\022*\n\007storage\030\002 \001(\0132\031.icdl_prot"
+  "o.TensorStorage\022\023\n\013tensor_size\030\003 \003(\004\0226\n\n"
+  "mem_layout\030\004 \001(\0162\".icdl_proto.Tensor.Ten"
+  "sorMemLayout\"J\n\017TensorMemLayout\022\020\n\014DENSE"
+  "_LAYOUT\020\000\022\021\n\rSPARSE_LAYOUT\020\001\022\022\n\016INVALID_"
+  "LAYOUT\020\002b\006proto3"
   ;
 ::google::protobuf::internal::DescriptorTable descriptor_table_Tensor_2eproto = {
   false, InitDefaults_Tensor_2eproto, 
   descriptor_table_protodef_Tensor_2eproto,
-  "Tensor.proto", &assign_descriptors_table_Tensor_2eproto, 402,
+  "Tensor.proto", &assign_descriptors_table_Tensor_2eproto, 816,
 };
 
 void AddDescriptors_Tensor_2eproto() {
@@ -127,11 +234,11 @@ void AddDescriptors_Tensor_2eproto() {
 // Force running AddDescriptors() at dynamic initialization time.
 static bool dynamic_init_dummy_Tensor_2eproto = []() { AddDescriptors_Tensor_2eproto(); return true; }();
 namespace icdl_proto {
-const ::google::protobuf::EnumDescriptor* Tensor_TensorDataType_descriptor() {
+const ::google::protobuf::EnumDescriptor* TensorDataDescriptor_TensorDataType_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&assign_descriptors_table_Tensor_2eproto);
   return file_level_enum_descriptors_Tensor_2eproto[0];
 }
-bool Tensor_TensorDataType_IsValid(int value) {
+bool TensorDataDescriptor_TensorDataType_IsValid(int value) {
   switch (value) {
     case 0:
     case 1:
@@ -144,13 +251,13 @@ bool Tensor_TensorDataType_IsValid(int value) {
 }
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const Tensor_TensorDataType Tensor::FLOAT_32;
-const Tensor_TensorDataType Tensor::FLOAT_16;
-const Tensor_TensorDataType Tensor::FIXPOINT;
-const Tensor_TensorDataType Tensor::INVALID_DTYPE;
-const Tensor_TensorDataType Tensor::TensorDataType_MIN;
-const Tensor_TensorDataType Tensor::TensorDataType_MAX;
-const int Tensor::TensorDataType_ARRAYSIZE;
+const TensorDataDescriptor_TensorDataType TensorDataDescriptor::FLOAT_32;
+const TensorDataDescriptor_TensorDataType TensorDataDescriptor::FLOAT_16;
+const TensorDataDescriptor_TensorDataType TensorDataDescriptor::FIXPOINT;
+const TensorDataDescriptor_TensorDataType TensorDataDescriptor::INVALID_DTYPE;
+const TensorDataDescriptor_TensorDataType TensorDataDescriptor::TensorDataType_MIN;
+const TensorDataDescriptor_TensorDataType TensorDataDescriptor::TensorDataType_MAX;
+const int TensorDataDescriptor::TensorDataType_ARRAYSIZE;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 const ::google::protobuf::EnumDescriptor* Tensor_TensorMemLayout_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&assign_descriptors_table_Tensor_2eproto);
@@ -178,14 +285,1245 @@ const int Tensor::TensorMemLayout_ARRAYSIZE;
 
 // ===================================================================
 
-void TensorStorage::InitAsDefaultInstance() {
+void FixpointRepresent::InitAsDefaultInstance() {
 }
-class TensorStorage::HasBitSetters {
+class FixpointRepresent::HasBitSetters {
  public:
 };
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int FixpointRepresent::kTotalBitsFieldNumber;
+const int FixpointRepresent::kIsSignedFieldNumber;
+const int FixpointRepresent::kFracPointLocationFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+FixpointRepresent::FixpointRepresent()
+  : ::google::protobuf::Message(), _internal_metadata_(nullptr) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:icdl_proto.FixpointRepresent)
+}
+FixpointRepresent::FixpointRepresent(const FixpointRepresent& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(nullptr) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::memcpy(&total_bits_, &from.total_bits_,
+    static_cast<size_t>(reinterpret_cast<char*>(&frac_point_location_) -
+    reinterpret_cast<char*>(&total_bits_)) + sizeof(frac_point_location_));
+  // @@protoc_insertion_point(copy_constructor:icdl_proto.FixpointRepresent)
+}
+
+void FixpointRepresent::SharedCtor() {
+  ::memset(&total_bits_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&frac_point_location_) -
+      reinterpret_cast<char*>(&total_bits_)) + sizeof(frac_point_location_));
+}
+
+FixpointRepresent::~FixpointRepresent() {
+  // @@protoc_insertion_point(destructor:icdl_proto.FixpointRepresent)
+  SharedDtor();
+}
+
+void FixpointRepresent::SharedDtor() {
+}
+
+void FixpointRepresent::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const FixpointRepresent& FixpointRepresent::default_instance() {
+  ::google::protobuf::internal::InitSCC(&::scc_info_FixpointRepresent_Tensor_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void FixpointRepresent::Clear() {
+// @@protoc_insertion_point(message_clear_start:icdl_proto.FixpointRepresent)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&total_bits_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&frac_point_location_) -
+      reinterpret_cast<char*>(&total_bits_)) + sizeof(frac_point_location_));
+  _internal_metadata_.Clear();
+}
+
+#if GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+const char* FixpointRepresent::_InternalParse(const char* begin, const char* end, void* object,
+                  ::google::protobuf::internal::ParseContext* ctx) {
+  auto msg = static_cast<FixpointRepresent*>(object);
+  ::google::protobuf::uint32 size; (void)size;
+  int depth; (void)depth;
+  ::google::protobuf::uint32 tag;
+  ::google::protobuf::internal::ParseFunc parser_till_end; (void)parser_till_end;
+  auto ptr = begin;
+  while (ptr < end) {
+    ptr = ::google::protobuf::io::Parse32(ptr, &tag);
+    GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+    switch (tag >> 3) {
+      // uint32 total_bits = 1;
+      case 1: {
+        if (static_cast<::google::protobuf::uint8>(tag) != 8) goto handle_unusual;
+        ::google::protobuf::uint64 val;
+        ptr = ::google::protobuf::io::Parse64(ptr, &val);
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+        ::google::protobuf::uint32 value = val;
+        msg->set_total_bits(value);
+        break;
+      }
+      // bool is_signed = 2;
+      case 2: {
+        if (static_cast<::google::protobuf::uint8>(tag) != 16) goto handle_unusual;
+        ::google::protobuf::uint64 val;
+        ptr = ::google::protobuf::io::Parse64(ptr, &val);
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+        bool value = val;
+        msg->set_is_signed(value);
+        break;
+      }
+      // int32 frac_point_location = 3;
+      case 3: {
+        if (static_cast<::google::protobuf::uint8>(tag) != 24) goto handle_unusual;
+        ::google::protobuf::uint64 val;
+        ptr = ::google::protobuf::io::Parse64(ptr, &val);
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+        ::google::protobuf::int32 value = val;
+        msg->set_frac_point_location(value);
+        break;
+      }
+      default: {
+      handle_unusual:
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->EndGroup(tag);
+          return ptr;
+        }
+        auto res = UnknownFieldParse(tag, {_InternalParse, msg},
+          ptr, end, msg->_internal_metadata_.mutable_unknown_fields(), ctx);
+        ptr = res.first;
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr != nullptr);
+        if (res.second) return ptr;
+      }
+    }  // switch
+  }  // while
+  return ptr;
+}
+#else  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+bool FixpointRepresent::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!PROTOBUF_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:icdl_proto.FixpointRepresent)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // uint32 total_bits = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) == (8 & 0xFF)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &total_bits_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // bool is_signed = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) == (16 & 0xFF)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &is_signed_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // int32 frac_point_location = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) == (24 & 0xFF)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &frac_point_location_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:icdl_proto.FixpointRepresent)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:icdl_proto.FixpointRepresent)
+  return false;
+#undef DO_
+}
+#endif  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+
+void FixpointRepresent::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:icdl_proto.FixpointRepresent)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // uint32 total_bits = 1;
+  if (this->total_bits() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->total_bits(), output);
+  }
+
+  // bool is_signed = 2;
+  if (this->is_signed() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->is_signed(), output);
+  }
+
+  // int32 frac_point_location = 3;
+  if (this->frac_point_location() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->frac_point_location(), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:icdl_proto.FixpointRepresent)
+}
+
+::google::protobuf::uint8* FixpointRepresent::InternalSerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:icdl_proto.FixpointRepresent)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // uint32 total_bits = 1;
+  if (this->total_bits() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->total_bits(), target);
+  }
+
+  // bool is_signed = 2;
+  if (this->is_signed() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->is_signed(), target);
+  }
+
+  // int32 frac_point_location = 3;
+  if (this->frac_point_location() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->frac_point_location(), target);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:icdl_proto.FixpointRepresent)
+  return target;
+}
+
+size_t FixpointRepresent::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:icdl_proto.FixpointRepresent)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // uint32 total_bits = 1;
+  if (this->total_bits() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->total_bits());
+  }
+
+  // bool is_signed = 2;
+  if (this->is_signed() != 0) {
+    total_size += 1 + 1;
+  }
+
+  // int32 frac_point_location = 3;
+  if (this->frac_point_location() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->frac_point_location());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void FixpointRepresent::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:icdl_proto.FixpointRepresent)
+  GOOGLE_DCHECK_NE(&from, this);
+  const FixpointRepresent* source =
+      ::google::protobuf::DynamicCastToGenerated<FixpointRepresent>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:icdl_proto.FixpointRepresent)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:icdl_proto.FixpointRepresent)
+    MergeFrom(*source);
+  }
+}
+
+void FixpointRepresent::MergeFrom(const FixpointRepresent& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:icdl_proto.FixpointRepresent)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.total_bits() != 0) {
+    set_total_bits(from.total_bits());
+  }
+  if (from.is_signed() != 0) {
+    set_is_signed(from.is_signed());
+  }
+  if (from.frac_point_location() != 0) {
+    set_frac_point_location(from.frac_point_location());
+  }
+}
+
+void FixpointRepresent::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:icdl_proto.FixpointRepresent)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void FixpointRepresent::CopyFrom(const FixpointRepresent& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:icdl_proto.FixpointRepresent)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool FixpointRepresent::IsInitialized() const {
+  return true;
+}
+
+void FixpointRepresent::Swap(FixpointRepresent* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void FixpointRepresent::InternalSwap(FixpointRepresent* other) {
+  using std::swap;
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(total_bits_, other->total_bits_);
+  swap(is_signed_, other->is_signed_);
+  swap(frac_point_location_, other->frac_point_location_);
+}
+
+::google::protobuf::Metadata FixpointRepresent::GetMetadata() const {
+  ::google::protobuf::internal::AssignDescriptors(&::assign_descriptors_table_Tensor_2eproto);
+  return ::file_level_metadata_Tensor_2eproto[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void FloatpointRepresent::InitAsDefaultInstance() {
+}
+class FloatpointRepresent::HasBitSetters {
+ public:
+};
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int FloatpointRepresent::kTotalBitsFieldNumber;
+const int FloatpointRepresent::kIsSignedFieldNumber;
+const int FloatpointRepresent::kExpBitsFieldNumber;
+const int FloatpointRepresent::kMantissaBitsFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+FloatpointRepresent::FloatpointRepresent()
+  : ::google::protobuf::Message(), _internal_metadata_(nullptr) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:icdl_proto.FloatpointRepresent)
+}
+FloatpointRepresent::FloatpointRepresent(const FloatpointRepresent& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(nullptr) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::memcpy(&total_bits_, &from.total_bits_,
+    static_cast<size_t>(reinterpret_cast<char*>(&mantissa_bits_) -
+    reinterpret_cast<char*>(&total_bits_)) + sizeof(mantissa_bits_));
+  // @@protoc_insertion_point(copy_constructor:icdl_proto.FloatpointRepresent)
+}
+
+void FloatpointRepresent::SharedCtor() {
+  ::memset(&total_bits_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&mantissa_bits_) -
+      reinterpret_cast<char*>(&total_bits_)) + sizeof(mantissa_bits_));
+}
+
+FloatpointRepresent::~FloatpointRepresent() {
+  // @@protoc_insertion_point(destructor:icdl_proto.FloatpointRepresent)
+  SharedDtor();
+}
+
+void FloatpointRepresent::SharedDtor() {
+}
+
+void FloatpointRepresent::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const FloatpointRepresent& FloatpointRepresent::default_instance() {
+  ::google::protobuf::internal::InitSCC(&::scc_info_FloatpointRepresent_Tensor_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void FloatpointRepresent::Clear() {
+// @@protoc_insertion_point(message_clear_start:icdl_proto.FloatpointRepresent)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&total_bits_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&mantissa_bits_) -
+      reinterpret_cast<char*>(&total_bits_)) + sizeof(mantissa_bits_));
+  _internal_metadata_.Clear();
+}
+
+#if GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+const char* FloatpointRepresent::_InternalParse(const char* begin, const char* end, void* object,
+                  ::google::protobuf::internal::ParseContext* ctx) {
+  auto msg = static_cast<FloatpointRepresent*>(object);
+  ::google::protobuf::uint32 size; (void)size;
+  int depth; (void)depth;
+  ::google::protobuf::uint32 tag;
+  ::google::protobuf::internal::ParseFunc parser_till_end; (void)parser_till_end;
+  auto ptr = begin;
+  while (ptr < end) {
+    ptr = ::google::protobuf::io::Parse32(ptr, &tag);
+    GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+    switch (tag >> 3) {
+      // uint32 total_bits = 1;
+      case 1: {
+        if (static_cast<::google::protobuf::uint8>(tag) != 8) goto handle_unusual;
+        ::google::protobuf::uint64 val;
+        ptr = ::google::protobuf::io::Parse64(ptr, &val);
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+        ::google::protobuf::uint32 value = val;
+        msg->set_total_bits(value);
+        break;
+      }
+      // bool is_signed = 2;
+      case 2: {
+        if (static_cast<::google::protobuf::uint8>(tag) != 16) goto handle_unusual;
+        ::google::protobuf::uint64 val;
+        ptr = ::google::protobuf::io::Parse64(ptr, &val);
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+        bool value = val;
+        msg->set_is_signed(value);
+        break;
+      }
+      // uint32 exp_bits = 3;
+      case 3: {
+        if (static_cast<::google::protobuf::uint8>(tag) != 24) goto handle_unusual;
+        ::google::protobuf::uint64 val;
+        ptr = ::google::protobuf::io::Parse64(ptr, &val);
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+        ::google::protobuf::uint32 value = val;
+        msg->set_exp_bits(value);
+        break;
+      }
+      // uint32 mantissa_bits = 4;
+      case 4: {
+        if (static_cast<::google::protobuf::uint8>(tag) != 32) goto handle_unusual;
+        ::google::protobuf::uint64 val;
+        ptr = ::google::protobuf::io::Parse64(ptr, &val);
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+        ::google::protobuf::uint32 value = val;
+        msg->set_mantissa_bits(value);
+        break;
+      }
+      default: {
+      handle_unusual:
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->EndGroup(tag);
+          return ptr;
+        }
+        auto res = UnknownFieldParse(tag, {_InternalParse, msg},
+          ptr, end, msg->_internal_metadata_.mutable_unknown_fields(), ctx);
+        ptr = res.first;
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr != nullptr);
+        if (res.second) return ptr;
+      }
+    }  // switch
+  }  // while
+  return ptr;
+}
+#else  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+bool FloatpointRepresent::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!PROTOBUF_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:icdl_proto.FloatpointRepresent)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // uint32 total_bits = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) == (8 & 0xFF)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &total_bits_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // bool is_signed = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) == (16 & 0xFF)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &is_signed_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // uint32 exp_bits = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) == (24 & 0xFF)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &exp_bits_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // uint32 mantissa_bits = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) == (32 & 0xFF)) {
+
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &mantissa_bits_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:icdl_proto.FloatpointRepresent)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:icdl_proto.FloatpointRepresent)
+  return false;
+#undef DO_
+}
+#endif  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+
+void FloatpointRepresent::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:icdl_proto.FloatpointRepresent)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // uint32 total_bits = 1;
+  if (this->total_bits() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->total_bits(), output);
+  }
+
+  // bool is_signed = 2;
+  if (this->is_signed() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->is_signed(), output);
+  }
+
+  // uint32 exp_bits = 3;
+  if (this->exp_bits() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(3, this->exp_bits(), output);
+  }
+
+  // uint32 mantissa_bits = 4;
+  if (this->mantissa_bits() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->mantissa_bits(), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:icdl_proto.FloatpointRepresent)
+}
+
+::google::protobuf::uint8* FloatpointRepresent::InternalSerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:icdl_proto.FloatpointRepresent)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // uint32 total_bits = 1;
+  if (this->total_bits() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->total_bits(), target);
+  }
+
+  // bool is_signed = 2;
+  if (this->is_signed() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->is_signed(), target);
+  }
+
+  // uint32 exp_bits = 3;
+  if (this->exp_bits() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(3, this->exp_bits(), target);
+  }
+
+  // uint32 mantissa_bits = 4;
+  if (this->mantissa_bits() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->mantissa_bits(), target);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:icdl_proto.FloatpointRepresent)
+  return target;
+}
+
+size_t FloatpointRepresent::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:icdl_proto.FloatpointRepresent)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // uint32 total_bits = 1;
+  if (this->total_bits() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->total_bits());
+  }
+
+  // bool is_signed = 2;
+  if (this->is_signed() != 0) {
+    total_size += 1 + 1;
+  }
+
+  // uint32 exp_bits = 3;
+  if (this->exp_bits() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->exp_bits());
+  }
+
+  // uint32 mantissa_bits = 4;
+  if (this->mantissa_bits() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->mantissa_bits());
+  }
+
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void FloatpointRepresent::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:icdl_proto.FloatpointRepresent)
+  GOOGLE_DCHECK_NE(&from, this);
+  const FloatpointRepresent* source =
+      ::google::protobuf::DynamicCastToGenerated<FloatpointRepresent>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:icdl_proto.FloatpointRepresent)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:icdl_proto.FloatpointRepresent)
+    MergeFrom(*source);
+  }
+}
+
+void FloatpointRepresent::MergeFrom(const FloatpointRepresent& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:icdl_proto.FloatpointRepresent)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.total_bits() != 0) {
+    set_total_bits(from.total_bits());
+  }
+  if (from.is_signed() != 0) {
+    set_is_signed(from.is_signed());
+  }
+  if (from.exp_bits() != 0) {
+    set_exp_bits(from.exp_bits());
+  }
+  if (from.mantissa_bits() != 0) {
+    set_mantissa_bits(from.mantissa_bits());
+  }
+}
+
+void FloatpointRepresent::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:icdl_proto.FloatpointRepresent)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void FloatpointRepresent::CopyFrom(const FloatpointRepresent& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:icdl_proto.FloatpointRepresent)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool FloatpointRepresent::IsInitialized() const {
+  return true;
+}
+
+void FloatpointRepresent::Swap(FloatpointRepresent* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void FloatpointRepresent::InternalSwap(FloatpointRepresent* other) {
+  using std::swap;
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(total_bits_, other->total_bits_);
+  swap(is_signed_, other->is_signed_);
+  swap(exp_bits_, other->exp_bits_);
+  swap(mantissa_bits_, other->mantissa_bits_);
+}
+
+::google::protobuf::Metadata FloatpointRepresent::GetMetadata() const {
+  ::google::protobuf::internal::AssignDescriptors(&::assign_descriptors_table_Tensor_2eproto);
+  return ::file_level_metadata_Tensor_2eproto[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void TensorDataDescriptor::InitAsDefaultInstance() {
+  ::icdl_proto::_TensorDataDescriptor_default_instance_.fix_point_ = const_cast< ::icdl_proto::FixpointRepresent*>(
+      ::icdl_proto::FixpointRepresent::internal_default_instance());
+  ::icdl_proto::_TensorDataDescriptor_default_instance_.flo_point_ = const_cast< ::icdl_proto::FloatpointRepresent*>(
+      ::icdl_proto::FloatpointRepresent::internal_default_instance());
+}
+class TensorDataDescriptor::HasBitSetters {
+ public:
+  static const ::icdl_proto::FixpointRepresent& fix_point(const TensorDataDescriptor* msg);
+  static const ::icdl_proto::FloatpointRepresent& flo_point(const TensorDataDescriptor* msg);
+};
+
+const ::icdl_proto::FixpointRepresent&
+TensorDataDescriptor::HasBitSetters::fix_point(const TensorDataDescriptor* msg) {
+  return *msg->data_represent_.fix_point_;
+}
+const ::icdl_proto::FloatpointRepresent&
+TensorDataDescriptor::HasBitSetters::flo_point(const TensorDataDescriptor* msg) {
+  return *msg->data_represent_.flo_point_;
+}
+void TensorDataDescriptor::set_allocated_fix_point(::icdl_proto::FixpointRepresent* fix_point) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  clear_data_represent();
+  if (fix_point) {
+    ::google::protobuf::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      fix_point = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, fix_point, submessage_arena);
+    }
+    set_has_fix_point();
+    data_represent_.fix_point_ = fix_point;
+  }
+  // @@protoc_insertion_point(field_set_allocated:icdl_proto.TensorDataDescriptor.fix_point)
+}
+void TensorDataDescriptor::set_allocated_flo_point(::icdl_proto::FloatpointRepresent* flo_point) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  clear_data_represent();
+  if (flo_point) {
+    ::google::protobuf::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      flo_point = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, flo_point, submessage_arena);
+    }
+    set_has_flo_point();
+    data_represent_.flo_point_ = flo_point;
+  }
+  // @@protoc_insertion_point(field_set_allocated:icdl_proto.TensorDataDescriptor.flo_point)
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int TensorDataDescriptor::kDtypeFieldNumber;
+const int TensorDataDescriptor::kFixPointFieldNumber;
+const int TensorDataDescriptor::kFloPointFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+TensorDataDescriptor::TensorDataDescriptor()
+  : ::google::protobuf::Message(), _internal_metadata_(nullptr) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:icdl_proto.TensorDataDescriptor)
+}
+TensorDataDescriptor::TensorDataDescriptor(const TensorDataDescriptor& from)
+  : ::google::protobuf::Message(),
+      _internal_metadata_(nullptr) {
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  dtype_ = from.dtype_;
+  clear_has_data_represent();
+  switch (from.data_represent_case()) {
+    case kFixPoint: {
+      mutable_fix_point()->::icdl_proto::FixpointRepresent::MergeFrom(from.fix_point());
+      break;
+    }
+    case kFloPoint: {
+      mutable_flo_point()->::icdl_proto::FloatpointRepresent::MergeFrom(from.flo_point());
+      break;
+    }
+    case DATA_REPRESENT_NOT_SET: {
+      break;
+    }
+  }
+  // @@protoc_insertion_point(copy_constructor:icdl_proto.TensorDataDescriptor)
+}
+
+void TensorDataDescriptor::SharedCtor() {
+  ::google::protobuf::internal::InitSCC(
+      &scc_info_TensorDataDescriptor_Tensor_2eproto.base);
+  dtype_ = 0;
+  clear_has_data_represent();
+}
+
+TensorDataDescriptor::~TensorDataDescriptor() {
+  // @@protoc_insertion_point(destructor:icdl_proto.TensorDataDescriptor)
+  SharedDtor();
+}
+
+void TensorDataDescriptor::SharedDtor() {
+  if (has_data_represent()) {
+    clear_data_represent();
+  }
+}
+
+void TensorDataDescriptor::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const TensorDataDescriptor& TensorDataDescriptor::default_instance() {
+  ::google::protobuf::internal::InitSCC(&::scc_info_TensorDataDescriptor_Tensor_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void TensorDataDescriptor::clear_data_represent() {
+// @@protoc_insertion_point(one_of_clear_start:icdl_proto.TensorDataDescriptor)
+  switch (data_represent_case()) {
+    case kFixPoint: {
+      delete data_represent_.fix_point_;
+      break;
+    }
+    case kFloPoint: {
+      delete data_represent_.flo_point_;
+      break;
+    }
+    case DATA_REPRESENT_NOT_SET: {
+      break;
+    }
+  }
+  _oneof_case_[0] = DATA_REPRESENT_NOT_SET;
+}
+
+
+void TensorDataDescriptor::Clear() {
+// @@protoc_insertion_point(message_clear_start:icdl_proto.TensorDataDescriptor)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  dtype_ = 0;
+  clear_data_represent();
+  _internal_metadata_.Clear();
+}
+
+#if GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+const char* TensorDataDescriptor::_InternalParse(const char* begin, const char* end, void* object,
+                  ::google::protobuf::internal::ParseContext* ctx) {
+  auto msg = static_cast<TensorDataDescriptor*>(object);
+  ::google::protobuf::uint32 size; (void)size;
+  int depth; (void)depth;
+  ::google::protobuf::uint32 tag;
+  ::google::protobuf::internal::ParseFunc parser_till_end; (void)parser_till_end;
+  auto ptr = begin;
+  while (ptr < end) {
+    ptr = ::google::protobuf::io::Parse32(ptr, &tag);
+    GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+    switch (tag >> 3) {
+      // .icdl_proto.TensorDataDescriptor.TensorDataType dtype = 1;
+      case 1: {
+        if (static_cast<::google::protobuf::uint8>(tag) != 8) goto handle_unusual;
+        ::google::protobuf::uint64 val;
+        ptr = ::google::protobuf::io::Parse64(ptr, &val);
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+        ::icdl_proto::TensorDataDescriptor_TensorDataType value = static_cast<::icdl_proto::TensorDataDescriptor_TensorDataType>(val);
+        msg->set_dtype(value);
+        break;
+      }
+      // .icdl_proto.FixpointRepresent fix_point = 2;
+      case 2: {
+        if (static_cast<::google::protobuf::uint8>(tag) != 18) goto handle_unusual;
+        ptr = ::google::protobuf::io::Parse32(ptr, &size);
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+        parser_till_end = ::icdl_proto::FixpointRepresent::_InternalParse;
+        object = msg->mutable_fix_point();
+        if (size > end - ptr) goto len_delim_till_end;
+        auto newend = ptr + size;
+        bool ok = ctx->ParseExactRange({parser_till_end, object},
+                                       ptr, newend);
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ok);
+        ptr = newend;
+        break;
+      }
+      // .icdl_proto.FloatpointRepresent flo_point = 3;
+      case 3: {
+        if (static_cast<::google::protobuf::uint8>(tag) != 26) goto handle_unusual;
+        ptr = ::google::protobuf::io::Parse32(ptr, &size);
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+        parser_till_end = ::icdl_proto::FloatpointRepresent::_InternalParse;
+        object = msg->mutable_flo_point();
+        if (size > end - ptr) goto len_delim_till_end;
+        auto newend = ptr + size;
+        bool ok = ctx->ParseExactRange({parser_till_end, object},
+                                       ptr, newend);
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ok);
+        ptr = newend;
+        break;
+      }
+      default: {
+      handle_unusual:
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->EndGroup(tag);
+          return ptr;
+        }
+        auto res = UnknownFieldParse(tag, {_InternalParse, msg},
+          ptr, end, msg->_internal_metadata_.mutable_unknown_fields(), ctx);
+        ptr = res.first;
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr != nullptr);
+        if (res.second) return ptr;
+      }
+    }  // switch
+  }  // while
+  return ptr;
+len_delim_till_end:
+  return ctx->StoreAndTailCall(ptr, end, {_InternalParse, msg},
+                               {parser_till_end, object}, size);
+}
+#else  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+bool TensorDataDescriptor::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!PROTOBUF_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:icdl_proto.TensorDataDescriptor)
+  for (;;) {
+    ::std::pair<::google::protobuf::uint32, bool> p = input->ReadTagWithCutoffNoLastTag(127u);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // .icdl_proto.TensorDataDescriptor.TensorDataType dtype = 1;
+      case 1: {
+        if (static_cast< ::google::protobuf::uint8>(tag) == (8 & 0xFF)) {
+          int value = 0;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_dtype(static_cast< ::icdl_proto::TensorDataDescriptor_TensorDataType >(value));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .icdl_proto.FixpointRepresent fix_point = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) == (18 & 0xFF)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_fix_point()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // .icdl_proto.FloatpointRepresent flo_point = 3;
+      case 3: {
+        if (static_cast< ::google::protobuf::uint8>(tag) == (26 & 0xFF)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_flo_point()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, _internal_metadata_.mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:icdl_proto.TensorDataDescriptor)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:icdl_proto.TensorDataDescriptor)
+  return false;
+#undef DO_
+}
+#endif  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+
+void TensorDataDescriptor::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:icdl_proto.TensorDataDescriptor)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .icdl_proto.TensorDataDescriptor.TensorDataType dtype = 1;
+  if (this->dtype() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->dtype(), output);
+  }
+
+  // .icdl_proto.FixpointRepresent fix_point = 2;
+  if (has_fix_point()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, HasBitSetters::fix_point(this), output);
+  }
+
+  // .icdl_proto.FloatpointRepresent flo_point = 3;
+  if (has_flo_point()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3, HasBitSetters::flo_point(this), output);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        _internal_metadata_.unknown_fields(), output);
+  }
+  // @@protoc_insertion_point(serialize_end:icdl_proto.TensorDataDescriptor)
+}
+
+::google::protobuf::uint8* TensorDataDescriptor::InternalSerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:icdl_proto.TensorDataDescriptor)
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .icdl_proto.TensorDataDescriptor.TensorDataType dtype = 1;
+  if (this->dtype() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->dtype(), target);
+  }
+
+  // .icdl_proto.FixpointRepresent fix_point = 2;
+  if (has_fix_point()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        2, HasBitSetters::fix_point(this), target);
+  }
+
+  // .icdl_proto.FloatpointRepresent flo_point = 3;
+  if (has_flo_point()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        3, HasBitSetters::flo_point(this), target);
+  }
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields(), target);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:icdl_proto.TensorDataDescriptor)
+  return target;
+}
+
+size_t TensorDataDescriptor::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:icdl_proto.TensorDataDescriptor)
+  size_t total_size = 0;
+
+  if (_internal_metadata_.have_unknown_fields()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        _internal_metadata_.unknown_fields());
+  }
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // .icdl_proto.TensorDataDescriptor.TensorDataType dtype = 1;
+  if (this->dtype() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::EnumSize(this->dtype());
+  }
+
+  switch (data_represent_case()) {
+    // .icdl_proto.FixpointRepresent fix_point = 2;
+    case kFixPoint: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *data_represent_.fix_point_);
+      break;
+    }
+    // .icdl_proto.FloatpointRepresent flo_point = 3;
+    case kFloPoint: {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSize(
+          *data_represent_.flo_point_);
+      break;
+    }
+    case DATA_REPRESENT_NOT_SET: {
+      break;
+    }
+  }
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void TensorDataDescriptor::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:icdl_proto.TensorDataDescriptor)
+  GOOGLE_DCHECK_NE(&from, this);
+  const TensorDataDescriptor* source =
+      ::google::protobuf::DynamicCastToGenerated<TensorDataDescriptor>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:icdl_proto.TensorDataDescriptor)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:icdl_proto.TensorDataDescriptor)
+    MergeFrom(*source);
+  }
+}
+
+void TensorDataDescriptor::MergeFrom(const TensorDataDescriptor& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:icdl_proto.TensorDataDescriptor)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom(from._internal_metadata_);
+  ::google::protobuf::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.dtype() != 0) {
+    set_dtype(from.dtype());
+  }
+  switch (from.data_represent_case()) {
+    case kFixPoint: {
+      mutable_fix_point()->::icdl_proto::FixpointRepresent::MergeFrom(from.fix_point());
+      break;
+    }
+    case kFloPoint: {
+      mutable_flo_point()->::icdl_proto::FloatpointRepresent::MergeFrom(from.flo_point());
+      break;
+    }
+    case DATA_REPRESENT_NOT_SET: {
+      break;
+    }
+  }
+}
+
+void TensorDataDescriptor::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:icdl_proto.TensorDataDescriptor)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void TensorDataDescriptor::CopyFrom(const TensorDataDescriptor& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:icdl_proto.TensorDataDescriptor)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool TensorDataDescriptor::IsInitialized() const {
+  return true;
+}
+
+void TensorDataDescriptor::Swap(TensorDataDescriptor* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void TensorDataDescriptor::InternalSwap(TensorDataDescriptor* other) {
+  using std::swap;
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  swap(dtype_, other->dtype_);
+  swap(data_represent_, other->data_represent_);
+  swap(_oneof_case_[0], other->_oneof_case_[0]);
+}
+
+::google::protobuf::Metadata TensorDataDescriptor::GetMetadata() const {
+  ::google::protobuf::internal::AssignDescriptors(&::assign_descriptors_table_Tensor_2eproto);
+  return ::file_level_metadata_Tensor_2eproto[kIndexInFileMessages];
+}
+
+
+// ===================================================================
+
+void TensorStorage::InitAsDefaultInstance() {
+  ::icdl_proto::_TensorStorage_default_instance_._instance.get_mutable()->data_descriptor_ = const_cast< ::icdl_proto::TensorDataDescriptor*>(
+      ::icdl_proto::TensorDataDescriptor::internal_default_instance());
+}
+class TensorStorage::HasBitSetters {
+ public:
+  static const ::icdl_proto::TensorDataDescriptor& data_descriptor(const TensorStorage* msg);
+};
+
+const ::icdl_proto::TensorDataDescriptor&
+TensorStorage::HasBitSetters::data_descriptor(const TensorStorage* msg) {
+  return *msg->data_descriptor_;
+}
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int TensorStorage::kDataFieldNumber;
+const int TensorStorage::kDataDescriptorFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 TensorStorage::TensorStorage()
@@ -201,6 +1539,11 @@ TensorStorage::TensorStorage(const TensorStorage& from)
   if (from.data().size() > 0) {
     data_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.data_);
   }
+  if (from.has_data_descriptor()) {
+    data_descriptor_ = new ::icdl_proto::TensorDataDescriptor(*from.data_descriptor_);
+  } else {
+    data_descriptor_ = nullptr;
+  }
   // @@protoc_insertion_point(copy_constructor:icdl_proto.TensorStorage)
 }
 
@@ -208,6 +1551,7 @@ void TensorStorage::SharedCtor() {
   ::google::protobuf::internal::InitSCC(
       &scc_info_TensorStorage_Tensor_2eproto.base);
   data_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  data_descriptor_ = nullptr;
 }
 
 TensorStorage::~TensorStorage() {
@@ -217,6 +1561,7 @@ TensorStorage::~TensorStorage() {
 
 void TensorStorage::SharedDtor() {
   data_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (this != internal_default_instance()) delete data_descriptor_;
 }
 
 void TensorStorage::SetCachedSize(int size) const {
@@ -235,6 +1580,10 @@ void TensorStorage::Clear() {
   (void) cached_has_bits;
 
   data_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (GetArenaNoVirtual() == nullptr && data_descriptor_ != nullptr) {
+    delete data_descriptor_;
+  }
+  data_descriptor_ = nullptr;
   _internal_metadata_.Clear();
 }
 
@@ -267,6 +1616,21 @@ const char* TensorStorage::_InternalParse(const char* begin, const char* end, vo
         GOOGLE_PROTOBUF_PARSER_ASSERT(::google::protobuf::internal::StringCheck(ptr, size, ctx));
         ::google::protobuf::internal::InlineGreedyStringParser(str, ptr, size, ctx);
         ptr += size;
+        break;
+      }
+      // .icdl_proto.TensorDataDescriptor data_descriptor = 2;
+      case 2: {
+        if (static_cast<::google::protobuf::uint8>(tag) != 18) goto handle_unusual;
+        ptr = ::google::protobuf::io::Parse32(ptr, &size);
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+        parser_till_end = ::icdl_proto::TensorDataDescriptor::_InternalParse;
+        object = msg->mutable_data_descriptor();
+        if (size > end - ptr) goto len_delim_till_end;
+        auto newend = ptr + size;
+        bool ok = ctx->ParseExactRange({parser_till_end, object},
+                                       ptr, newend);
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ok);
+        ptr = newend;
         break;
       }
       default: {
@@ -310,6 +1674,17 @@ bool TensorStorage::MergePartialFromCodedStream(
         break;
       }
 
+      // .icdl_proto.TensorDataDescriptor data_descriptor = 2;
+      case 2: {
+        if (static_cast< ::google::protobuf::uint8>(tag) == (18 & 0xFF)) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessage(
+               input, mutable_data_descriptor()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0) {
@@ -343,6 +1718,12 @@ void TensorStorage::SerializeWithCachedSizes(
       1, this->data(), output);
   }
 
+  // .icdl_proto.TensorDataDescriptor data_descriptor = 2;
+  if (this->has_data_descriptor()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, HasBitSetters::data_descriptor(this), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         _internal_metadata_.unknown_fields(), output);
@@ -361,6 +1742,13 @@ void TensorStorage::SerializeWithCachedSizes(
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         1, this->data(), target);
+  }
+
+  // .icdl_proto.TensorDataDescriptor data_descriptor = 2;
+  if (this->has_data_descriptor()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      InternalWriteMessageToArray(
+        2, HasBitSetters::data_descriptor(this), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -389,6 +1777,13 @@ size_t TensorStorage::ByteSizeLong() const {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::BytesSize(
         this->data());
+  }
+
+  // .icdl_proto.TensorDataDescriptor data_descriptor = 2;
+  if (this->has_data_descriptor()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSize(
+        *data_descriptor_);
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -422,6 +1817,9 @@ void TensorStorage::MergeFrom(const TensorStorage& from) {
 
     data_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.data_);
   }
+  if (from.has_data_descriptor()) {
+    mutable_data_descriptor()->::icdl_proto::TensorDataDescriptor::MergeFrom(from.data_descriptor());
+  }
 }
 
 void TensorStorage::CopyFrom(const ::google::protobuf::Message& from) {
@@ -451,6 +1849,7 @@ void TensorStorage::InternalSwap(TensorStorage* other) {
   _internal_metadata_.Swap(&other->_internal_metadata_);
   data_.Swap(&other->data_, &::google::protobuf::internal::GetEmptyStringAlreadyInited(),
     GetArenaNoVirtual());
+  swap(data_descriptor_, other->data_descriptor_);
 }
 
 ::google::protobuf::Metadata TensorStorage::GetMetadata() const {
@@ -475,7 +1874,6 @@ Tensor::HasBitSetters::storage(const Tensor* msg) {
   return *msg->storage_;
 }
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int Tensor::kDtypeFieldNumber;
 const int Tensor::kStorageFieldNumber;
 const int Tensor::kTensorSizeFieldNumber;
 const int Tensor::kMemLayoutFieldNumber;
@@ -496,9 +1894,7 @@ Tensor::Tensor(const Tensor& from)
   } else {
     storage_ = nullptr;
   }
-  ::memcpy(&dtype_, &from.dtype_,
-    static_cast<size_t>(reinterpret_cast<char*>(&mem_layout_) -
-    reinterpret_cast<char*>(&dtype_)) + sizeof(mem_layout_));
+  mem_layout_ = from.mem_layout_;
   // @@protoc_insertion_point(copy_constructor:icdl_proto.Tensor)
 }
 
@@ -539,9 +1935,7 @@ void Tensor::Clear() {
     delete storage_;
   }
   storage_ = nullptr;
-  ::memset(&dtype_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&mem_layout_) -
-      reinterpret_cast<char*>(&dtype_)) + sizeof(mem_layout_));
+  mem_layout_ = 0;
   _internal_metadata_.Clear();
 }
 
@@ -558,16 +1952,6 @@ const char* Tensor::_InternalParse(const char* begin, const char* end, void* obj
     ptr = ::google::protobuf::io::Parse32(ptr, &tag);
     GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
     switch (tag >> 3) {
-      // .icdl_proto.Tensor.TensorDataType dtype = 1;
-      case 1: {
-        if (static_cast<::google::protobuf::uint8>(tag) != 8) goto handle_unusual;
-        ::google::protobuf::uint64 val;
-        ptr = ::google::protobuf::io::Parse64(ptr, &val);
-        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
-        ::icdl_proto::Tensor_TensorDataType value = static_cast<::icdl_proto::Tensor_TensorDataType>(val);
-        msg->set_dtype(value);
-        break;
-      }
       // .icdl_proto.TensorStorage storage = 2;
       case 2: {
         if (static_cast<::google::protobuf::uint8>(tag) != 18) goto handle_unusual;
@@ -646,20 +2030,6 @@ bool Tensor::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // .icdl_proto.Tensor.TensorDataType dtype = 1;
-      case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) == (8 & 0xFF)) {
-          int value = 0;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          set_dtype(static_cast< ::icdl_proto::Tensor_TensorDataType >(value));
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
       // .icdl_proto.TensorStorage storage = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) == (18 & 0xFF)) {
@@ -728,12 +2098,6 @@ void Tensor::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .icdl_proto.Tensor.TensorDataType dtype = 1;
-  if (this->dtype() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      1, this->dtype(), output);
-  }
-
   // .icdl_proto.TensorStorage storage = 2;
   if (this->has_storage()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -769,12 +2133,6 @@ void Tensor::SerializeWithCachedSizes(
   // @@protoc_insertion_point(serialize_to_array_start:icdl_proto.Tensor)
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
-
-  // .icdl_proto.Tensor.TensorDataType dtype = 1;
-  if (this->dtype() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      1, this->dtype(), target);
-  }
 
   // .icdl_proto.TensorStorage storage = 2;
   if (this->has_storage()) {
@@ -845,12 +2203,6 @@ size_t Tensor::ByteSizeLong() const {
         *storage_);
   }
 
-  // .icdl_proto.Tensor.TensorDataType dtype = 1;
-  if (this->dtype() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::EnumSize(this->dtype());
-  }
-
   // .icdl_proto.Tensor.TensorMemLayout mem_layout = 4;
   if (this->mem_layout() != 0) {
     total_size += 1 +
@@ -888,9 +2240,6 @@ void Tensor::MergeFrom(const Tensor& from) {
   if (from.has_storage()) {
     mutable_storage()->::icdl_proto::TensorStorage::MergeFrom(from.storage());
   }
-  if (from.dtype() != 0) {
-    set_dtype(from.dtype());
-  }
   if (from.mem_layout() != 0) {
     set_mem_layout(from.mem_layout());
   }
@@ -923,7 +2272,6 @@ void Tensor::InternalSwap(Tensor* other) {
   _internal_metadata_.Swap(&other->_internal_metadata_);
   tensor_size_.InternalSwap(&other->tensor_size_);
   swap(storage_, other->storage_);
-  swap(dtype_, other->dtype_);
   swap(mem_layout_, other->mem_layout_);
 }
 
@@ -937,6 +2285,15 @@ void Tensor::InternalSwap(Tensor* other) {
 }  // namespace icdl_proto
 namespace google {
 namespace protobuf {
+template<> PROTOBUF_NOINLINE ::icdl_proto::FixpointRepresent* Arena::CreateMaybeMessage< ::icdl_proto::FixpointRepresent >(Arena* arena) {
+  return Arena::CreateInternal< ::icdl_proto::FixpointRepresent >(arena);
+}
+template<> PROTOBUF_NOINLINE ::icdl_proto::FloatpointRepresent* Arena::CreateMaybeMessage< ::icdl_proto::FloatpointRepresent >(Arena* arena) {
+  return Arena::CreateInternal< ::icdl_proto::FloatpointRepresent >(arena);
+}
+template<> PROTOBUF_NOINLINE ::icdl_proto::TensorDataDescriptor* Arena::CreateMaybeMessage< ::icdl_proto::TensorDataDescriptor >(Arena* arena) {
+  return Arena::CreateInternal< ::icdl_proto::TensorDataDescriptor >(arena);
+}
 template<> PROTOBUF_NOINLINE ::icdl_proto::TensorStorage* Arena::CreateMaybeMessage< ::icdl_proto::TensorStorage >(Arena* arena) {
   return Arena::CreateInternal< ::icdl_proto::TensorStorage >(arena);
 }

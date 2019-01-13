@@ -20,6 +20,8 @@ namespace icdl{
         Tensor convert_to_float32(const StorageConverter& storage_converter, 
                               const TensorMemLayout& target_mem_layout) const;
         
+        bool deserialize_storage_init(const icdl_proto::Tensor& tensor_proto);
+        
     public:
         TensorDataType dtype() const;
         TensorSize size() const;

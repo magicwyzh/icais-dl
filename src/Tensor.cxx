@@ -1,6 +1,7 @@
 #include "Tensor.h"
 #include "tensor_utils.h"
 #include <cassert>
+#include "protos/protobuf_utils.h"
 namespace icdl{
     TensorDataType Tensor::dtype() const{
         if(storage_ == nullptr){
@@ -46,23 +47,6 @@ namespace icdl{
     }
     icdl_proto::Tensor Tensor::serialize() const{
         icdl_proto::Tensor t;
-        switch(dtype()){
-            case kFloat32: 
-                t.set_dtype(icdl_proto::Tensor_TensorDataType::Tensor_TensorDataType_FLOAT_32);
-                break;
-            case kFloat16:
-                t.set_dtype(icdl_proto::Tensor_TensorDataType::Tensor_TensorDataType_FLOAT_16);
-                break;
-            case kFixpoint:
-                t.set_dtype(icdl_proto::Tensor_TensorDataType::Tensor_TensorDataType_FIXPOINT);
-                break;
-            case TensorDataType::INVALID_DTYPE:
-                t.set_dtype(icdl_proto::Tensor_TensorDataType::Tensor_TensorDataType_INVALID_DTYPE);
-                break;
-            default:
-                throw std::runtime_error("Unknown Data Type for serialization");
-                break;
-        }
         switch(get_mem_layout()){
             case kDense:
                 t.set_mem_layout(icdl_proto::Tensor_TensorMemLayout_DENSE_LAYOUT);
@@ -80,39 +64,69 @@ namespace icdl{
         for(auto dim : size_){
             t.add_tensor_size(dim);
         }
-        
         (*t.mutable_storage()) = storage_->serialize();
         return t;
     }
 
-    void Tensor::deserialize(const icdl_proto::Tensor& tensor_proto){
-        // sanity check...
-        assert(static_cast<size_t>(tensor_proto.tensor_size_size()) == size_.size());
-        for(size_t i = 0; i < size_.size(); i++){
-            assert(size_[i] == tensor_proto.tensor_size(i));
+
+    bool Tensor::deserialize_storage_init(const icdl_proto::Tensor& tensor_proto){
+        bool allocate_new_storage = false;
+        if(static_cast<size_t>(tensor_proto.tensor_size_size()) != size_.size()){
+            allocate_new_storage = true;
         }
-        TensorDataType proto_data_type;
-        TensorMemLayout proto_layout;
-        switch(tensor_proto.dtype()){
-            case icdl_proto::Tensor::TensorDataType::Tensor_TensorDataType_FLOAT_32: proto_data_type = kFloat32; break;
-            case icdl_proto::Tensor::TensorDataType::Tensor_TensorDataType_FLOAT_16: proto_data_type = kFloat16; break;
-            case icdl_proto::Tensor::TensorDataType::Tensor_TensorDataType_FIXPOINT: proto_data_type = kFixpoint; break;
-            case icdl_proto::Tensor::TensorDataType::Tensor_TensorDataType_INVALID_DTYPE: proto_data_type = TensorDataType::INVALID_DTYPE;break;
-            default: {
-                throw std::runtime_error("The protobuf's TensorDataType is not compatible with the definition in icdl source.");
-            }
+        size_t num_data = 1;
+        for(size_t i = 0; i < static_cast<size_t>(tensor_proto.tensor_size_size()); i++){
+            num_data *= tensor_proto.tensor_size(i);
+        }
+        if(num_data != nelement()){
+            allocate_new_storage = true;
         }
 
-        switch(tensor_proto.mem_layout()){
-            case icdl_proto::Tensor_TensorMemLayout_DENSE_LAYOUT: proto_layout = kDense; break;
-            case icdl_proto::Tensor_TensorMemLayout_INVALID_LAYOUT: proto_layout = TensorMemLayout::INVALID_LAYOUT;break;
-            case icdl_proto::Tensor_TensorMemLayout_SPARSE_LAYOUT: proto_layout = kSparse; break;
-            default: {
-                throw(std::runtime_error("The protobuf's TensorMemLayout is not compatible with the definition in icdl source."));
+        TensorDataType proto_data_type = proto_dtype_to_icdl_dtype(tensor_proto.storage().data_descriptor().dtype());
+        TensorMemLayout proto_layout = proto_mem_layout_to_icdl_layout(tensor_proto.mem_layout());
+
+        if(proto_data_type != dtype() || proto_layout != mem_layout_){
+            allocate_new_storage = true;
+        }
+        
+        icdl_proto::FixpointRepresent fix;
+        FixpointRepresent icdl_fix_repr;
+        if(allocate_new_storage){
+            switch(proto_data_type){
+                case kFloat32:
+                    storage_ = f32_storage_make(num_data, kCPUMem);
+                    break;
+                case kFixpoint:
+                    assert(tensor_proto.storage().data_descriptor().has_fix_point());
+                    fix = tensor_proto.storage().data_descriptor().fix_point();
+                    icdl_fix_repr = FixpointRepresent({fix.total_bits(), fix.is_signed(), fix.frac_point_location()});
+                    storage_ = fixp_storage_make(num_data, icdl_fix_repr, kCPUMem);
+                    break;
+                case kFloat16:
+                    std::cerr << "Float16 is not supported now!" << std::endl;
+                default:
+                    std::cerr << "Try to create a Tensor with invalid data type when deserializing: " << std::endl;
+                    exit(EXIT_FAILURE);
+                    break;
             }
         }
-        assert(proto_data_type == dtype() && proto_layout == mem_layout_);
+        
+        return allocate_new_storage;
+    }
+
+    void Tensor::deserialize(const icdl_proto::Tensor& tensor_proto){
+        // sanity check...
+        assert(tensor_proto.tensor_size_size() != 0);
+
+        deserialize_storage_init(tensor_proto);
+        
+        // start real deserialize!
         storage_->deserialize(tensor_proto.storage());
+        size_.clear();
+        for(auto i = 0; i < tensor_proto.tensor_size_size(); i++){
+            size_.emplace_back(tensor_proto.tensor_size(i));
+        }
+        mem_layout_ = proto_mem_layout_to_icdl_layout(tensor_proto.mem_layout());
     }
 
     Tensor Tensor::convert_to_fixpoint(const StorageConverter& storage_converter,const FixpointRepresent & target_fix_represent,  const TensorMemLayout& target_mem_layout) const{

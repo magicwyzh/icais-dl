@@ -42,7 +42,7 @@ struct TableStruct_Tensor_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::google::protobuf::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::google::protobuf::internal::ParseTable schema[2]
+  static const ::google::protobuf::internal::ParseTable schema[5]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::google::protobuf::internal::FieldMetadata field_metadata[];
   static const ::google::protobuf::internal::SerializationTable serialization_table[];
@@ -50,43 +50,55 @@ struct TableStruct_Tensor_2eproto {
 };
 void AddDescriptors_Tensor_2eproto();
 namespace icdl_proto {
+class FixpointRepresent;
+class FixpointRepresentDefaultTypeInternal;
+extern FixpointRepresentDefaultTypeInternal _FixpointRepresent_default_instance_;
+class FloatpointRepresent;
+class FloatpointRepresentDefaultTypeInternal;
+extern FloatpointRepresentDefaultTypeInternal _FloatpointRepresent_default_instance_;
 class Tensor;
 class TensorDefaultTypeInternal;
 extern TensorDefaultTypeInternal _Tensor_default_instance_;
+class TensorDataDescriptor;
+class TensorDataDescriptorDefaultTypeInternal;
+extern TensorDataDescriptorDefaultTypeInternal _TensorDataDescriptor_default_instance_;
 class TensorStorage;
 class TensorStorageDefaultTypeInternal;
 extern TensorStorageDefaultTypeInternal _TensorStorage_default_instance_;
 }  // namespace icdl_proto
 namespace google {
 namespace protobuf {
+template<> ::icdl_proto::FixpointRepresent* Arena::CreateMaybeMessage<::icdl_proto::FixpointRepresent>(Arena*);
+template<> ::icdl_proto::FloatpointRepresent* Arena::CreateMaybeMessage<::icdl_proto::FloatpointRepresent>(Arena*);
 template<> ::icdl_proto::Tensor* Arena::CreateMaybeMessage<::icdl_proto::Tensor>(Arena*);
+template<> ::icdl_proto::TensorDataDescriptor* Arena::CreateMaybeMessage<::icdl_proto::TensorDataDescriptor>(Arena*);
 template<> ::icdl_proto::TensorStorage* Arena::CreateMaybeMessage<::icdl_proto::TensorStorage>(Arena*);
 }  // namespace protobuf
 }  // namespace google
 namespace icdl_proto {
 
-enum Tensor_TensorDataType {
-  Tensor_TensorDataType_FLOAT_32 = 0,
-  Tensor_TensorDataType_FLOAT_16 = 1,
-  Tensor_TensorDataType_FIXPOINT = 2,
-  Tensor_TensorDataType_INVALID_DTYPE = 3,
-  Tensor_TensorDataType_Tensor_TensorDataType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::min(),
-  Tensor_TensorDataType_Tensor_TensorDataType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::max()
+enum TensorDataDescriptor_TensorDataType {
+  TensorDataDescriptor_TensorDataType_FLOAT_32 = 0,
+  TensorDataDescriptor_TensorDataType_FLOAT_16 = 1,
+  TensorDataDescriptor_TensorDataType_FIXPOINT = 2,
+  TensorDataDescriptor_TensorDataType_INVALID_DTYPE = 3,
+  TensorDataDescriptor_TensorDataType_TensorDataDescriptor_TensorDataType_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::min(),
+  TensorDataDescriptor_TensorDataType_TensorDataDescriptor_TensorDataType_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::max()
 };
-bool Tensor_TensorDataType_IsValid(int value);
-const Tensor_TensorDataType Tensor_TensorDataType_TensorDataType_MIN = Tensor_TensorDataType_FLOAT_32;
-const Tensor_TensorDataType Tensor_TensorDataType_TensorDataType_MAX = Tensor_TensorDataType_INVALID_DTYPE;
-const int Tensor_TensorDataType_TensorDataType_ARRAYSIZE = Tensor_TensorDataType_TensorDataType_MAX + 1;
+bool TensorDataDescriptor_TensorDataType_IsValid(int value);
+const TensorDataDescriptor_TensorDataType TensorDataDescriptor_TensorDataType_TensorDataType_MIN = TensorDataDescriptor_TensorDataType_FLOAT_32;
+const TensorDataDescriptor_TensorDataType TensorDataDescriptor_TensorDataType_TensorDataType_MAX = TensorDataDescriptor_TensorDataType_INVALID_DTYPE;
+const int TensorDataDescriptor_TensorDataType_TensorDataType_ARRAYSIZE = TensorDataDescriptor_TensorDataType_TensorDataType_MAX + 1;
 
-const ::google::protobuf::EnumDescriptor* Tensor_TensorDataType_descriptor();
-inline const ::std::string& Tensor_TensorDataType_Name(Tensor_TensorDataType value) {
+const ::google::protobuf::EnumDescriptor* TensorDataDescriptor_TensorDataType_descriptor();
+inline const ::std::string& TensorDataDescriptor_TensorDataType_Name(TensorDataDescriptor_TensorDataType value) {
   return ::google::protobuf::internal::NameOfEnum(
-    Tensor_TensorDataType_descriptor(), value);
+    TensorDataDescriptor_TensorDataType_descriptor(), value);
 }
-inline bool Tensor_TensorDataType_Parse(
-    const ::std::string& name, Tensor_TensorDataType* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<Tensor_TensorDataType>(
-    Tensor_TensorDataType_descriptor(), name, value);
+inline bool TensorDataDescriptor_TensorDataType_Parse(
+    const ::std::string& name, TensorDataDescriptor_TensorDataType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<TensorDataDescriptor_TensorDataType>(
+    TensorDataDescriptor_TensorDataType_descriptor(), name, value);
 }
 enum Tensor_TensorMemLayout {
   Tensor_TensorMemLayout_DENSE_LAYOUT = 0,
@@ -111,6 +123,442 @@ inline bool Tensor_TensorMemLayout_Parse(
     Tensor_TensorMemLayout_descriptor(), name, value);
 }
 // ===================================================================
+
+class FixpointRepresent : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:icdl_proto.FixpointRepresent) */ {
+ public:
+  FixpointRepresent();
+  virtual ~FixpointRepresent();
+
+  FixpointRepresent(const FixpointRepresent& from);
+
+  inline FixpointRepresent& operator=(const FixpointRepresent& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  FixpointRepresent(FixpointRepresent&& from) noexcept
+    : FixpointRepresent() {
+    *this = ::std::move(from);
+  }
+
+  inline FixpointRepresent& operator=(FixpointRepresent&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return default_instance().GetDescriptor();
+  }
+  static const FixpointRepresent& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const FixpointRepresent* internal_default_instance() {
+    return reinterpret_cast<const FixpointRepresent*>(
+               &_FixpointRepresent_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    0;
+
+  void Swap(FixpointRepresent* other);
+  friend void swap(FixpointRepresent& a, FixpointRepresent& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline FixpointRepresent* New() const final {
+    return CreateMaybeMessage<FixpointRepresent>(nullptr);
+  }
+
+  FixpointRepresent* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<FixpointRepresent>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const FixpointRepresent& from);
+  void MergeFrom(const FixpointRepresent& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  #if GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+  static const char* _InternalParse(const char* begin, const char* end, void* object, ::google::protobuf::internal::ParseContext* ctx);
+  ::google::protobuf::internal::ParseFunc _ParseFunc() const final { return _InternalParse; }
+  #else
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  #endif  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(FixpointRepresent* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // uint32 total_bits = 1;
+  void clear_total_bits();
+  static const int kTotalBitsFieldNumber = 1;
+  ::google::protobuf::uint32 total_bits() const;
+  void set_total_bits(::google::protobuf::uint32 value);
+
+  // bool is_signed = 2;
+  void clear_is_signed();
+  static const int kIsSignedFieldNumber = 2;
+  bool is_signed() const;
+  void set_is_signed(bool value);
+
+  // int32 frac_point_location = 3;
+  void clear_frac_point_location();
+  static const int kFracPointLocationFieldNumber = 3;
+  ::google::protobuf::int32 frac_point_location() const;
+  void set_frac_point_location(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:icdl_proto.FixpointRepresent)
+ private:
+  class HasBitSetters;
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::uint32 total_bits_;
+  bool is_signed_;
+  ::google::protobuf::int32 frac_point_location_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Tensor_2eproto;
+};
+// -------------------------------------------------------------------
+
+class FloatpointRepresent : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:icdl_proto.FloatpointRepresent) */ {
+ public:
+  FloatpointRepresent();
+  virtual ~FloatpointRepresent();
+
+  FloatpointRepresent(const FloatpointRepresent& from);
+
+  inline FloatpointRepresent& operator=(const FloatpointRepresent& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  FloatpointRepresent(FloatpointRepresent&& from) noexcept
+    : FloatpointRepresent() {
+    *this = ::std::move(from);
+  }
+
+  inline FloatpointRepresent& operator=(FloatpointRepresent&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return default_instance().GetDescriptor();
+  }
+  static const FloatpointRepresent& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const FloatpointRepresent* internal_default_instance() {
+    return reinterpret_cast<const FloatpointRepresent*>(
+               &_FloatpointRepresent_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  void Swap(FloatpointRepresent* other);
+  friend void swap(FloatpointRepresent& a, FloatpointRepresent& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline FloatpointRepresent* New() const final {
+    return CreateMaybeMessage<FloatpointRepresent>(nullptr);
+  }
+
+  FloatpointRepresent* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<FloatpointRepresent>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const FloatpointRepresent& from);
+  void MergeFrom(const FloatpointRepresent& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  #if GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+  static const char* _InternalParse(const char* begin, const char* end, void* object, ::google::protobuf::internal::ParseContext* ctx);
+  ::google::protobuf::internal::ParseFunc _ParseFunc() const final { return _InternalParse; }
+  #else
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  #endif  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(FloatpointRepresent* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // uint32 total_bits = 1;
+  void clear_total_bits();
+  static const int kTotalBitsFieldNumber = 1;
+  ::google::protobuf::uint32 total_bits() const;
+  void set_total_bits(::google::protobuf::uint32 value);
+
+  // bool is_signed = 2;
+  void clear_is_signed();
+  static const int kIsSignedFieldNumber = 2;
+  bool is_signed() const;
+  void set_is_signed(bool value);
+
+  // uint32 exp_bits = 3;
+  void clear_exp_bits();
+  static const int kExpBitsFieldNumber = 3;
+  ::google::protobuf::uint32 exp_bits() const;
+  void set_exp_bits(::google::protobuf::uint32 value);
+
+  // uint32 mantissa_bits = 4;
+  void clear_mantissa_bits();
+  static const int kMantissaBitsFieldNumber = 4;
+  ::google::protobuf::uint32 mantissa_bits() const;
+  void set_mantissa_bits(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:icdl_proto.FloatpointRepresent)
+ private:
+  class HasBitSetters;
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  ::google::protobuf::uint32 total_bits_;
+  bool is_signed_;
+  ::google::protobuf::uint32 exp_bits_;
+  ::google::protobuf::uint32 mantissa_bits_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_Tensor_2eproto;
+};
+// -------------------------------------------------------------------
+
+class TensorDataDescriptor : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:icdl_proto.TensorDataDescriptor) */ {
+ public:
+  TensorDataDescriptor();
+  virtual ~TensorDataDescriptor();
+
+  TensorDataDescriptor(const TensorDataDescriptor& from);
+
+  inline TensorDataDescriptor& operator=(const TensorDataDescriptor& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  #if LANG_CXX11
+  TensorDataDescriptor(TensorDataDescriptor&& from) noexcept
+    : TensorDataDescriptor() {
+    *this = ::std::move(from);
+  }
+
+  inline TensorDataDescriptor& operator=(TensorDataDescriptor&& from) noexcept {
+    if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+  #endif
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return default_instance().GetDescriptor();
+  }
+  static const TensorDataDescriptor& default_instance();
+
+  enum DataRepresentCase {
+    kFixPoint = 2,
+    kFloPoint = 3,
+    DATA_REPRESENT_NOT_SET = 0,
+  };
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const TensorDataDescriptor* internal_default_instance() {
+    return reinterpret_cast<const TensorDataDescriptor*>(
+               &_TensorDataDescriptor_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    2;
+
+  void Swap(TensorDataDescriptor* other);
+  friend void swap(TensorDataDescriptor& a, TensorDataDescriptor& b) {
+    a.Swap(&b);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline TensorDataDescriptor* New() const final {
+    return CreateMaybeMessage<TensorDataDescriptor>(nullptr);
+  }
+
+  TensorDataDescriptor* New(::google::protobuf::Arena* arena) const final {
+    return CreateMaybeMessage<TensorDataDescriptor>(arena);
+  }
+  void CopyFrom(const ::google::protobuf::Message& from) final;
+  void MergeFrom(const ::google::protobuf::Message& from) final;
+  void CopyFrom(const TensorDataDescriptor& from);
+  void MergeFrom(const TensorDataDescriptor& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  #if GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+  static const char* _InternalParse(const char* begin, const char* end, void* object, ::google::protobuf::internal::ParseContext* ctx);
+  ::google::protobuf::internal::ParseFunc _ParseFunc() const final { return _InternalParse; }
+  #else
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input) final;
+  #endif  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const final;
+  ::google::protobuf::uint8* InternalSerializeWithCachedSizesToArray(
+      ::google::protobuf::uint8* target) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(TensorDataDescriptor* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return nullptr;
+  }
+  inline void* MaybeArenaPtr() const {
+    return nullptr;
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  typedef TensorDataDescriptor_TensorDataType TensorDataType;
+  static const TensorDataType FLOAT_32 =
+    TensorDataDescriptor_TensorDataType_FLOAT_32;
+  static const TensorDataType FLOAT_16 =
+    TensorDataDescriptor_TensorDataType_FLOAT_16;
+  static const TensorDataType FIXPOINT =
+    TensorDataDescriptor_TensorDataType_FIXPOINT;
+  static const TensorDataType INVALID_DTYPE =
+    TensorDataDescriptor_TensorDataType_INVALID_DTYPE;
+  static inline bool TensorDataType_IsValid(int value) {
+    return TensorDataDescriptor_TensorDataType_IsValid(value);
+  }
+  static const TensorDataType TensorDataType_MIN =
+    TensorDataDescriptor_TensorDataType_TensorDataType_MIN;
+  static const TensorDataType TensorDataType_MAX =
+    TensorDataDescriptor_TensorDataType_TensorDataType_MAX;
+  static const int TensorDataType_ARRAYSIZE =
+    TensorDataDescriptor_TensorDataType_TensorDataType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  TensorDataType_descriptor() {
+    return TensorDataDescriptor_TensorDataType_descriptor();
+  }
+  static inline const ::std::string& TensorDataType_Name(TensorDataType value) {
+    return TensorDataDescriptor_TensorDataType_Name(value);
+  }
+  static inline bool TensorDataType_Parse(const ::std::string& name,
+      TensorDataType* value) {
+    return TensorDataDescriptor_TensorDataType_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // .icdl_proto.TensorDataDescriptor.TensorDataType dtype = 1;
+  void clear_dtype();
+  static const int kDtypeFieldNumber = 1;
+  ::icdl_proto::TensorDataDescriptor_TensorDataType dtype() const;
+  void set_dtype(::icdl_proto::TensorDataDescriptor_TensorDataType value);
+
+  // .icdl_proto.FixpointRepresent fix_point = 2;
+  bool has_fix_point() const;
+  void clear_fix_point();
+  static const int kFixPointFieldNumber = 2;
+  const ::icdl_proto::FixpointRepresent& fix_point() const;
+  ::icdl_proto::FixpointRepresent* release_fix_point();
+  ::icdl_proto::FixpointRepresent* mutable_fix_point();
+  void set_allocated_fix_point(::icdl_proto::FixpointRepresent* fix_point);
+
+  // .icdl_proto.FloatpointRepresent flo_point = 3;
+  bool has_flo_point() const;
+  void clear_flo_point();
+  static const int kFloPointFieldNumber = 3;
+  const ::icdl_proto::FloatpointRepresent& flo_point() const;
+  ::icdl_proto::FloatpointRepresent* release_flo_point();
+  ::icdl_proto::FloatpointRepresent* mutable_flo_point();
+  void set_allocated_flo_point(::icdl_proto::FloatpointRepresent* flo_point);
+
+  void clear_data_represent();
+  DataRepresentCase data_represent_case() const;
+  // @@protoc_insertion_point(class_scope:icdl_proto.TensorDataDescriptor)
+ private:
+  class HasBitSetters;
+  void set_has_fix_point();
+  void set_has_flo_point();
+
+  inline bool has_data_represent() const;
+  inline void clear_has_data_represent();
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  int dtype_;
+  union DataRepresentUnion {
+    DataRepresentUnion() {}
+    ::icdl_proto::FixpointRepresent* fix_point_;
+    ::icdl_proto::FloatpointRepresent* flo_point_;
+  } data_represent_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
+  ::google::protobuf::uint32 _oneof_case_[1];
+
+  friend struct ::TableStruct_Tensor_2eproto;
+};
+// -------------------------------------------------------------------
 
 class TensorStorage : public ::google::protobuf::Message /* @@protoc_insertion_point(class_definition:icdl_proto.TensorStorage) */ {
  public:
@@ -149,7 +597,7 @@ class TensorStorage : public ::google::protobuf::Message /* @@protoc_insertion_p
                &_TensorStorage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    0;
+    3;
 
   void Swap(TensorStorage* other);
   friend void swap(TensorStorage& a, TensorStorage& b) {
@@ -220,12 +668,22 @@ class TensorStorage : public ::google::protobuf::Message /* @@protoc_insertion_p
   ::std::string* release_data();
   void set_allocated_data(::std::string* data);
 
+  // .icdl_proto.TensorDataDescriptor data_descriptor = 2;
+  bool has_data_descriptor() const;
+  void clear_data_descriptor();
+  static const int kDataDescriptorFieldNumber = 2;
+  const ::icdl_proto::TensorDataDescriptor& data_descriptor() const;
+  ::icdl_proto::TensorDataDescriptor* release_data_descriptor();
+  ::icdl_proto::TensorDataDescriptor* mutable_data_descriptor();
+  void set_allocated_data_descriptor(::icdl_proto::TensorDataDescriptor* data_descriptor);
+
   // @@protoc_insertion_point(class_scope:icdl_proto.TensorStorage)
  private:
   class HasBitSetters;
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::ArenaStringPtr data_;
+  ::icdl_proto::TensorDataDescriptor* data_descriptor_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Tensor_2eproto;
 };
@@ -268,7 +726,7 @@ class Tensor : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
                &_Tensor_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    4;
 
   void Swap(Tensor* other);
   friend void swap(Tensor& a, Tensor& b) {
@@ -323,36 +781,6 @@ class Tensor : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
 
   // nested types ----------------------------------------------------
 
-  typedef Tensor_TensorDataType TensorDataType;
-  static const TensorDataType FLOAT_32 =
-    Tensor_TensorDataType_FLOAT_32;
-  static const TensorDataType FLOAT_16 =
-    Tensor_TensorDataType_FLOAT_16;
-  static const TensorDataType FIXPOINT =
-    Tensor_TensorDataType_FIXPOINT;
-  static const TensorDataType INVALID_DTYPE =
-    Tensor_TensorDataType_INVALID_DTYPE;
-  static inline bool TensorDataType_IsValid(int value) {
-    return Tensor_TensorDataType_IsValid(value);
-  }
-  static const TensorDataType TensorDataType_MIN =
-    Tensor_TensorDataType_TensorDataType_MIN;
-  static const TensorDataType TensorDataType_MAX =
-    Tensor_TensorDataType_TensorDataType_MAX;
-  static const int TensorDataType_ARRAYSIZE =
-    Tensor_TensorDataType_TensorDataType_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  TensorDataType_descriptor() {
-    return Tensor_TensorDataType_descriptor();
-  }
-  static inline const ::std::string& TensorDataType_Name(TensorDataType value) {
-    return Tensor_TensorDataType_Name(value);
-  }
-  static inline bool TensorDataType_Parse(const ::std::string& name,
-      TensorDataType* value) {
-    return Tensor_TensorDataType_Parse(name, value);
-  }
-
   typedef Tensor_TensorMemLayout TensorMemLayout;
   static const TensorMemLayout DENSE_LAYOUT =
     Tensor_TensorMemLayout_DENSE_LAYOUT;
@@ -404,12 +832,6 @@ class Tensor : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::icdl_proto::TensorStorage* mutable_storage();
   void set_allocated_storage(::icdl_proto::TensorStorage* storage);
 
-  // .icdl_proto.Tensor.TensorDataType dtype = 1;
-  void clear_dtype();
-  static const int kDtypeFieldNumber = 1;
-  ::icdl_proto::Tensor_TensorDataType dtype() const;
-  void set_dtype(::icdl_proto::Tensor_TensorDataType value);
-
   // .icdl_proto.Tensor.TensorMemLayout mem_layout = 4;
   void clear_mem_layout();
   static const int kMemLayoutFieldNumber = 4;
@@ -424,7 +846,6 @@ class Tensor : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   ::google::protobuf::RepeatedField< ::google::protobuf::uint64 > tensor_size_;
   mutable std::atomic<int> _tensor_size_cached_byte_size_;
   ::icdl_proto::TensorStorage* storage_;
-  int dtype_;
   int mem_layout_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Tensor_2eproto;
@@ -438,6 +859,221 @@ class Tensor : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// FixpointRepresent
+
+// uint32 total_bits = 1;
+inline void FixpointRepresent::clear_total_bits() {
+  total_bits_ = 0u;
+}
+inline ::google::protobuf::uint32 FixpointRepresent::total_bits() const {
+  // @@protoc_insertion_point(field_get:icdl_proto.FixpointRepresent.total_bits)
+  return total_bits_;
+}
+inline void FixpointRepresent::set_total_bits(::google::protobuf::uint32 value) {
+  
+  total_bits_ = value;
+  // @@protoc_insertion_point(field_set:icdl_proto.FixpointRepresent.total_bits)
+}
+
+// bool is_signed = 2;
+inline void FixpointRepresent::clear_is_signed() {
+  is_signed_ = false;
+}
+inline bool FixpointRepresent::is_signed() const {
+  // @@protoc_insertion_point(field_get:icdl_proto.FixpointRepresent.is_signed)
+  return is_signed_;
+}
+inline void FixpointRepresent::set_is_signed(bool value) {
+  
+  is_signed_ = value;
+  // @@protoc_insertion_point(field_set:icdl_proto.FixpointRepresent.is_signed)
+}
+
+// int32 frac_point_location = 3;
+inline void FixpointRepresent::clear_frac_point_location() {
+  frac_point_location_ = 0;
+}
+inline ::google::protobuf::int32 FixpointRepresent::frac_point_location() const {
+  // @@protoc_insertion_point(field_get:icdl_proto.FixpointRepresent.frac_point_location)
+  return frac_point_location_;
+}
+inline void FixpointRepresent::set_frac_point_location(::google::protobuf::int32 value) {
+  
+  frac_point_location_ = value;
+  // @@protoc_insertion_point(field_set:icdl_proto.FixpointRepresent.frac_point_location)
+}
+
+// -------------------------------------------------------------------
+
+// FloatpointRepresent
+
+// uint32 total_bits = 1;
+inline void FloatpointRepresent::clear_total_bits() {
+  total_bits_ = 0u;
+}
+inline ::google::protobuf::uint32 FloatpointRepresent::total_bits() const {
+  // @@protoc_insertion_point(field_get:icdl_proto.FloatpointRepresent.total_bits)
+  return total_bits_;
+}
+inline void FloatpointRepresent::set_total_bits(::google::protobuf::uint32 value) {
+  
+  total_bits_ = value;
+  // @@protoc_insertion_point(field_set:icdl_proto.FloatpointRepresent.total_bits)
+}
+
+// bool is_signed = 2;
+inline void FloatpointRepresent::clear_is_signed() {
+  is_signed_ = false;
+}
+inline bool FloatpointRepresent::is_signed() const {
+  // @@protoc_insertion_point(field_get:icdl_proto.FloatpointRepresent.is_signed)
+  return is_signed_;
+}
+inline void FloatpointRepresent::set_is_signed(bool value) {
+  
+  is_signed_ = value;
+  // @@protoc_insertion_point(field_set:icdl_proto.FloatpointRepresent.is_signed)
+}
+
+// uint32 exp_bits = 3;
+inline void FloatpointRepresent::clear_exp_bits() {
+  exp_bits_ = 0u;
+}
+inline ::google::protobuf::uint32 FloatpointRepresent::exp_bits() const {
+  // @@protoc_insertion_point(field_get:icdl_proto.FloatpointRepresent.exp_bits)
+  return exp_bits_;
+}
+inline void FloatpointRepresent::set_exp_bits(::google::protobuf::uint32 value) {
+  
+  exp_bits_ = value;
+  // @@protoc_insertion_point(field_set:icdl_proto.FloatpointRepresent.exp_bits)
+}
+
+// uint32 mantissa_bits = 4;
+inline void FloatpointRepresent::clear_mantissa_bits() {
+  mantissa_bits_ = 0u;
+}
+inline ::google::protobuf::uint32 FloatpointRepresent::mantissa_bits() const {
+  // @@protoc_insertion_point(field_get:icdl_proto.FloatpointRepresent.mantissa_bits)
+  return mantissa_bits_;
+}
+inline void FloatpointRepresent::set_mantissa_bits(::google::protobuf::uint32 value) {
+  
+  mantissa_bits_ = value;
+  // @@protoc_insertion_point(field_set:icdl_proto.FloatpointRepresent.mantissa_bits)
+}
+
+// -------------------------------------------------------------------
+
+// TensorDataDescriptor
+
+// .icdl_proto.TensorDataDescriptor.TensorDataType dtype = 1;
+inline void TensorDataDescriptor::clear_dtype() {
+  dtype_ = 0;
+}
+inline ::icdl_proto::TensorDataDescriptor_TensorDataType TensorDataDescriptor::dtype() const {
+  // @@protoc_insertion_point(field_get:icdl_proto.TensorDataDescriptor.dtype)
+  return static_cast< ::icdl_proto::TensorDataDescriptor_TensorDataType >(dtype_);
+}
+inline void TensorDataDescriptor::set_dtype(::icdl_proto::TensorDataDescriptor_TensorDataType value) {
+  
+  dtype_ = value;
+  // @@protoc_insertion_point(field_set:icdl_proto.TensorDataDescriptor.dtype)
+}
+
+// .icdl_proto.FixpointRepresent fix_point = 2;
+inline bool TensorDataDescriptor::has_fix_point() const {
+  return data_represent_case() == kFixPoint;
+}
+inline void TensorDataDescriptor::set_has_fix_point() {
+  _oneof_case_[0] = kFixPoint;
+}
+inline void TensorDataDescriptor::clear_fix_point() {
+  if (has_fix_point()) {
+    delete data_represent_.fix_point_;
+    clear_has_data_represent();
+  }
+}
+inline ::icdl_proto::FixpointRepresent* TensorDataDescriptor::release_fix_point() {
+  // @@protoc_insertion_point(field_release:icdl_proto.TensorDataDescriptor.fix_point)
+  if (has_fix_point()) {
+    clear_has_data_represent();
+      ::icdl_proto::FixpointRepresent* temp = data_represent_.fix_point_;
+    data_represent_.fix_point_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::icdl_proto::FixpointRepresent& TensorDataDescriptor::fix_point() const {
+  // @@protoc_insertion_point(field_get:icdl_proto.TensorDataDescriptor.fix_point)
+  return has_fix_point()
+      ? *data_represent_.fix_point_
+      : *reinterpret_cast< ::icdl_proto::FixpointRepresent*>(&::icdl_proto::_FixpointRepresent_default_instance_);
+}
+inline ::icdl_proto::FixpointRepresent* TensorDataDescriptor::mutable_fix_point() {
+  if (!has_fix_point()) {
+    clear_data_represent();
+    set_has_fix_point();
+    data_represent_.fix_point_ = CreateMaybeMessage< ::icdl_proto::FixpointRepresent >(
+        GetArenaNoVirtual());
+  }
+  // @@protoc_insertion_point(field_mutable:icdl_proto.TensorDataDescriptor.fix_point)
+  return data_represent_.fix_point_;
+}
+
+// .icdl_proto.FloatpointRepresent flo_point = 3;
+inline bool TensorDataDescriptor::has_flo_point() const {
+  return data_represent_case() == kFloPoint;
+}
+inline void TensorDataDescriptor::set_has_flo_point() {
+  _oneof_case_[0] = kFloPoint;
+}
+inline void TensorDataDescriptor::clear_flo_point() {
+  if (has_flo_point()) {
+    delete data_represent_.flo_point_;
+    clear_has_data_represent();
+  }
+}
+inline ::icdl_proto::FloatpointRepresent* TensorDataDescriptor::release_flo_point() {
+  // @@protoc_insertion_point(field_release:icdl_proto.TensorDataDescriptor.flo_point)
+  if (has_flo_point()) {
+    clear_has_data_represent();
+      ::icdl_proto::FloatpointRepresent* temp = data_represent_.flo_point_;
+    data_represent_.flo_point_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::icdl_proto::FloatpointRepresent& TensorDataDescriptor::flo_point() const {
+  // @@protoc_insertion_point(field_get:icdl_proto.TensorDataDescriptor.flo_point)
+  return has_flo_point()
+      ? *data_represent_.flo_point_
+      : *reinterpret_cast< ::icdl_proto::FloatpointRepresent*>(&::icdl_proto::_FloatpointRepresent_default_instance_);
+}
+inline ::icdl_proto::FloatpointRepresent* TensorDataDescriptor::mutable_flo_point() {
+  if (!has_flo_point()) {
+    clear_data_represent();
+    set_has_flo_point();
+    data_represent_.flo_point_ = CreateMaybeMessage< ::icdl_proto::FloatpointRepresent >(
+        GetArenaNoVirtual());
+  }
+  // @@protoc_insertion_point(field_mutable:icdl_proto.TensorDataDescriptor.flo_point)
+  return data_represent_.flo_point_;
+}
+
+inline bool TensorDataDescriptor::has_data_represent() const {
+  return data_represent_case() != DATA_REPRESENT_NOT_SET;
+}
+inline void TensorDataDescriptor::clear_has_data_represent() {
+  _oneof_case_[0] = DATA_REPRESENT_NOT_SET;
+}
+inline TensorDataDescriptor::DataRepresentCase TensorDataDescriptor::data_represent_case() const {
+  return TensorDataDescriptor::DataRepresentCase(_oneof_case_[0]);
+}
+// -------------------------------------------------------------------
+
 // TensorStorage
 
 // bytes data = 1;
@@ -493,23 +1129,60 @@ inline void TensorStorage::set_allocated_data(::std::string* data) {
   // @@protoc_insertion_point(field_set_allocated:icdl_proto.TensorStorage.data)
 }
 
+// .icdl_proto.TensorDataDescriptor data_descriptor = 2;
+inline bool TensorStorage::has_data_descriptor() const {
+  return this != internal_default_instance() && data_descriptor_ != nullptr;
+}
+inline void TensorStorage::clear_data_descriptor() {
+  if (GetArenaNoVirtual() == nullptr && data_descriptor_ != nullptr) {
+    delete data_descriptor_;
+  }
+  data_descriptor_ = nullptr;
+}
+inline const ::icdl_proto::TensorDataDescriptor& TensorStorage::data_descriptor() const {
+  const ::icdl_proto::TensorDataDescriptor* p = data_descriptor_;
+  // @@protoc_insertion_point(field_get:icdl_proto.TensorStorage.data_descriptor)
+  return p != nullptr ? *p : *reinterpret_cast<const ::icdl_proto::TensorDataDescriptor*>(
+      &::icdl_proto::_TensorDataDescriptor_default_instance_);
+}
+inline ::icdl_proto::TensorDataDescriptor* TensorStorage::release_data_descriptor() {
+  // @@protoc_insertion_point(field_release:icdl_proto.TensorStorage.data_descriptor)
+  
+  ::icdl_proto::TensorDataDescriptor* temp = data_descriptor_;
+  data_descriptor_ = nullptr;
+  return temp;
+}
+inline ::icdl_proto::TensorDataDescriptor* TensorStorage::mutable_data_descriptor() {
+  
+  if (data_descriptor_ == nullptr) {
+    auto* p = CreateMaybeMessage<::icdl_proto::TensorDataDescriptor>(GetArenaNoVirtual());
+    data_descriptor_ = p;
+  }
+  // @@protoc_insertion_point(field_mutable:icdl_proto.TensorStorage.data_descriptor)
+  return data_descriptor_;
+}
+inline void TensorStorage::set_allocated_data_descriptor(::icdl_proto::TensorDataDescriptor* data_descriptor) {
+  ::google::protobuf::Arena* message_arena = GetArenaNoVirtual();
+  if (message_arena == nullptr) {
+    delete data_descriptor_;
+  }
+  if (data_descriptor) {
+    ::google::protobuf::Arena* submessage_arena = nullptr;
+    if (message_arena != submessage_arena) {
+      data_descriptor = ::google::protobuf::internal::GetOwnedMessage(
+          message_arena, data_descriptor, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  data_descriptor_ = data_descriptor;
+  // @@protoc_insertion_point(field_set_allocated:icdl_proto.TensorStorage.data_descriptor)
+}
+
 // -------------------------------------------------------------------
 
 // Tensor
-
-// .icdl_proto.Tensor.TensorDataType dtype = 1;
-inline void Tensor::clear_dtype() {
-  dtype_ = 0;
-}
-inline ::icdl_proto::Tensor_TensorDataType Tensor::dtype() const {
-  // @@protoc_insertion_point(field_get:icdl_proto.Tensor.dtype)
-  return static_cast< ::icdl_proto::Tensor_TensorDataType >(dtype_);
-}
-inline void Tensor::set_dtype(::icdl_proto::Tensor_TensorDataType value) {
-  
-  dtype_ = value;
-  // @@protoc_insertion_point(field_set:icdl_proto.Tensor.dtype)
-}
 
 // .icdl_proto.TensorStorage storage = 2;
 inline bool Tensor::has_storage() const {
@@ -611,6 +1284,12 @@ inline void Tensor::set_mem_layout(::icdl_proto::Tensor_TensorMemLayout value) {
 #endif  // __GNUC__
 // -------------------------------------------------------------------
 
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -619,10 +1298,10 @@ inline void Tensor::set_mem_layout(::icdl_proto::Tensor_TensorMemLayout value) {
 namespace google {
 namespace protobuf {
 
-template <> struct is_proto_enum< ::icdl_proto::Tensor_TensorDataType> : ::std::true_type {};
+template <> struct is_proto_enum< ::icdl_proto::TensorDataDescriptor_TensorDataType> : ::std::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::icdl_proto::Tensor_TensorDataType>() {
-  return ::icdl_proto::Tensor_TensorDataType_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::icdl_proto::TensorDataDescriptor_TensorDataType>() {
+  return ::icdl_proto::TensorDataDescriptor_TensorDataType_descriptor();
 }
 template <> struct is_proto_enum< ::icdl_proto::Tensor_TensorMemLayout> : ::std::true_type {};
 template <>

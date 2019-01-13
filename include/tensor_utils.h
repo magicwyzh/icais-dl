@@ -34,6 +34,7 @@ namespace icdl{
         NHWC,
         NOT_AVAILABLE
     };
+    
     const std::string enum_to_string(const TensorDataType& enum_val);
     const std::string enum_to_string(const TensorDataLocation& enum_val);
     const std::string enum_to_string(const TensorMemLayout& enum_val);

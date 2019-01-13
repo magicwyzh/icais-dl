@@ -1,22 +1,44 @@
 syntax = "proto3";
 package icdl_proto;
-message TensorStorage{
-    bytes data = 1;
+message FixpointRepresent{
+    uint32 total_bits = 1;
+    bool is_signed = 2;
+    int32 frac_point_location = 3;
 }
 
-message Tensor{
+message FloatpointRepresent{
+    uint32 total_bits = 1;
+    bool is_signed = 2;
+    uint32 exp_bits = 3;
+    uint32 mantissa_bits = 4; 
+}
+
+message TensorDataDescriptor{
     enum TensorDataType{
         FLOAT_32 = 0;
         FLOAT_16 = 1;
         FIXPOINT = 2;
         INVALID_DTYPE = 3;
     }
+    TensorDataType dtype = 1;
+    oneof data_represent{
+        FixpointRepresent fix_point = 2;
+        FloatpointRepresent flo_point = 3;
+    }
+}
+
+message TensorStorage{
+    bytes data = 1;// num_data can be get from data.size()
+    TensorDataDescriptor data_descriptor = 2;
+}
+
+message Tensor{
     enum TensorMemLayout{
         DENSE_LAYOUT = 0;
         SPARSE_LAYOUT = 1;
         INVALID_LAYOUT = 2;
     }
-    TensorDataType dtype = 1;
+    //TensorDataType dtype = 1;
     TensorStorage storage = 2;
     repeated uint64 tensor_size = 3;
     TensorMemLayout mem_layout = 4;

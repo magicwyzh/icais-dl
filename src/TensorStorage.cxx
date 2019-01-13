@@ -2,20 +2,73 @@
 #include <string.h>
 #include "tensor_utils.h"
 #include "accelerator_memory.h"
+#include "protos/protobuf_utils.h"
 namespace icdl{
 
     void TensorStorage::deserialize(const icdl_proto::TensorStorage& storage_proto){
         assert(data_location_ == kCPUMem);
+        TensorDataType dtype_pb = proto_dtype_to_icdl_dtype(storage_proto.data_descriptor().dtype());
+        TensorDataDescriptor descrpt_pb;
+        // set descriptor
+        auto proto_descriptor = icdl_proto::TensorDataDescriptor();
+        
+        // sanity check
+        if(get_data_type() == kFloat32 || get_data_type() == kFloat16){
+            assert(storage_proto.data_descriptor().has_flo_point());
+            auto r = storage_proto.data_descriptor().flo_point();
+            assert(get_data_descriptor().get_represent().flo_point == 
+                FloatpointRepresent({r.total_bits(), r.is_signed(), r.exp_bits(), r.mantissa_bits()}));
+        }
+        else if(get_data_type() == kFixpoint){
+            assert(storage_proto.data_descriptor().has_fix_point());
+            auto r = storage_proto.data_descriptor().fix_point();
+            assert(get_data_descriptor().get_represent().fix_point ==
+                 FixpointRepresent({r.total_bits(), r.is_signed(), r.frac_point_location()}));
+        }
+
+        assert(dtype_pb == get_data_type());
+        assert(storage_proto.data().size() == get_total_bytes());
+        
         auto my_ptr = data_ptr();
         auto proto_ptr = storage_proto.data().c_str();
         memcpy(my_ptr, proto_ptr, get_total_bytes());
     }
+
     icdl_proto::TensorStorage TensorStorage::serialize() const{
         icdl_proto::TensorStorage s;
         s.set_data(data_ptr(), get_total_bytes());
+        auto descr_pb = icdl_proto::TensorDataDescriptor();
+        icdl_proto::TensorDataDescriptor_TensorDataType dtype_pb;
+        switch(get_data_type()){
+            case kFloat32: dtype_pb = icdl_proto::TensorDataDescriptor_TensorDataType_FLOAT_32;break;
+            case kFloat16: dtype_pb = icdl_proto::TensorDataDescriptor_TensorDataType_FLOAT_16;break;
+            case kFixpoint: dtype_pb = icdl_proto::TensorDataDescriptor_TensorDataType_FIXPOINT; break;
+            default: 
+                dtype_pb = icdl_proto::TensorDataDescriptor_TensorDataType_INVALID_DTYPE; break;
+        }
+        descr_pb.set_dtype(dtype_pb);
+
+        if(get_data_type() == kFloat32 || get_data_type() == kFloat16){
+            auto proto_flo = descr_pb.mutable_flo_point();
+            auto storage_flo = get_data_descriptor().get_represent().flo_point;
+            proto_flo->set_is_signed(storage_flo.is_signed);
+            proto_flo->set_total_bits(storage_flo.total_bits);
+            proto_flo->set_mantissa_bits(storage_flo.mantissa_bits);
+            proto_flo->set_exp_bits(storage_flo.exp_bits);
+        }
+        else if(get_data_type() == kFixpoint){
+            auto proto_fix = descr_pb.mutable_fix_point();
+            auto storage_fix = get_data_descriptor().get_represent().fix_point;
+            proto_fix->set_is_signed(storage_fix.is_signed);
+            proto_fix->set_total_bits(storage_fix.total_bits);
+            proto_fix->set_frac_point_location(storage_fix.frac_point_location);
+        }
+
+        (*s.mutable_data_descriptor()) = descr_pb;
+
         return s;
     }
-    FixpointRepresent invalid_fix_represent;
+
     Float32TensorStorage::Float32TensorStorage(size_t num_element, TensorDataLocation data_loc)
         :TensorStorage(num_element, data_loc, Float32Descriptor()), data_ptr_(nullptr){
         if(data_loc == kCPUMem){

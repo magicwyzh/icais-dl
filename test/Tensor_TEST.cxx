@@ -3,6 +3,9 @@
 #include <memory>
 #include <random>
 #include <iostream>
+#include <fstream>
+#include "protos/Tensor.pb.h"
+#include "test_utils.h"
 using namespace icdl;
 
 TEST(TensorTest, Float2FixConvertTest){
@@ -340,4 +343,32 @@ TEST(StorageTest, InitTest){
         EXPECT_EQ(cloned_fix8_raw_ptr[i], fix8_raw_ptr[i]);
     }
 
+}
+
+
+TEST(TensorTest, SeDeserializeTest){
+    GOOGLE_PROTOBUF_VERIFY_VERSION;
+    auto t1 = icdl::Tensor({1,3,25,25}, FixpointDescriptor(8, true, 3));
+    auto p1 = static_cast<int8_t*>(t1.data_ptr());
+    EXPECT_EQ(icdl::TensorDataType::FIXPOINT, t1.dtype());
+    for(size_t i = 0; i < t1.nelement();i++){
+        p1[i] = i;
+    }
+    auto t1_pb = t1.serialize();
+
+    std::fstream output("t1.icdl_tensor", std::ios::out| std::ios::trunc| std::ios::binary);
+    t1_pb.SerializeToOstream(&output);
+
+    auto t2 = icdl::Tensor();
+    std::fstream input("t1.icdl_tensor", std::ios::in | std::ios::binary);
+    icdl_proto::Tensor t2_pb;
+    t2_pb.ParseFromIstream(&input);
+    t2.deserialize(t2_pb);
+    EXPECT_EQ(t1.get_data_descript().get_represent().fix_point, t2.get_data_descript().get_represent().fix_point);
+    EXPECT_EQ(t1.nelement(), t2.nelement());
+    auto p2 = static_cast<int8_t*>(t2.data_ptr());
+    for(size_t i = 0; i < t1.nelement();i++){
+        EXPECT_EQ(p1[i], p2[i]);
+    }
+    google::protobuf::ShutdownProtobufLibrary();
 }
