@@ -22,10 +22,10 @@ namespace icdl{ namespace op{
         ICDL_ARG(TensorDataDescriptor, param_descriptor) = Float32Descriptor();
     };
     class Linear: public Operator{
-    private:
-        LinearOptions _options;
-        Tensor _weight;
-        Tensor _bias;
+    OP_ADD_TENSOR(weight);
+    OP_ADD_TENSOR(bias);
+    OP_ADD_OPTIONS(Linear);
+    OP_ADD_COMMON_FUNCTIONS(Linear);
     public:
         Linear(const size_t in, const size_t out, 
                 OpImplPtr linear_impl = makeEmptyOperatorImpl(), 
@@ -37,25 +37,11 @@ namespace icdl{ namespace op{
                 const TensorDataLocation& param_location = kCPUMem,
                 const TensorMemLayout& param_mem_layout = kDense);
         
-        virtual std::string type_name() const override{
-            return "Linear";
-        }
         virtual TensorSize output_size(const TensorSize& input_size) const override{
             assert(input_size.size() == 2);//one dim for batch, one dim for #neurons.
             return TensorSize({input_size[0], _options.out()});
         }
-        const LinearOptions& get_options() const{
-            return _options;
-        }
-        const Tensor& get_weight() const{
-            return _weight;
-        }
-        const Tensor& get_bias() const{
-            return _bias;
-        }
     };
-
-    
 }
     OP_FACTORY_REGISTER(Linear); //generate a function called "icdl::LinearOpMake->std::shared_ptr<Operator>"
 }//namespace icdl::op

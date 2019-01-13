@@ -30,6 +30,7 @@ namespace icdl{ namespace op{
     OP_ADD_TENSOR(weight);
     OP_ADD_TENSOR(bias);
     OP_ADD_OPTIONS(Conv2d);
+    OP_ADD_COMMON_FUNCTIONS(Conv2d);
     public:
         Conv2d(const size_t input_channels, const size_t output_channels,
                 const ExpandingArray<2>& kernel_size, 
@@ -47,10 +48,9 @@ namespace icdl{ namespace op{
                 const TensorDataLocation& param_location = kCPUMem,
                 const TensorMemLayout& param_mem_layout = kDense
         );
-        virtual std::string type_name() const override{
-            return "Conv2d";
-        }
         virtual TensorSize output_size(const TensorSize& input_size) const override;
     };
 
-}}
+}
+    OP_FACTORY_REGISTER(Conv2d); 
+}

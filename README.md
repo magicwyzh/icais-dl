@@ -82,6 +82,7 @@ Here are something in the to-do list now:
     * Memory location conversion
 * Discuss with quantization guys about what they want to represent TensorData
     * Currently there is just a FixpointRepresentation with total_bits, frac_bits, sign. However, they may want something like per-channel scalar, etc.
+    * New FixpointRepresent implementation and unit test.
 * Arm Compute Library Backend
 * Scripts that transforms models in framework like Darknet/Pytorch to ICDL model.
     * Not clear now.

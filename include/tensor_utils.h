@@ -37,6 +37,55 @@ namespace icdl{
     const std::string enum_to_string(const TensorDataType& enum_val);
     const std::string enum_to_string(const TensorDataLocation& enum_val);
     const std::string enum_to_string(const TensorMemLayout& enum_val);
+
+    /**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     *                      Fixpoint Represent Design Considerations
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * There may be different understandings about fixpoint representation or quantization.
+     * 1. Quantization is just to make data fixpoint. E.g., a float point number 3.246 may be 
+     * quantized to 3 decimal digit and has 2 fractions, then it become 3.25. And the data representation
+     * of this number includes three parts: 
+     *      1) total number of digit=3 
+     *      2) signed or unsigned
+     *      3) the fixed number has 2 fractional bits in the rightest part.
+     * 2. Quantization to integer number(no fixed point info) with scalars. When one want to quantize a data x, 
+     * they just represent it as x = scalar*(xq-z), where scalar is a float and xq & z are integer without fractions
+     * so the data representation of this number includes x parts:
+     *      1) total number of integer bits for xq & z
+     *      2) signed or unsigned
+     *      3) float scalar number
+     * Another concern is the quantization may be per-layer quantization or per-channel or from other dims.
+     *  So the info/represent mentioned above should be variable length(i.e., using std::vector).
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     * To satisfy these two different requirements, the attributes of FixpointRepresent should be:
+     *  1) std::vector<uint8_t> total_bits_list; // when each channel use different bits, uint8 is enough..
+     *  2) std::vector<bool> signed;
+     *  3) std::vector<int> frac_point_locations;
+     *  4) std::vector<float> scalars;
+     *  5) std::vector<int16_t> zero_points;//16 bits should be enought for DNNs...
+     * Constructors:
+     *  1) FixpointRepresent(): total_bits({0}), signed({false}), frac_point_location({0}), scalars({}), zero_points({})
+     *  2) FixpointRepresent(size_t bits, bool sign, int frac_loc)// per layer fixpoint without scalar
+     *     :total_bits({bits}), is_signed({sign}), frac_point_location({frac_loc}), scalar({}), zero_point({})
+     *  3) FixpointRepresent(std::vector<size_t> bits, std::vector<bool> sign, std::vector<int> frac_loc)// fixpoint without scalar
+     *     :total_bits(bits), is_signed(sign), frac_point_location(frac_loc), scalar({}), zero_point({})
+     *  4) FixpointRepresent(std::vector<size_t> bits, std::vector<bool> sign, std::vector<float> scalar, std::vector<int16_t> zero)
+     *     :total_bits(bits), is_signed(sign), frac_point_location({}), scalars(scalar), zero_points(zero)
+     *  5) FixpointRepresent(std::vector<size_t> bits, std::vector<bool> sign, 
+     *                       std::vector<int> frac_loc, std::vector<float> scalar, 
+     *                       std::vector<int16_t> zero)
+     *     :total_bits(bits), is_signed(sign), frac_point_location(frac_loc), scalars(scalar), zero_points(zero)
+     *  Methods: 
+     *  1) int32_t Bit_mask(): assume the vector size=1 or uniform bits, pick up the first element's bits.
+     *  2) std::vector<int32_t> bit_mask_lists(): return vector of bitmask
+     *  3)&4) like above, two versions of num_byte_up_round()
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     *  TODO: 
+     *      Change current FixpointRepresent to support two different quantization/fixpoint requirements
+     *      and use vector.
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     **/
+
     struct FixpointRepresent{
         size_t total_bits = 0;
         bool is_signed = false;
@@ -66,8 +115,8 @@ namespace icdl{
     };
 
     union DataRepresent{
-        FloatpointRepresent flo_point;
         FixpointRepresent fix_point;
+        FloatpointRepresent flo_point;
         DataRepresent(){}
     };
 

@@ -7,6 +7,12 @@
 #include <vector>
 namespace icdl{
 
+#define OP_ADD_COMMON_FUNCTIONS(op_name) \
+    public:\
+        virtual std::string type_name() const override{\
+            return #op_name;\
+        }
+
 #define OP_ADD_TENSOR(name) \
     public:\
         const Tensor& get_##name() const{\
@@ -17,7 +23,7 @@ namespace icdl{
 
 #define OP_ADD_OPTIONS(op_name) \
     public:\
-        const op_name##Options& get_options() const{\
+        virtual const op_name##Options& get_options() const{\
             return _options;\
         }\
     private:\
