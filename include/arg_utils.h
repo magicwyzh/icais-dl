@@ -19,7 +19,7 @@ namespace icdl{
             return _##name;\
         }\
     private:\
-        Tensor _##name
+        icdl::Tensor _##name
 
 #define OP_ADD_OPTIONS(op_name) \
     public:\

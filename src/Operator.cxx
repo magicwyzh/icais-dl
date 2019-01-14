@@ -1,7 +1,7 @@
 #include "Operator.h"
 
 namespace icdl{
-        int64_t Operator::compute_complexity(const TensorSize& input_size) const{
+    int64_t Operator::compute_complexity(const TensorSize& input_size) const{
                 return 0;
             }
     void Operator::_register_tensor(const std::string& tensor_name, Tensor* tensor_ptr){

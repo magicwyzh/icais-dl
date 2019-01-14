@@ -221,7 +221,7 @@ TEST(TensorTest, InitTest){
     EXPECT_EQ(images_float.size(), TensorSize({1,3,32,32}));
     EXPECT_EQ(images_float.get_data_location(), kCPUMem);
     EXPECT_EQ(images_float.get_mem_layout(), kDense);
-    EXPECT_EQ(images_float.nelement(), 1*3*32*32);
+    EXPECT_EQ(images_float.nelement(), static_cast<size_t>(1*3*32*32));
     //should have data
     EXPECT_NE(images_float.data_ptr(), nullptr);
     // but dense tensor should not have aux_info
@@ -238,7 +238,7 @@ TEST(TensorTest, InitTest){
     EXPECT_EQ(images_fixpoint.size(), TensorSize({8,3,32,32}));
     EXPECT_EQ(images_fixpoint.get_data_location(), kCPUMem);
     EXPECT_EQ(images_fixpoint.get_mem_layout(), kDense);
-    EXPECT_EQ(images_fixpoint.nelement(), 8*3*32*32);
+    EXPECT_EQ(images_fixpoint.nelement(), static_cast<size_t>(8*3*32*32));
     //should have data
     EXPECT_NE(images_fixpoint.data_ptr(), nullptr);
     // but dense tensor should not have aux_info
@@ -259,7 +259,7 @@ TEST(TensorTest, InitTest){
     EXPECT_EQ(t_fr_blob.size(), TensorSize({8,3,16,16}));
     EXPECT_EQ(t_fr_blob.dtype(), kFixpoint);
     EXPECT_EQ(t_fr_blob.get_data_descript(), descript);
-    EXPECT_EQ(t_fr_blob.nelement(), 8*3*16*16);
+    EXPECT_EQ(t_fr_blob.nelement(), static_cast<size_t>(8*3*16*16));
     EXPECT_EQ(t_fr_blob.get_data_location(), kCPUMem);
     delete [] raw_image_ptr;
 }
