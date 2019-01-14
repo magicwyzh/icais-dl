@@ -12,7 +12,7 @@ wget https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-lat
 Build them with CXXFLAGS=-D_GLIBCXX_USE_CXX11_ABI=0 and install them together in a deps directory.
 
 Building dependencies may be troublesome. So you can also download a pre-built binary packages from:
-https://drive.google.com/open?id=1DvWQGVIoYIHnw_SnuD3plVCNO-Ek367g
+[deps.tar.gz](https://drive.google.com/open?id=1DvWQGVIoYIHnw_SnuD3plVCNO-Ek367g)
 and unzip it in the icdl source directory. 
 
 
