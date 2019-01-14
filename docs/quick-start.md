@@ -1,35 +1,27 @@
 # Compile and Link
-This project is made based on CMAKE.
-To compile and use:
+This project is made based on CMAKE. 
+To compile and use, there are 3 main dependencies
+i.e., googletest, protobuf, libtorch
 ```bash
-# build googletest
-git clone https://github.com/google/googletest
-cd gtest/googletest 
-vim CMakeLists.txt # add a line ``add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)"
-mkdir build && cd build && cmake .. 
-# headers will be installed in /usr/local/include
-# lib will be in /usr/local/lib
-make && make install 
-
-cd 
+# build googletest & protobuf from
+$ git clone https://github.com/google/googletest
+$ git clone --recursive https://github.com/protocolbuffers/protobuf
 # get pytorch lib
 wget https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-latest.zip
-#... unzip to where you want
-unzip libtorch-win-shared-with-deps-latest.zip
-# then you may have /home/<your_user_name>/libtorch
+```
+Build them with CXXFLAGS=-D_GLIBCXX_USE_CXX11_ABI=0 and install them together in a deps directory.
 
-# build and install protobuf from source as described in https://github.com/protocolbuffers/protobuf/blob/master/src/README.md
-# Only difference: Remember to build with env variable set CXXFLAGS=-D_GLIBCXX_USE_CXX11_ABI=0  
-# see ./configure --help in protobuf source
+It may be troublesome. Ask me for the built libs....
 
-...
+Following is the steps to build icdl library.
+```bash
 # Start building icdl
-cd <icdl_src_package_path>
-vim CMakeList.txt # modify link_directories() and include_directories() to set path to googletest/protobuf/libtorch
-vim test/CMakeList.txt # modify link_directories() and include_directories() to set path to googletest/protobuf/libtorch
-mkdir build
+cd <icdl_src_path>
+mkdir deps
+# install googletest/protobuf/libtorch in deps
+mkdir build # in <icdl_src_path>
 cmake .. && make 
-# run unit test
+# run unit tests
 ./bin/test_all
 ```
 # Core Idea Description
