@@ -1,3 +1,6 @@
 build/
 .vscode/
-deps/
+deps/bin
+deps/lib
+deps/include
+deps.tar.gz
