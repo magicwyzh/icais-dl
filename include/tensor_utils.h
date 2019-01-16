@@ -6,6 +6,8 @@
 #include <algorithm>  
 #include <cassert>
 #include <string>
+#include "icdl_exceptions.h"
+#include "protos/Tensor.pb.h"
 namespace icdl{
     using TensorSize = std::vector<size_t>;
 
@@ -39,7 +41,9 @@ namespace icdl{
     const std::string enum_to_string(const TensorDataLocation& enum_val);
     const std::string enum_to_string(const TensorMemLayout& enum_val);
 
-    /**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    /**
+     * @brief 
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      *                      Fixpoint Represent Design Considerations
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      * There may be different understandings about fixpoint representation or quantization.
@@ -58,50 +62,58 @@ namespace icdl{
      * Another concern is the quantization may be per-layer quantization or per-channel or from other dims.
      *  So the info/represent mentioned above should be variable length(i.e., using std::vector).
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     * To satisfy these two different requirements, the attributes of FixpointRepresent should be:
-     *  1) std::vector<uint8_t> total_bits_list; // when each channel use different bits, uint8 is enough..
-     *  2) std::vector<bool> signed;
-     *  3) std::vector<int> frac_point_locations;
-     *  4) std::vector<float> scalars;
-     *  5) std::vector<int16_t> zero_points;//16 bits should be enought for DNNs...
-     * Constructors:
-     *  1) FixpointRepresent(): total_bits({0}), signed({false}), frac_point_location({0}), scalars({}), zero_points({})
-     *  2) FixpointRepresent(size_t bits, bool sign, int frac_loc)// per layer fixpoint without scalar
-     *     :total_bits({bits}), is_signed({sign}), frac_point_location({frac_loc}), scalar({}), zero_point({})
-     *  3) FixpointRepresent(std::vector<size_t> bits, std::vector<bool> sign, std::vector<int> frac_loc)// fixpoint without scalar
-     *     :total_bits(bits), is_signed(sign), frac_point_location(frac_loc), scalar({}), zero_point({})
-     *  4) FixpointRepresent(std::vector<size_t> bits, std::vector<bool> sign, std::vector<float> scalar, std::vector<int16_t> zero)
-     *     :total_bits(bits), is_signed(sign), frac_point_location({}), scalars(scalar), zero_points(zero)
-     *  5) FixpointRepresent(std::vector<size_t> bits, std::vector<bool> sign, 
-     *                       std::vector<int> frac_loc, std::vector<float> scalar, 
-     *                       std::vector<int16_t> zero)
-     *     :total_bits(bits), is_signed(sign), frac_point_location(frac_loc), scalars(scalar), zero_points(zero)
-     *  Methods: 
-     *  1) int32_t Bit_mask(): assume the vector size=1 or uniform bits, pick up the first element's bits.
-     *  2) std::vector<int32_t> bit_mask_lists(): return vector of bitmask
-     *  3)&4) like above, two versions of num_byte_up_round()
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     *  TODO: 
-     *      Change current FixpointRepresent to support two different quantization/fixpoint requirements
-     *      and use vector.
-     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     **/
-
+     */
     struct FixpointRepresent{
-        size_t total_bits = 0;
-        bool is_signed = false;
-        int frac_point_location = 0;
-        inline int32_t bit_mask() const{
-            return (1 << total_bits) - 1;
-        }
-        FixpointRepresent():total_bits(0), is_signed(false), frac_point_location(0){}
-        FixpointRepresent(size_t bits, bool sign, int frac_loc)
-        :total_bits(bits), is_signed(sign), frac_point_location(frac_loc){}
+        std::vector<uint8_t> total_bits;
+        std::vector<bool> is_signed;
+        std::vector<int8_t> frac_point_locations;
+        std::vector<float> scalars;
+        std::vector<int16_t> zero_points;
+        FixpointRepresent(){}
+        FixpointRepresent(uint8_t bits, bool sign, int8_t frac_loc)// per layer fixpoint without scalar
+          :total_bits({bits}), is_signed({sign}), frac_point_locations({frac_loc}){}
+        FixpointRepresent(std::vector<uint8_t> bits, std::vector<bool> sign, std::vector<int8_t> frac_loc)// fixpoint without scalar
+          :total_bits(bits), is_signed(sign), frac_point_locations(frac_loc), scalars({}), zero_points({}){}
+        FixpointRepresent(std::vector<uint8_t> bits, std::vector<bool> sign, std::vector<float> scalar, std::vector<int16_t> zero)
+          :total_bits(bits), is_signed(sign), frac_point_locations({}), scalars(scalar), zero_points(zero){}
+        FixpointRepresent(std::vector<uint8_t> bits, std::vector<bool> sign, 
+                            std::vector<int8_t> frac_loc, std::vector<float> scalar, 
+                            std::vector<int16_t> zero)
+          :total_bits(bits), is_signed(sign), frac_point_locations(frac_loc), scalars(scalar), zero_points(zero){}
+        FixpointRepresent(FixpointRepresent&& other) = default;
+        FixpointRepresent(const FixpointRepresent&) = default;
+        FixpointRepresent& deserialize(const icdl_proto::FixpointRepresent& proto_repr);
+        icdl_proto::FixpointRepresent serialize() const;
+        FixpointRepresent& operator=(const FixpointRepresent& other) = default;
         bool operator==(const FixpointRepresent& rhs) const;
-        size_t num_byte_up_round() const{
-            return (total_bits + 8 - 1) / 8;
-        }
+
+        /**
+         * @brief Return bit mask for the first element in total_bits. 
+         *        The size of total bits is assumed to be > 1, otherwise raise asssertion error.
+         * 
+         * @return int32_t 
+         */
+        int32_t bit_mask() const;
+        /**
+         * @brief Return bit masks for each element in total_bits
+         * 
+         * @return std::vector<int32_t> 
+         */
+        std::vector<int32_t> bit_masks() const;
+        /**
+         * @brief Returns the number of bytes of a data, aligned to 8 bits.
+         *        Assume the total_bits are all the same. Only check the first one in the total_bits.
+         * 
+         * @return size_t
+         */
+        size_t num_byte_up_round() const;
+        /**
+         * @brief Clear all members.
+         * 
+         */
+        void clear();
     };
+
 
     struct FloatpointRepresent{
         size_t total_bits{32};
@@ -115,10 +127,21 @@ namespace icdl{
         bool operator==(const FloatpointRepresent& rhs) const;
     };
 
-    union DataRepresent{
+    /**
+     * @brief A structure to store how data is represented as fixpoint or float.
+     *        Previously it is considered to be an union, however, when the fixpoint represent
+     *        starts to store multiple vectors, an union is unable to be used because all of its
+     *        default constructors/destructors/copy constructors are deleted...
+     *        Not sure how to write the copy constructor, so dont use union now.
+     *        
+     */
+    struct DataRepresent{
         FixpointRepresent fix_point;
         FloatpointRepresent flo_point;
-        DataRepresent(){}
+        DataRepresent(DataRepresent && other) = default;
+        DataRepresent(const DataRepresent& other): fix_point(other.fix_point), flo_point(other.flo_point){}
+        DataRepresent() = default;
+        DataRepresent& operator=(const DataRepresent& other) = default;
     };
 
     class TensorDataDescriptor{
@@ -127,17 +150,13 @@ namespace icdl{
         DataRepresent represent_;
     public:
         TensorDataDescriptor(const FloatpointRepresent& float_represent);
-
-        TensorDataDescriptor(const FixpointRepresent& fix_represent):dtype_(TensorDataType::FIXPOINT){
-            represent_.fix_point = fix_represent;
-        }
-        //Common Float by string
-        //TensorDataDescriptor(const std::string & type_str);
-
+        TensorDataDescriptor(const FixpointRepresent& fix_represent);
+        TensorDataDescriptor(const TensorDataDescriptor& other);
         // Fixpoint
         TensorDataDescriptor(const size_t total_bits, const bool is_signed, const int frac_point);
         // invalid empty descriptor
         TensorDataDescriptor();
+        TensorDataDescriptor& operator=(const TensorDataDescriptor& other) = default;
 
         TensorDataType get_dtype() const;
         DataRepresent get_represent() const;
@@ -158,6 +177,7 @@ namespace icdl{
             return this->dim_layout_4d==rhs.dim_layout_4d ? true : false;
         }
     };
+
     constexpr auto kFloat32 = TensorDataType::FLOAT_32;
     constexpr auto kFloat16 = TensorDataType::FLOAT_16;
     constexpr auto kFixpoint = TensorDataType::FIXPOINT;
@@ -168,17 +188,31 @@ namespace icdl{
     constexpr auto kNCHW = TensorDimLayout4D::NCHW;
     constexpr auto kNHWC = TensorDimLayout4D::NHWC;
 
+
     inline TensorDataDescriptor Float32Descriptor(){
         return TensorDataDescriptor().dtype(kFloat32);
     }
+
     inline TensorDataDescriptor Float16Descriptor(){
         return TensorDataDescriptor().dtype(kFloat16);
     }
+
     inline TensorDataDescriptor FixpointDescriptor(const size_t total_bits, const bool is_signed, const int frac_point){
         return TensorDataDescriptor(total_bits, is_signed, frac_point);
     }
+
     inline TensorDataDescriptor FixpointDescriptor(const FixpointRepresent& fix_represent){
         return TensorDataDescriptor(fix_represent);
     }
+
+    inline TensorDataDescriptor FixpointDescriptor(std::vector<uint8_t> bits, 
+                                                   std::vector<bool> sign, 
+                                                   std::vector<float> scalar, 
+                                                   std::vector<int16_t> zero
+                                                   ){
+        return TensorDataDescriptor(FixpointDescriptor(bits, sign, scalar,zero));
+    }
+
+
 }
 #endif

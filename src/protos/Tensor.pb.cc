@@ -138,7 +138,9 @@ const ::google::protobuf::uint32 TableStruct_Tensor_2eproto::offsets[] PROTOBUF_
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::icdl_proto::FixpointRepresent, total_bits_),
   PROTOBUF_FIELD_OFFSET(::icdl_proto::FixpointRepresent, is_signed_),
-  PROTOBUF_FIELD_OFFSET(::icdl_proto::FixpointRepresent, frac_point_location_),
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::FixpointRepresent, frac_point_locations_),
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::FixpointRepresent, scalars_),
+  PROTOBUF_FIELD_OFFSET(::icdl_proto::FixpointRepresent, zero_points_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::icdl_proto::FloatpointRepresent, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -175,10 +177,10 @@ const ::google::protobuf::uint32 TableStruct_Tensor_2eproto::offsets[] PROTOBUF_
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::icdl_proto::FixpointRepresent)},
-  { 8, -1, sizeof(::icdl_proto::FloatpointRepresent)},
-  { 17, -1, sizeof(::icdl_proto::TensorDataDescriptor)},
-  { 26, -1, sizeof(::icdl_proto::TensorStorage)},
-  { 33, -1, sizeof(::icdl_proto::Tensor)},
+  { 10, -1, sizeof(::icdl_proto::FloatpointRepresent)},
+  { 19, -1, sizeof(::icdl_proto::TensorDataDescriptor)},
+  { 28, -1, sizeof(::icdl_proto::TensorStorage)},
+  { 35, -1, sizeof(::icdl_proto::Tensor)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -196,32 +198,33 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
 };
 
 const char descriptor_table_protodef_Tensor_2eproto[] =
-  "\n\014Tensor.proto\022\nicdl_proto\"W\n\021FixpointRe"
-  "present\022\022\n\ntotal_bits\030\001 \001(\r\022\021\n\tis_signed"
-  "\030\002 \001(\010\022\033\n\023frac_point_location\030\003 \001(\005\"e\n\023F"
-  "loatpointRepresent\022\022\n\ntotal_bits\030\001 \001(\r\022\021"
-  "\n\tis_signed\030\002 \001(\010\022\020\n\010exp_bits\030\003 \001(\r\022\025\n\rm"
-  "antissa_bits\030\004 \001(\r\"\241\002\n\024TensorDataDescrip"
-  "tor\022>\n\005dtype\030\001 \001(\0162/.icdl_proto.TensorDa"
-  "taDescriptor.TensorDataType\0222\n\tfix_point"
-  "\030\002 \001(\0132\035.icdl_proto.FixpointRepresentH\000\022"
-  "4\n\tflo_point\030\003 \001(\0132\037.icdl_proto.Floatpoi"
-  "ntRepresentH\000\"M\n\016TensorDataType\022\014\n\010FLOAT"
-  "_32\020\000\022\014\n\010FLOAT_16\020\001\022\014\n\010FIXPOINT\020\002\022\021\n\rINV"
-  "ALID_DTYPE\020\003B\020\n\016data_represent\"X\n\rTensor"
-  "Storage\022\014\n\004data\030\001 \001(\014\0229\n\017data_descriptor"
-  "\030\002 \001(\0132 .icdl_proto.TensorDataDescriptor"
-  "\"\315\001\n\006Tensor\022*\n\007storage\030\002 \001(\0132\031.icdl_prot"
-  "o.TensorStorage\022\023\n\013tensor_size\030\003 \003(\004\0226\n\n"
-  "mem_layout\030\004 \001(\0162\".icdl_proto.Tensor.Ten"
-  "sorMemLayout\"J\n\017TensorMemLayout\022\020\n\014DENSE"
-  "_LAYOUT\020\000\022\021\n\rSPARSE_LAYOUT\020\001\022\022\n\016INVALID_"
-  "LAYOUT\020\002b\006proto3"
+  "\n\014Tensor.proto\022\nicdl_proto\"~\n\021FixpointRe"
+  "present\022\022\n\ntotal_bits\030\001 \003(\r\022\021\n\tis_signed"
+  "\030\002 \003(\010\022\034\n\024frac_point_locations\030\003 \003(\005\022\017\n\007"
+  "scalars\030\004 \003(\002\022\023\n\013zero_points\030\005 \003(\005\"e\n\023Fl"
+  "oatpointRepresent\022\022\n\ntotal_bits\030\001 \001(\r\022\021\n"
+  "\tis_signed\030\002 \001(\010\022\020\n\010exp_bits\030\003 \001(\r\022\025\n\rma"
+  "ntissa_bits\030\004 \001(\r\"\241\002\n\024TensorDataDescript"
+  "or\022>\n\005dtype\030\001 \001(\0162/.icdl_proto.TensorDat"
+  "aDescriptor.TensorDataType\0222\n\tfix_point\030"
+  "\002 \001(\0132\035.icdl_proto.FixpointRepresentH\000\0224"
+  "\n\tflo_point\030\003 \001(\0132\037.icdl_proto.Floatpoin"
+  "tRepresentH\000\"M\n\016TensorDataType\022\014\n\010FLOAT_"
+  "32\020\000\022\014\n\010FLOAT_16\020\001\022\014\n\010FIXPOINT\020\002\022\021\n\rINVA"
+  "LID_DTYPE\020\003B\020\n\016data_represent\"X\n\rTensorS"
+  "torage\022\014\n\004data\030\001 \001(\014\0229\n\017data_descriptor\030"
+  "\002 \001(\0132 .icdl_proto.TensorDataDescriptor\""
+  "\315\001\n\006Tensor\022*\n\007storage\030\002 \001(\0132\031.icdl_proto"
+  ".TensorStorage\022\023\n\013tensor_size\030\003 \003(\004\0226\n\nm"
+  "em_layout\030\004 \001(\0162\".icdl_proto.Tensor.Tens"
+  "orMemLayout\"J\n\017TensorMemLayout\022\020\n\014DENSE_"
+  "LAYOUT\020\000\022\021\n\rSPARSE_LAYOUT\020\001\022\022\n\016INVALID_L"
+  "AYOUT\020\002b\006proto3"
   ;
 ::google::protobuf::internal::DescriptorTable descriptor_table_Tensor_2eproto = {
   false, InitDefaults_Tensor_2eproto, 
   descriptor_table_protodef_Tensor_2eproto,
-  "Tensor.proto", &assign_descriptors_table_Tensor_2eproto, 816,
+  "Tensor.proto", &assign_descriptors_table_Tensor_2eproto, 855,
 };
 
 void AddDescriptors_Tensor_2eproto() {
@@ -294,7 +297,9 @@ class FixpointRepresent::HasBitSetters {
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int FixpointRepresent::kTotalBitsFieldNumber;
 const int FixpointRepresent::kIsSignedFieldNumber;
-const int FixpointRepresent::kFracPointLocationFieldNumber;
+const int FixpointRepresent::kFracPointLocationsFieldNumber;
+const int FixpointRepresent::kScalarsFieldNumber;
+const int FixpointRepresent::kZeroPointsFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 FixpointRepresent::FixpointRepresent()
@@ -304,18 +309,17 @@ FixpointRepresent::FixpointRepresent()
 }
 FixpointRepresent::FixpointRepresent(const FixpointRepresent& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(nullptr) {
+      _internal_metadata_(nullptr),
+      total_bits_(from.total_bits_),
+      is_signed_(from.is_signed_),
+      frac_point_locations_(from.frac_point_locations_),
+      scalars_(from.scalars_),
+      zero_points_(from.zero_points_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
-  ::memcpy(&total_bits_, &from.total_bits_,
-    static_cast<size_t>(reinterpret_cast<char*>(&frac_point_location_) -
-    reinterpret_cast<char*>(&total_bits_)) + sizeof(frac_point_location_));
   // @@protoc_insertion_point(copy_constructor:icdl_proto.FixpointRepresent)
 }
 
 void FixpointRepresent::SharedCtor() {
-  ::memset(&total_bits_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&frac_point_location_) -
-      reinterpret_cast<char*>(&total_bits_)) + sizeof(frac_point_location_));
 }
 
 FixpointRepresent::~FixpointRepresent() {
@@ -341,9 +345,11 @@ void FixpointRepresent::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&total_bits_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&frac_point_location_) -
-      reinterpret_cast<char*>(&total_bits_)) + sizeof(frac_point_location_));
+  total_bits_.Clear();
+  is_signed_.Clear();
+  frac_point_locations_.Clear();
+  scalars_.Clear();
+  zero_points_.Clear();
   _internal_metadata_.Clear();
 }
 
@@ -360,34 +366,118 @@ const char* FixpointRepresent::_InternalParse(const char* begin, const char* end
     ptr = ::google::protobuf::io::Parse32(ptr, &tag);
     GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
     switch (tag >> 3) {
-      // uint32 total_bits = 1;
+      // repeated uint32 total_bits = 1;
       case 1: {
-        if (static_cast<::google::protobuf::uint8>(tag) != 8) goto handle_unusual;
-        ::google::protobuf::uint64 val;
-        ptr = ::google::protobuf::io::Parse64(ptr, &val);
-        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
-        ::google::protobuf::uint32 value = val;
-        msg->set_total_bits(value);
+        if (static_cast<::google::protobuf::uint8>(tag) == 10) {
+          ptr = ::google::protobuf::io::Parse32(ptr, &size);
+          GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+          parser_till_end = ::google::protobuf::internal::PackedUInt32Parser;
+          object = msg->mutable_total_bits();
+          if (size > end - ptr) goto len_delim_till_end;
+          auto newend = ptr + size;
+          if (size) ptr = parser_till_end(ptr, newend, object, ctx);
+          GOOGLE_PROTOBUF_PARSER_ASSERT(ptr == newend);
+          break;
+        } else if (static_cast<::google::protobuf::uint8>(tag) != 8) goto handle_unusual;
+        do {
+          ::google::protobuf::uint64 val;
+          ptr = ::google::protobuf::io::Parse64(ptr, &val);
+          GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+          ::google::protobuf::uint32 value = val;
+          msg->add_total_bits(value);
+          if (ptr >= end) break;
+        } while ((::google::protobuf::io::UnalignedLoad<::google::protobuf::uint64>(ptr) & 255) == 8 && (ptr += 1));
         break;
       }
-      // bool is_signed = 2;
+      // repeated bool is_signed = 2;
       case 2: {
-        if (static_cast<::google::protobuf::uint8>(tag) != 16) goto handle_unusual;
-        ::google::protobuf::uint64 val;
-        ptr = ::google::protobuf::io::Parse64(ptr, &val);
-        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
-        bool value = val;
-        msg->set_is_signed(value);
+        if (static_cast<::google::protobuf::uint8>(tag) == 18) {
+          ptr = ::google::protobuf::io::Parse32(ptr, &size);
+          GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+          parser_till_end = ::google::protobuf::internal::PackedBoolParser;
+          object = msg->mutable_is_signed();
+          if (size > end - ptr) goto len_delim_till_end;
+          auto newend = ptr + size;
+          if (size) ptr = parser_till_end(ptr, newend, object, ctx);
+          GOOGLE_PROTOBUF_PARSER_ASSERT(ptr == newend);
+          break;
+        } else if (static_cast<::google::protobuf::uint8>(tag) != 16) goto handle_unusual;
+        do {
+          ::google::protobuf::uint64 val;
+          ptr = ::google::protobuf::io::Parse64(ptr, &val);
+          GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+          bool value = val;
+          msg->add_is_signed(value);
+          if (ptr >= end) break;
+        } while ((::google::protobuf::io::UnalignedLoad<::google::protobuf::uint64>(ptr) & 255) == 16 && (ptr += 1));
         break;
       }
-      // int32 frac_point_location = 3;
+      // repeated int32 frac_point_locations = 3;
       case 3: {
-        if (static_cast<::google::protobuf::uint8>(tag) != 24) goto handle_unusual;
-        ::google::protobuf::uint64 val;
-        ptr = ::google::protobuf::io::Parse64(ptr, &val);
-        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
-        ::google::protobuf::int32 value = val;
-        msg->set_frac_point_location(value);
+        if (static_cast<::google::protobuf::uint8>(tag) == 26) {
+          ptr = ::google::protobuf::io::Parse32(ptr, &size);
+          GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+          parser_till_end = ::google::protobuf::internal::PackedInt32Parser;
+          object = msg->mutable_frac_point_locations();
+          if (size > end - ptr) goto len_delim_till_end;
+          auto newend = ptr + size;
+          if (size) ptr = parser_till_end(ptr, newend, object, ctx);
+          GOOGLE_PROTOBUF_PARSER_ASSERT(ptr == newend);
+          break;
+        } else if (static_cast<::google::protobuf::uint8>(tag) != 24) goto handle_unusual;
+        do {
+          ::google::protobuf::uint64 val;
+          ptr = ::google::protobuf::io::Parse64(ptr, &val);
+          GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+          ::google::protobuf::int32 value = val;
+          msg->add_frac_point_locations(value);
+          if (ptr >= end) break;
+        } while ((::google::protobuf::io::UnalignedLoad<::google::protobuf::uint64>(ptr) & 255) == 24 && (ptr += 1));
+        break;
+      }
+      // repeated float scalars = 4;
+      case 4: {
+        if (static_cast<::google::protobuf::uint8>(tag) == 34) {
+          ptr = ::google::protobuf::io::Parse32(ptr, &size);
+          GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+          parser_till_end = ::google::protobuf::internal::PackedFloatParser;
+          object = msg->mutable_scalars();
+          if (size > end - ptr) goto len_delim_till_end;
+          auto newend = ptr + size;
+          if (size) ptr = parser_till_end(ptr, newend, object, ctx);
+          GOOGLE_PROTOBUF_PARSER_ASSERT(ptr == newend);
+          break;
+        } else if (static_cast<::google::protobuf::uint8>(tag) != 37) goto handle_unusual;
+        do {
+          float val;
+          std::memcpy(&val, ptr, 4);
+          ptr += 4;
+          msg->add_scalars(val);
+          if (ptr >= end) break;
+        } while ((::google::protobuf::io::UnalignedLoad<::google::protobuf::uint64>(ptr) & 255) == 37 && (ptr += 1));
+        break;
+      }
+      // repeated int32 zero_points = 5;
+      case 5: {
+        if (static_cast<::google::protobuf::uint8>(tag) == 42) {
+          ptr = ::google::protobuf::io::Parse32(ptr, &size);
+          GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+          parser_till_end = ::google::protobuf::internal::PackedInt32Parser;
+          object = msg->mutable_zero_points();
+          if (size > end - ptr) goto len_delim_till_end;
+          auto newend = ptr + size;
+          if (size) ptr = parser_till_end(ptr, newend, object, ctx);
+          GOOGLE_PROTOBUF_PARSER_ASSERT(ptr == newend);
+          break;
+        } else if (static_cast<::google::protobuf::uint8>(tag) != 40) goto handle_unusual;
+        do {
+          ::google::protobuf::uint64 val;
+          ptr = ::google::protobuf::io::Parse64(ptr, &val);
+          GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+          ::google::protobuf::int32 value = val;
+          msg->add_zero_points(value);
+          if (ptr >= end) break;
+        } while ((::google::protobuf::io::UnalignedLoad<::google::protobuf::uint64>(ptr) & 255) == 40 && (ptr += 1));
         break;
       }
       default: {
@@ -405,6 +495,9 @@ const char* FixpointRepresent::_InternalParse(const char* begin, const char* end
     }  // switch
   }  // while
   return ptr;
+len_delim_till_end:
+  return ctx->StoreAndTailCall(ptr, end, {_InternalParse, msg},
+                               {parser_till_end, object}, size);
 }
 #else  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
 bool FixpointRepresent::MergePartialFromCodedStream(
@@ -417,39 +510,80 @@ bool FixpointRepresent::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // uint32 total_bits = 1;
+      // repeated uint32 total_bits = 1;
       case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) == (8 & 0xFF)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+        if (static_cast< ::google::protobuf::uint8>(tag) == (10 & 0xFF)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &total_bits_)));
+                 input, this->mutable_total_bits())));
+        } else if (static_cast< ::google::protobuf::uint8>(tag) == (8 & 0xFF)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 1, 10u, input, this->mutable_total_bits())));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // bool is_signed = 2;
+      // repeated bool is_signed = 2;
       case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) == (16 & 0xFF)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+        if (static_cast< ::google::protobuf::uint8>(tag) == (18 & 0xFF)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &is_signed_)));
+                 input, this->mutable_is_signed())));
+        } else if (static_cast< ::google::protobuf::uint8>(tag) == (16 & 0xFF)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 1, 18u, input, this->mutable_is_signed())));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // int32 frac_point_location = 3;
+      // repeated int32 frac_point_locations = 3;
       case 3: {
-        if (static_cast< ::google::protobuf::uint8>(tag) == (24 & 0xFF)) {
-
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+        if (static_cast< ::google::protobuf::uint8>(tag) == (26 & 0xFF)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &frac_point_location_)));
+                 input, this->mutable_frac_point_locations())));
+        } else if (static_cast< ::google::protobuf::uint8>(tag) == (24 & 0xFF)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 1, 26u, input, this->mutable_frac_point_locations())));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // repeated float scalars = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) == (34 & 0xFF)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, this->mutable_scalars())));
+        } else if (static_cast< ::google::protobuf::uint8>(tag) == (37 & 0xFF)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 1, 34u, input, this->mutable_scalars())));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // repeated int32 zero_points = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) == (42 & 0xFF)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, this->mutable_zero_points())));
+        } else if (static_cast< ::google::protobuf::uint8>(tag) == (40 & 0xFF)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 1, 42u, input, this->mutable_zero_points())));
         } else {
           goto handle_unusual;
         }
@@ -483,19 +617,55 @@ void FixpointRepresent::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // uint32 total_bits = 1;
-  if (this->total_bits() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->total_bits(), output);
+  // repeated uint32 total_bits = 1;
+  if (this->total_bits_size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteTag(1, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
+    output->WriteVarint32(_total_bits_cached_byte_size_.load(
+        std::memory_order_relaxed));
+  }
+  for (int i = 0, n = this->total_bits_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32NoTag(
+      this->total_bits(i), output);
   }
 
-  // bool is_signed = 2;
-  if (this->is_signed() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->is_signed(), output);
+  // repeated bool is_signed = 2;
+  if (this->is_signed_size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteTag(2, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
+    output->WriteVarint32(_is_signed_cached_byte_size_.load(
+        std::memory_order_relaxed));
+    ::google::protobuf::internal::WireFormatLite::WriteBoolArray(
+      this->is_signed().data(), this->is_signed_size(), output);
   }
 
-  // int32 frac_point_location = 3;
-  if (this->frac_point_location() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->frac_point_location(), output);
+  // repeated int32 frac_point_locations = 3;
+  if (this->frac_point_locations_size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteTag(3, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
+    output->WriteVarint32(_frac_point_locations_cached_byte_size_.load(
+        std::memory_order_relaxed));
+  }
+  for (int i = 0, n = this->frac_point_locations_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32NoTag(
+      this->frac_point_locations(i), output);
+  }
+
+  // repeated float scalars = 4;
+  if (this->scalars_size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteTag(4, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
+    output->WriteVarint32(_scalars_cached_byte_size_.load(
+        std::memory_order_relaxed));
+    ::google::protobuf::internal::WireFormatLite::WriteFloatArray(
+      this->scalars().data(), this->scalars_size(), output);
+  }
+
+  // repeated int32 zero_points = 5;
+  if (this->zero_points_size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteTag(5, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
+    output->WriteVarint32(_zero_points_cached_byte_size_.load(
+        std::memory_order_relaxed));
+  }
+  for (int i = 0, n = this->zero_points_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32NoTag(
+      this->zero_points(i), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -511,19 +681,69 @@ void FixpointRepresent::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // uint32 total_bits = 1;
-  if (this->total_bits() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->total_bits(), target);
+  // repeated uint32 total_bits = 1;
+  if (this->total_bits_size() > 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
+      1,
+      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
+      target);
+    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
+        _total_bits_cached_byte_size_.load(std::memory_order_relaxed),
+         target);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteUInt32NoTagToArray(this->total_bits_, target);
   }
 
-  // bool is_signed = 2;
-  if (this->is_signed() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->is_signed(), target);
+  // repeated bool is_signed = 2;
+  if (this->is_signed_size() > 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
+      2,
+      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
+      target);
+    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
+        _is_signed_cached_byte_size_.load(std::memory_order_relaxed),
+         target);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteBoolNoTagToArray(this->is_signed_, target);
   }
 
-  // int32 frac_point_location = 3;
-  if (this->frac_point_location() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->frac_point_location(), target);
+  // repeated int32 frac_point_locations = 3;
+  if (this->frac_point_locations_size() > 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
+      3,
+      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
+      target);
+    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
+        _frac_point_locations_cached_byte_size_.load(std::memory_order_relaxed),
+         target);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteInt32NoTagToArray(this->frac_point_locations_, target);
+  }
+
+  // repeated float scalars = 4;
+  if (this->scalars_size() > 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
+      4,
+      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
+      target);
+    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
+        _scalars_cached_byte_size_.load(std::memory_order_relaxed),
+         target);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteFloatNoTagToArray(this->scalars_, target);
+  }
+
+  // repeated int32 zero_points = 5;
+  if (this->zero_points_size() > 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
+      5,
+      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
+      target);
+    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
+        _zero_points_cached_byte_size_.load(std::memory_order_relaxed),
+         target);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteInt32NoTagToArray(this->zero_points_, target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -547,23 +767,79 @@ size_t FixpointRepresent::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // uint32 total_bits = 1;
-  if (this->total_bits() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::UInt32Size(
-        this->total_bits());
+  // repeated uint32 total_bits = 1;
+  {
+    size_t data_size = ::google::protobuf::internal::WireFormatLite::
+      UInt32Size(this->total_bits_);
+    if (data_size > 0) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+            static_cast<::google::protobuf::int32>(data_size));
+    }
+    int cached_size = ::google::protobuf::internal::ToCachedSize(data_size);
+    _total_bits_cached_byte_size_.store(cached_size,
+                                    std::memory_order_relaxed);
+    total_size += data_size;
   }
 
-  // bool is_signed = 2;
-  if (this->is_signed() != 0) {
-    total_size += 1 + 1;
+  // repeated bool is_signed = 2;
+  {
+    unsigned int count = static_cast<unsigned int>(this->is_signed_size());
+    size_t data_size = 1UL * count;
+    if (data_size > 0) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+            static_cast<::google::protobuf::int32>(data_size));
+    }
+    int cached_size = ::google::protobuf::internal::ToCachedSize(data_size);
+    _is_signed_cached_byte_size_.store(cached_size,
+                                    std::memory_order_relaxed);
+    total_size += data_size;
   }
 
-  // int32 frac_point_location = 3;
-  if (this->frac_point_location() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->frac_point_location());
+  // repeated int32 frac_point_locations = 3;
+  {
+    size_t data_size = ::google::protobuf::internal::WireFormatLite::
+      Int32Size(this->frac_point_locations_);
+    if (data_size > 0) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+            static_cast<::google::protobuf::int32>(data_size));
+    }
+    int cached_size = ::google::protobuf::internal::ToCachedSize(data_size);
+    _frac_point_locations_cached_byte_size_.store(cached_size,
+                                    std::memory_order_relaxed);
+    total_size += data_size;
+  }
+
+  // repeated float scalars = 4;
+  {
+    unsigned int count = static_cast<unsigned int>(this->scalars_size());
+    size_t data_size = 4UL * count;
+    if (data_size > 0) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+            static_cast<::google::protobuf::int32>(data_size));
+    }
+    int cached_size = ::google::protobuf::internal::ToCachedSize(data_size);
+    _scalars_cached_byte_size_.store(cached_size,
+                                    std::memory_order_relaxed);
+    total_size += data_size;
+  }
+
+  // repeated int32 zero_points = 5;
+  {
+    size_t data_size = ::google::protobuf::internal::WireFormatLite::
+      Int32Size(this->zero_points_);
+    if (data_size > 0) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+            static_cast<::google::protobuf::int32>(data_size));
+    }
+    int cached_size = ::google::protobuf::internal::ToCachedSize(data_size);
+    _zero_points_cached_byte_size_.store(cached_size,
+                                    std::memory_order_relaxed);
+    total_size += data_size;
   }
 
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
@@ -593,15 +869,11 @@ void FixpointRepresent::MergeFrom(const FixpointRepresent& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from.total_bits() != 0) {
-    set_total_bits(from.total_bits());
-  }
-  if (from.is_signed() != 0) {
-    set_is_signed(from.is_signed());
-  }
-  if (from.frac_point_location() != 0) {
-    set_frac_point_location(from.frac_point_location());
-  }
+  total_bits_.MergeFrom(from.total_bits_);
+  is_signed_.MergeFrom(from.is_signed_);
+  frac_point_locations_.MergeFrom(from.frac_point_locations_);
+  scalars_.MergeFrom(from.scalars_);
+  zero_points_.MergeFrom(from.zero_points_);
 }
 
 void FixpointRepresent::CopyFrom(const ::google::protobuf::Message& from) {
@@ -629,9 +901,11 @@ void FixpointRepresent::Swap(FixpointRepresent* other) {
 void FixpointRepresent::InternalSwap(FixpointRepresent* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  swap(total_bits_, other->total_bits_);
-  swap(is_signed_, other->is_signed_);
-  swap(frac_point_location_, other->frac_point_location_);
+  total_bits_.InternalSwap(&other->total_bits_);
+  is_signed_.InternalSwap(&other->is_signed_);
+  frac_point_locations_.InternalSwap(&other->frac_point_locations_);
+  scalars_.InternalSwap(&other->scalars_);
+  zero_points_.InternalSwap(&other->zero_points_);
 }
 
 ::google::protobuf::Metadata FixpointRepresent::GetMetadata() const {

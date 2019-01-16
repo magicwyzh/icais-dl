@@ -3,31 +3,43 @@
 #include "tensor_utils.h"
 #include "accelerator_memory.h"
 #include "protos/protobuf_utils.h"
+#include "icdl_exceptions.h"
 namespace icdl{
 
     void TensorStorage::deserialize(const icdl_proto::TensorStorage& storage_proto){
-        assert(data_location_ == kCPUMem);
+        ICDL_ASSERT(data_location_ == kCPUMem, 
+            "A TensorStorage for deserialization must be in CPUMem, but meets a " 
+            << enum_to_string(data_location_));
+        
         TensorDataType dtype_pb = proto_dtype_to_icdl_dtype(storage_proto.data_descriptor().dtype());
+        ICDL_ASSERT(get_data_type() == dtype_pb, "DataType Not match when deserializing TensorStorage: " 
+            << "Protobuf dtype=" << enum_to_string(dtype_pb) << ", icdl storage dtype = " << enum_to_string(get_data_type())
+        );
         TensorDataDescriptor descrpt_pb;
         // set descriptor
         auto proto_descriptor = icdl_proto::TensorDataDescriptor();
         
         // sanity check
         if(get_data_type() == kFloat32 || get_data_type() == kFloat16){
-            assert(storage_proto.data_descriptor().has_flo_point());
+            ICDL_ASSERT(storage_proto.data_descriptor().has_flo_point(), 
+                "A protobuf object for FloatTensorStorage Must has float point data represent");
+                
             auto r = storage_proto.data_descriptor().flo_point();
-            assert(get_data_descriptor().get_represent().flo_point == 
-                FloatpointRepresent({r.total_bits(), r.is_signed(), r.exp_bits(), r.mantissa_bits()}));
+
+            ICDL_ASSERT(get_data_descriptor().get_represent().flo_point == 
+                FloatpointRepresent({r.total_bits(), r.is_signed(), r.exp_bits(), r.mantissa_bits()}),
+                "FloatStorage has different data represent with that in protobuf object when deserializing");
         }
         else if(get_data_type() == kFixpoint){
-            assert(storage_proto.data_descriptor().has_fix_point());
+            ICDL_ASSERT(storage_proto.data_descriptor().has_fix_point(), 
+                "A protobuf object for FixpointTensorStorage Must has fixpoint data represent");
             auto r = storage_proto.data_descriptor().fix_point();
-            assert(get_data_descriptor().get_represent().fix_point ==
-                 FixpointRepresent({r.total_bits(), r.is_signed(), r.frac_point_location()}));
+            ICDL_ASSERT(get_data_descriptor().get_represent().fix_point == FixpointRepresent().deserialize(r), 
+                "FixpointRepresent not match when deserializing TensorStorage from a protobuf object"
+            );
         }
 
-        assert(dtype_pb == get_data_type());
-        assert(storage_proto.data().size() == get_total_bytes());
+        ICDL_ASSERT(storage_proto.data().size() == get_total_bytes(), "Storage size not match.");
         
         auto my_ptr = data_ptr();
         auto proto_ptr = storage_proto.data().c_str();
@@ -57,11 +69,8 @@ namespace icdl{
             proto_flo->set_exp_bits(storage_flo.exp_bits);
         }
         else if(get_data_type() == kFixpoint){
-            auto proto_fix = descr_pb.mutable_fix_point();
             auto storage_fix = get_data_descriptor().get_represent().fix_point;
-            proto_fix->set_is_signed(storage_fix.is_signed);
-            proto_fix->set_total_bits(storage_fix.total_bits);
-            proto_fix->set_frac_point_location(storage_fix.frac_point_location);
+            (*descr_pb.mutable_fix_point()) = storage_fix.serialize();
         }
 
         (*s.mutable_data_descriptor()) = descr_pb;

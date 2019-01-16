@@ -28,7 +28,11 @@ namespace icdl{
     }
     
     bool FixpointRepresent::operator==(const FixpointRepresent& rhs) const{
-        if(total_bits==rhs.total_bits && is_signed == rhs.is_signed && frac_point_location == rhs.frac_point_location){
+        if(total_bits==rhs.total_bits && 
+            is_signed == rhs.is_signed && 
+            frac_point_locations == rhs.frac_point_locations &&
+            zero_points == rhs.zero_points &&
+            scalars == rhs.scalars){
             return true;
         }
         else {
@@ -90,6 +94,19 @@ namespace icdl{
     }
     TensorDataDescriptor::TensorDataDescriptor(): dtype_(TensorDataType::INVALID_DTYPE){}
 
+    TensorDataDescriptor::TensorDataDescriptor(const FixpointRepresent& fix_represent):dtype_(TensorDataType::FIXPOINT){
+        represent_.fix_point = fix_represent;
+    }
+
+
+    TensorDataDescriptor::TensorDataDescriptor(const TensorDataDescriptor& other): dtype_(other.dtype_){
+        if(other.dtype_ == kFixpoint){
+            represent_.fix_point = other.represent_.fix_point;
+        }
+        else if(other.dtype_ == kFloat32 || other.dtype_ == kFloat16){
+            represent_.flo_point = other.represent_.flo_point;
+        }
+    }
 
     TensorDataDescriptor::TensorDataDescriptor(const size_t total_bits, const bool is_signed, const int frac_point){
         dtype_ = TensorDataType::FIXPOINT;
@@ -112,4 +129,65 @@ namespace icdl{
         }
     }
 
+    void FixpointRepresent::clear(){
+        total_bits.clear();
+        is_signed.clear();
+        frac_point_locations.clear();
+        scalars.clear();
+        zero_points.clear();
+    }
+    std::vector<int32_t> FixpointRepresent::bit_masks() const{
+        std::vector<int32_t> vec;
+        for(const auto& x : total_bits){
+            vec.emplace_back((1<<x) - 1);
+        }
+        return vec;
+    }
+    int32_t FixpointRepresent::bit_mask() const{
+        ICDL_ASSERT(total_bits.size() > 0, "total_bits field of FixpointRepresent should has more than one value for bit_mask!");
+        return (1 << total_bits[0]) - 1;
+    }
+    size_t FixpointRepresent::num_byte_up_round() const{
+        ICDL_ASSERT(total_bits.size() > 0, "total_bits field of FixpointRepresent should has more than one value for num_byte_up_round!");
+        return (total_bits[0] + 8 - 1) / 8;
+    }
+
+    FixpointRepresent& FixpointRepresent::deserialize(const icdl_proto::FixpointRepresent& proto_repr){
+        clear();
+        for(const auto x: proto_repr.total_bits()){
+            total_bits.emplace_back(static_cast<uint8_t>(x));
+        }
+        for(const auto x: proto_repr.is_signed()){
+            is_signed.emplace_back(x);
+        }
+        for(const auto x: proto_repr.frac_point_locations()){
+            frac_point_locations.emplace_back(static_cast<int8_t>(x));
+        }
+        for(const auto x: proto_repr.scalars()){
+            scalars.emplace_back(static_cast<float>(x));
+        }
+        for(const auto x: proto_repr.zero_points()){
+            zero_points.emplace_back(static_cast<int16_t>(x));
+        }
+        return *this;
+    }
+    icdl_proto::FixpointRepresent FixpointRepresent::serialize() const{
+        icdl_proto::FixpointRepresent repr_pb;
+        for(const auto x : frac_point_locations){
+            repr_pb.add_frac_point_locations(x);
+        }
+        for(const auto x : is_signed){
+            repr_pb.add_is_signed(x);
+        }
+        for(const auto x : total_bits){
+            repr_pb.add_total_bits(x);
+        }
+        for(const auto x : scalars){
+            repr_pb.add_scalars(x);
+        }
+        for(const auto x : zero_points){
+            repr_pb.add_zero_points(x);
+        }
+        return repr_pb;
+    }
 }//namespace icdl

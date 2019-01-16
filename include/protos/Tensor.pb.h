@@ -218,32 +218,81 @@ class FixpointRepresent : public ::google::protobuf::Message /* @@protoc_inserti
 
   // accessors -------------------------------------------------------
 
-  // uint32 total_bits = 1;
+  // repeated uint32 total_bits = 1;
+  int total_bits_size() const;
   void clear_total_bits();
   static const int kTotalBitsFieldNumber = 1;
-  ::google::protobuf::uint32 total_bits() const;
-  void set_total_bits(::google::protobuf::uint32 value);
+  ::google::protobuf::uint32 total_bits(int index) const;
+  void set_total_bits(int index, ::google::protobuf::uint32 value);
+  void add_total_bits(::google::protobuf::uint32 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+      total_bits() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+      mutable_total_bits();
 
-  // bool is_signed = 2;
+  // repeated bool is_signed = 2;
+  int is_signed_size() const;
   void clear_is_signed();
   static const int kIsSignedFieldNumber = 2;
-  bool is_signed() const;
-  void set_is_signed(bool value);
+  bool is_signed(int index) const;
+  void set_is_signed(int index, bool value);
+  void add_is_signed(bool value);
+  const ::google::protobuf::RepeatedField< bool >&
+      is_signed() const;
+  ::google::protobuf::RepeatedField< bool >*
+      mutable_is_signed();
 
-  // int32 frac_point_location = 3;
-  void clear_frac_point_location();
-  static const int kFracPointLocationFieldNumber = 3;
-  ::google::protobuf::int32 frac_point_location() const;
-  void set_frac_point_location(::google::protobuf::int32 value);
+  // repeated int32 frac_point_locations = 3;
+  int frac_point_locations_size() const;
+  void clear_frac_point_locations();
+  static const int kFracPointLocationsFieldNumber = 3;
+  ::google::protobuf::int32 frac_point_locations(int index) const;
+  void set_frac_point_locations(int index, ::google::protobuf::int32 value);
+  void add_frac_point_locations(::google::protobuf::int32 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+      frac_point_locations() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+      mutable_frac_point_locations();
+
+  // repeated float scalars = 4;
+  int scalars_size() const;
+  void clear_scalars();
+  static const int kScalarsFieldNumber = 4;
+  float scalars(int index) const;
+  void set_scalars(int index, float value);
+  void add_scalars(float value);
+  const ::google::protobuf::RepeatedField< float >&
+      scalars() const;
+  ::google::protobuf::RepeatedField< float >*
+      mutable_scalars();
+
+  // repeated int32 zero_points = 5;
+  int zero_points_size() const;
+  void clear_zero_points();
+  static const int kZeroPointsFieldNumber = 5;
+  ::google::protobuf::int32 zero_points(int index) const;
+  void set_zero_points(int index, ::google::protobuf::int32 value);
+  void add_zero_points(::google::protobuf::int32 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+      zero_points() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+      mutable_zero_points();
 
   // @@protoc_insertion_point(class_scope:icdl_proto.FixpointRepresent)
  private:
   class HasBitSetters;
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::uint32 total_bits_;
-  bool is_signed_;
-  ::google::protobuf::int32 frac_point_location_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::uint32 > total_bits_;
+  mutable std::atomic<int> _total_bits_cached_byte_size_;
+  ::google::protobuf::RepeatedField< bool > is_signed_;
+  mutable std::atomic<int> _is_signed_cached_byte_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > frac_point_locations_;
+  mutable std::atomic<int> _frac_point_locations_cached_byte_size_;
+  ::google::protobuf::RepeatedField< float > scalars_;
+  mutable std::atomic<int> _scalars_cached_byte_size_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > zero_points_;
+  mutable std::atomic<int> _zero_points_cached_byte_size_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_Tensor_2eproto;
 };
@@ -861,46 +910,154 @@ class Tensor : public ::google::protobuf::Message /* @@protoc_insertion_point(cl
 #endif  // __GNUC__
 // FixpointRepresent
 
-// uint32 total_bits = 1;
+// repeated uint32 total_bits = 1;
+inline int FixpointRepresent::total_bits_size() const {
+  return total_bits_.size();
+}
 inline void FixpointRepresent::clear_total_bits() {
-  total_bits_ = 0u;
+  total_bits_.Clear();
 }
-inline ::google::protobuf::uint32 FixpointRepresent::total_bits() const {
+inline ::google::protobuf::uint32 FixpointRepresent::total_bits(int index) const {
   // @@protoc_insertion_point(field_get:icdl_proto.FixpointRepresent.total_bits)
-  return total_bits_;
+  return total_bits_.Get(index);
 }
-inline void FixpointRepresent::set_total_bits(::google::protobuf::uint32 value) {
-  
-  total_bits_ = value;
+inline void FixpointRepresent::set_total_bits(int index, ::google::protobuf::uint32 value) {
+  total_bits_.Set(index, value);
   // @@protoc_insertion_point(field_set:icdl_proto.FixpointRepresent.total_bits)
 }
+inline void FixpointRepresent::add_total_bits(::google::protobuf::uint32 value) {
+  total_bits_.Add(value);
+  // @@protoc_insertion_point(field_add:icdl_proto.FixpointRepresent.total_bits)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >&
+FixpointRepresent::total_bits() const {
+  // @@protoc_insertion_point(field_list:icdl_proto.FixpointRepresent.total_bits)
+  return total_bits_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::uint32 >*
+FixpointRepresent::mutable_total_bits() {
+  // @@protoc_insertion_point(field_mutable_list:icdl_proto.FixpointRepresent.total_bits)
+  return &total_bits_;
+}
 
-// bool is_signed = 2;
+// repeated bool is_signed = 2;
+inline int FixpointRepresent::is_signed_size() const {
+  return is_signed_.size();
+}
 inline void FixpointRepresent::clear_is_signed() {
-  is_signed_ = false;
+  is_signed_.Clear();
 }
-inline bool FixpointRepresent::is_signed() const {
+inline bool FixpointRepresent::is_signed(int index) const {
   // @@protoc_insertion_point(field_get:icdl_proto.FixpointRepresent.is_signed)
-  return is_signed_;
+  return is_signed_.Get(index);
 }
-inline void FixpointRepresent::set_is_signed(bool value) {
-  
-  is_signed_ = value;
+inline void FixpointRepresent::set_is_signed(int index, bool value) {
+  is_signed_.Set(index, value);
   // @@protoc_insertion_point(field_set:icdl_proto.FixpointRepresent.is_signed)
 }
+inline void FixpointRepresent::add_is_signed(bool value) {
+  is_signed_.Add(value);
+  // @@protoc_insertion_point(field_add:icdl_proto.FixpointRepresent.is_signed)
+}
+inline const ::google::protobuf::RepeatedField< bool >&
+FixpointRepresent::is_signed() const {
+  // @@protoc_insertion_point(field_list:icdl_proto.FixpointRepresent.is_signed)
+  return is_signed_;
+}
+inline ::google::protobuf::RepeatedField< bool >*
+FixpointRepresent::mutable_is_signed() {
+  // @@protoc_insertion_point(field_mutable_list:icdl_proto.FixpointRepresent.is_signed)
+  return &is_signed_;
+}
 
-// int32 frac_point_location = 3;
-inline void FixpointRepresent::clear_frac_point_location() {
-  frac_point_location_ = 0;
+// repeated int32 frac_point_locations = 3;
+inline int FixpointRepresent::frac_point_locations_size() const {
+  return frac_point_locations_.size();
 }
-inline ::google::protobuf::int32 FixpointRepresent::frac_point_location() const {
-  // @@protoc_insertion_point(field_get:icdl_proto.FixpointRepresent.frac_point_location)
-  return frac_point_location_;
+inline void FixpointRepresent::clear_frac_point_locations() {
+  frac_point_locations_.Clear();
 }
-inline void FixpointRepresent::set_frac_point_location(::google::protobuf::int32 value) {
-  
-  frac_point_location_ = value;
-  // @@protoc_insertion_point(field_set:icdl_proto.FixpointRepresent.frac_point_location)
+inline ::google::protobuf::int32 FixpointRepresent::frac_point_locations(int index) const {
+  // @@protoc_insertion_point(field_get:icdl_proto.FixpointRepresent.frac_point_locations)
+  return frac_point_locations_.Get(index);
+}
+inline void FixpointRepresent::set_frac_point_locations(int index, ::google::protobuf::int32 value) {
+  frac_point_locations_.Set(index, value);
+  // @@protoc_insertion_point(field_set:icdl_proto.FixpointRepresent.frac_point_locations)
+}
+inline void FixpointRepresent::add_frac_point_locations(::google::protobuf::int32 value) {
+  frac_point_locations_.Add(value);
+  // @@protoc_insertion_point(field_add:icdl_proto.FixpointRepresent.frac_point_locations)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+FixpointRepresent::frac_point_locations() const {
+  // @@protoc_insertion_point(field_list:icdl_proto.FixpointRepresent.frac_point_locations)
+  return frac_point_locations_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+FixpointRepresent::mutable_frac_point_locations() {
+  // @@protoc_insertion_point(field_mutable_list:icdl_proto.FixpointRepresent.frac_point_locations)
+  return &frac_point_locations_;
+}
+
+// repeated float scalars = 4;
+inline int FixpointRepresent::scalars_size() const {
+  return scalars_.size();
+}
+inline void FixpointRepresent::clear_scalars() {
+  scalars_.Clear();
+}
+inline float FixpointRepresent::scalars(int index) const {
+  // @@protoc_insertion_point(field_get:icdl_proto.FixpointRepresent.scalars)
+  return scalars_.Get(index);
+}
+inline void FixpointRepresent::set_scalars(int index, float value) {
+  scalars_.Set(index, value);
+  // @@protoc_insertion_point(field_set:icdl_proto.FixpointRepresent.scalars)
+}
+inline void FixpointRepresent::add_scalars(float value) {
+  scalars_.Add(value);
+  // @@protoc_insertion_point(field_add:icdl_proto.FixpointRepresent.scalars)
+}
+inline const ::google::protobuf::RepeatedField< float >&
+FixpointRepresent::scalars() const {
+  // @@protoc_insertion_point(field_list:icdl_proto.FixpointRepresent.scalars)
+  return scalars_;
+}
+inline ::google::protobuf::RepeatedField< float >*
+FixpointRepresent::mutable_scalars() {
+  // @@protoc_insertion_point(field_mutable_list:icdl_proto.FixpointRepresent.scalars)
+  return &scalars_;
+}
+
+// repeated int32 zero_points = 5;
+inline int FixpointRepresent::zero_points_size() const {
+  return zero_points_.size();
+}
+inline void FixpointRepresent::clear_zero_points() {
+  zero_points_.Clear();
+}
+inline ::google::protobuf::int32 FixpointRepresent::zero_points(int index) const {
+  // @@protoc_insertion_point(field_get:icdl_proto.FixpointRepresent.zero_points)
+  return zero_points_.Get(index);
+}
+inline void FixpointRepresent::set_zero_points(int index, ::google::protobuf::int32 value) {
+  zero_points_.Set(index, value);
+  // @@protoc_insertion_point(field_set:icdl_proto.FixpointRepresent.zero_points)
+}
+inline void FixpointRepresent::add_zero_points(::google::protobuf::int32 value) {
+  zero_points_.Add(value);
+  // @@protoc_insertion_point(field_add:icdl_proto.FixpointRepresent.zero_points)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+FixpointRepresent::zero_points() const {
+  // @@protoc_insertion_point(field_list:icdl_proto.FixpointRepresent.zero_points)
+  return zero_points_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+FixpointRepresent::mutable_zero_points() {
+  // @@protoc_insertion_point(field_mutable_list:icdl_proto.FixpointRepresent.zero_points)
+  return &zero_points_;
 }
 
 // -------------------------------------------------------------------

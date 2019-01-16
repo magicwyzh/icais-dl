@@ -45,6 +45,7 @@ namespace icdl{
         }
         return storage_->aux_info_ptr();
     }
+    
     icdl_proto::Tensor Tensor::serialize() const{
         icdl_proto::Tensor t;
         switch(get_mem_layout()){
@@ -91,6 +92,7 @@ namespace icdl{
         
         icdl_proto::FixpointRepresent fix;
         FixpointRepresent icdl_fix_repr;
+
         if(allocate_new_storage){
             switch(proto_data_type){
                 case kFloat32:
@@ -99,7 +101,9 @@ namespace icdl{
                 case kFixpoint:
                     assert(tensor_proto.storage().data_descriptor().has_fix_point());
                     fix = tensor_proto.storage().data_descriptor().fix_point();
-                    icdl_fix_repr = FixpointRepresent({fix.total_bits(), fix.is_signed(), fix.frac_point_location()});
+                    
+                    //icdl_fix_repr = FixpointRepresent({fix.total_bits(), fix.is_signed(), fix.frac_point_locations()});
+                    icdl_fix_repr = FixpointRepresent().deserialize(fix);
                     storage_ = fixp_storage_make(num_data, icdl_fix_repr, kCPUMem);
                     break;
                 case kFloat16:
@@ -114,7 +118,7 @@ namespace icdl{
         return allocate_new_storage;
     }
 
-    void Tensor::deserialize(const icdl_proto::Tensor& tensor_proto){
+    Tensor& Tensor::deserialize(const icdl_proto::Tensor& tensor_proto){
         // sanity check...
         assert(tensor_proto.tensor_size_size() != 0);
 
@@ -127,6 +131,7 @@ namespace icdl{
             size_.emplace_back(tensor_proto.tensor_size(i));
         }
         mem_layout_ = proto_mem_layout_to_icdl_layout(tensor_proto.mem_layout());
+        return *this;
     }
 
     Tensor Tensor::convert_to_fixpoint(const StorageConverter& storage_converter,const FixpointRepresent & target_fix_represent,  const TensorMemLayout& target_mem_layout) const{
