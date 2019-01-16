@@ -19,49 +19,8 @@ Things can be customized for users according to their hardware design:
    * Operator: Add new operator, e.g., describe conv-BN-Relu as one operator if the accelerator's computational primitive is something like this.
    * OperatorImpls: Depends on how the accelerator is designed
 
-Build a model and use it:
-```cpp
-#include "icdl.h"
-class ResidualBlock: public icdl::DynamicComputeGraph{
-public: 
-    ResidualBlock(){
-        // makeConv2dPytorchImpl is a factory func provides a backend engine for a specific operator. 
-        //The user should provide their own implementations. Here we just call it a 'PytorchImpl' which calls pytorch's APIs.
-        add_compute_node("conv1", icdl::Conv2dOpMake(3, 10, 3, icdl::op::makeConv2dPytorchImpl()));
-        add_compute_node("ReLU1", icdl::ReLUOpMake(icdl::op::makeReluPytorchImpl()));
-        add_compute_node("ResAdd", icdl::EltAddOpMake(icdl::op::makeEltAddPytorchImpl()));
-    }
-    virtual TensorList apply(TensorList& inputs) override{
-        auto x = inputs[0];
-        auto res = x;
-        x = _compute_node["conv1"].apply(x);
-        x = _compute_node["ReLU1"].apply(x);
-        return _compute_node["ResAdd"].apply({x, res});
-    }
-}
-// inherit from sequential graph, dont need to override apply()
-class Model: public icdl::SeqDyComputeGraph{
-    Model(){
-        add_compute_node({
-            {"Conv1", icdl::Conv2dOpMake(3, 10, 3, icdl::op::makeConv2dPytorchImpl())},
-            {"Conv2", icdl::Conv2dOpMake(10, 3, 3, icdl::op::makeConv2dPytorchImpl())}
-        });
-        add_compute_node("ResBlock1", std::make_shared<ResidualBlock>());
-    }
-}
 
-int main(){
-    Model model;
-    // fixpoint tensor with 8bit per data, signed, 0 fractional bit.
-    auto image = icdl::Tensor({1,3,32,32}, icdl::FixpointTensorDescriptor(8, true, 0)));
-    // pre-processing for image...
-    // ...
-    auto results = model(image);
-    // post-processing for results
-    // ...
-    return 0;
-}
-```
+For quick start, see [quick-start.md](./docs/quick-start.md).
 
 
 # TODO
@@ -81,8 +40,8 @@ Here are something in the to-do list now:
     * float-fix conversion
     * Memory location conversion
 * Discuss with quantization guys about what they want to represent TensorData
-    * Currently there is just a FixpointRepresentation with total_bits, frac_bits, sign. However, they may want something like per-channel scalar, etc.
-    * New FixpointRepresent implementation and unit test.
+    * ~~Currently there is just a FixpointRepresentation with total_bits, frac_bits, sign. However, they may want something like per-channel scalar, etc~~.
+    * ~~New FixpointRepresent implementation~~ and unit test.
 * Arm Compute Library Backend
 * Scripts that transforms models in framework like Darknet/Pytorch to ICDL model.
     * Not clear now.
