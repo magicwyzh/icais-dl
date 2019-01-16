@@ -2,6 +2,7 @@
 #include <cmath>
 #include <exception>
 #include <cassert>
+#include "icdl_exceptions.h"
 namespace icdl{
     StorageConverter& get_default_storage_converter(){
         static DefaultStorageConverter cvt;
@@ -41,11 +42,13 @@ namespace icdl{
         }
     }
 
+
     int16_t DefaultStorageConverter::single_data_flo32_to_fixp(const float src_data, 
                                         const FixpointRepresent& dst_fix_represent){
-        auto total_bits = dst_fix_represent.total_bits;
-        auto frac_point = dst_fix_represent.frac_point_location;
-        auto is_signed = dst_fix_represent.is_signed;
+
+        auto total_bits = dst_fix_represent.total_bits[0];
+        auto frac_point = dst_fix_represent.frac_point_locations[0];
+        auto is_signed = dst_fix_represent.is_signed[0];
         auto lsb_val = std::pow(2, -frac_point);
         auto round_int_result = saturate(std::lround(src_data / lsb_val), total_bits, is_signed);
         return round_int_result;
@@ -53,8 +56,9 @@ namespace icdl{
 
     float DefaultStorageConverter::single_data_fixp_to_flo32(const int16_t src_data, 
                                     const FixpointRepresent& src_fix_represent){
-        auto frac_point = src_fix_represent.frac_point_location;
-        auto is_signed = src_fix_represent.is_signed;
+
+        auto frac_point = src_fix_represent.frac_point_locations[0];
+        auto is_signed = src_fix_represent.is_signed[0];
         auto lsb_val = std::pow(2, -frac_point);
         if(is_signed){
             return lsb_val * src_data;
@@ -67,13 +71,13 @@ namespace icdl{
     int16_t DefaultStorageConverter::single_data_fixp_to_fixp(const int16_t src_data, 
                                      const FixpointRepresent& src_fix_represent, 
                                      const FixpointRepresent& dst_fix_represent){
-        if(src_fix_represent.is_signed && 
-           !dst_fix_represent.is_signed && 
-           ((src_data >> (src_fix_represent.total_bits-1)) & 0x1)){
+        if(src_fix_represent.is_signed[0] && 
+           !dst_fix_represent.is_signed[0] && 
+           ((src_data >> (src_fix_represent.total_bits[0]-1)) & 0x1)){
             //sign to unsign, and the data is less than zero
             throw std::logic_error("Try to convert a negative sigend data to an unsigned one");
         }
-        int exp_diff = dst_fix_represent.frac_point_location - src_fix_represent.frac_point_location;
+        int exp_diff = dst_fix_represent.frac_point_locations[0] - src_fix_represent.frac_point_locations[0];
         int32_t shifted_data = 0;
         if(exp_diff > 0){
             shifted_data = static_cast<int32_t>(src_data) << exp_diff;
@@ -81,7 +85,7 @@ namespace icdl{
         else{
             shifted_data = static_cast<int32_t>(src_data) >> (-exp_diff);
         }
-        return saturate(shifted_data, dst_fix_represent.total_bits, dst_fix_represent.is_signed);
+        return saturate(shifted_data, dst_fix_represent.total_bits[0], dst_fix_represent.is_signed[0]);
     }
 
     // because 16bits are enough for deep learning, so only expand a fixpoint data to 16bits for further processing, 
@@ -90,7 +94,7 @@ namespace icdl{
     // We assume little-endian!
     int16_t DefaultStorageConverter::fixpoint_to_int16(const void* data_ptr, const FixpointRepresent& fix_repr, const size_t bit_offset){
         auto data_fetch_ptr = static_cast<const int32_t*>(data_ptr);
-        auto total_bits = fix_repr.total_bits;
+        auto total_bits = fix_repr.total_bits[0];
         auto bit_mask = fix_repr.bit_mask();
         assert(total_bits <= 16);
         assert(bit_offset < 8);
@@ -105,7 +109,7 @@ namespace icdl{
 
         data >>= bit_offset;//eliminate the offset.
         data &= bit_mask;//mask the higher bits to zero.
-        if(fix_repr.is_signed == false){
+        if(fix_repr.is_signed[0] == false){
             return static_cast<int16_t>(data);
         }
         auto higher_bits_mask = ~bit_mask;
@@ -116,11 +120,25 @@ namespace icdl{
         return static_cast<int16_t>(data);
     }
 
-    /* Following are incorrect implementations**/
+#define FIXP_REPR_ONLY_ONE_ELEMENT(repr_name)\
+    (repr_name.total_bits.size() == 1 && \
+     repr_name.frac_point_locations.size() == 1&& \
+     repr_name.is_signed.size() == 1)
+#define FIXP_REPR_CLEAN(repr_name)\
+    (repr_name.scalars.size()==0 && repr_name.zero_points.size()==0)
+
+#define CHECK_FIXP_REPR(repr_name)\
+        ICDL_ASSERT(FIXP_REPR_ONLY_ONE_ELEMENT(repr_name), \
+            "DefaultStorageConverter assumes the FixpointRepresent total_bits/is_signed/frac_points only has one value");\
+        ICDL_ASSERT(FIXP_REPR_CLEAN(repr_name), \
+            "DefaultStorageConverter assumes the FixpointRepresent dont have scalar/zero_points")
+
+
     StoragePtr DefaultStorageConverter::fix_to_float32_convert(StoragePtr storage,
                                         const FixpointRepresent& src_fix_represent, 
                                         const TensorMemLayout & src_mem_layout, 
                                         const TensorMemLayout & target_mem_layout) const{
+        CHECK_FIXP_REPR(src_fix_represent);
         //if not in CPUMem, may be impossible to have access to data
         assert(storage->get_data_location() == kCPUMem); 
         assert(storage->get_data_type() == kFixpoint);
@@ -151,6 +169,10 @@ namespace icdl{
                                       const FixpointRepresent& target_fix_represent, 
                                       const TensorMemLayout & src_mem_layout, 
                                       const TensorMemLayout &target_mem_layout) const{
+        // sanity check
+        CHECK_FIXP_REPR(src_fix_represent);
+        CHECK_FIXP_REPR(target_fix_represent);
+
         assert(src_mem_layout == kDense);
         assert(target_mem_layout == kDense);
         //if not in CPUMem, may be impossible to have access to data
@@ -188,6 +210,8 @@ namespace icdl{
                                         const FixpointRepresent& target_fix_represent, 
                                         const TensorMemLayout & src_mem_layout, 
                                         const TensorMemLayout &target_mem_layout) const{
+        CHECK_FIXP_REPR(target_fix_represent);
+
         assert(src_mem_layout == kDense);
         assert(target_mem_layout == kDense);
         assert(storage->get_data_location() == kCPUMem); 
@@ -220,5 +244,7 @@ namespace icdl{
             throw std::runtime_error("float32_to_float32 with different mem layout has not been implemented");
         }
     }
-
+#undef FIXP_REPR_ONLY_ONE_ELEMENT
+#undef FIXP_REPR_CLEAN
+#undef CHECK_FIXP_REPR
 }//namespace icdl

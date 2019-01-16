@@ -1,8 +1,10 @@
 # Compile and Link
 This project is made based on CMAKE. 
 To compile and use, there are 3 main dependencies
-i.e., googletest, protobuf, libtorch
+i.e., googletest, protobuf, libtorch, libboost
 ```bash
+# get libboost via apt-get, libboost is only for some useful assertion header..
+sudo apt-get install libboost-dev
 # build googletest & protobuf from
 $ git clone https://github.com/google/googletest
 $ git clone --recursive https://github.com/protocolbuffers/protobuf

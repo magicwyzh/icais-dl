@@ -31,7 +31,7 @@ namespace icdl{
         size_t nelement() const;
         void* data_ptr() const;
         void* aux_info_ptr() const;
-        void deserialize(const icdl_proto::Tensor& tensor_proto);
+        Tensor& deserialize(const icdl_proto::Tensor& tensor_proto);
         icdl_proto::Tensor serialize() const;
         /* change data type from float-to-fixpoint or fixpoint-to-fixpoint, etc. 
         *   Retrun a new tensor, the underlying storage is changed.

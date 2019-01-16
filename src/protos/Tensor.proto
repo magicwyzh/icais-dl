@@ -1,9 +1,11 @@
 syntax = "proto3";
 package icdl_proto;
 message FixpointRepresent{
-    uint32 total_bits = 1;
-    bool is_signed = 2;
-    int32 frac_point_location = 3;
+    repeated uint32 total_bits = 1;
+    repeated bool is_signed = 2;
+    repeated int32 frac_point_locations = 3;
+    repeated float scalars = 4;
+    repeated int32 zero_points = 5;
 }
 
 message FloatpointRepresent{
