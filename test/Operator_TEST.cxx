@@ -5,7 +5,6 @@
 #include "operators/Impls.h"
 #include "Operator.h"
 #include "torch/torch.h"
-
 TEST(OperatorTest, LinearPyTorchImplTest){
     int64_t batch_size = 8;
     int64_t in_size = 32;
