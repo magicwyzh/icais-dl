@@ -4,7 +4,7 @@
 #include <random>
 #include <iostream>
 #include <fstream>
-#include "protos/Tensor.pb.h"
+#include "icdl.h"
 #include "test_utils.h"
 using namespace icdl;
 

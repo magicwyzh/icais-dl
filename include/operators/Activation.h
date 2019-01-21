@@ -44,4 +44,6 @@ namespace icdl{namespace op{
             return ActivationType_to_str(get_options().act_type());
         }
     };
-}}//namespace icdl::op
+}
+    OP_FACTORY_REGISTER(Activation);
+}//namespace icdl::op

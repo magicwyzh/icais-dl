@@ -30,7 +30,7 @@ namespace icdl{
         TensorDataDescriptor get_data_descript() const;
         size_t nelement() const;
         void* data_ptr() const;
-        void* aux_info_ptr() const;
+        std::shared_ptr<StorageAuxInfoBase> aux_info_ptr() const;
         Tensor& deserialize(const icdl_proto::Tensor& tensor_proto);
         icdl_proto::Tensor serialize() const;
         /* change data type from float-to-fixpoint or fixpoint-to-fixpoint, etc. 

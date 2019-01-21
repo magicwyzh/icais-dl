@@ -39,8 +39,8 @@ namespace icdl{
         return storage_->data_ptr();
     }
 
-    void* Tensor::aux_info_ptr() const{
-        if(storage_ == nullptr){
+    std::shared_ptr<StorageAuxInfoBase> Tensor::aux_info_ptr() const{
+        if(!storage_){
             return nullptr;
         }
         return storage_->aux_info_ptr();

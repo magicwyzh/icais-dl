@@ -9,15 +9,20 @@ namespace icdl{namespace op{
         INVALID_OP_TYPE
     };
 
-    struct EltwiseOptions{
-        BinaryEltwiseOptions(const BinaryEltwiseOpType& op_type): op_type_(op_type){}
+    struct BinaryEltwiseOpOptions{
+        BinaryEltwiseOpOptions(const BinaryEltwiseOpType& op_type): op_type_(op_type){}
         ICDL_ARG(BinaryEltwiseOpType, op_type) = BinaryEltwiseOpType::INVALID_OP_TYPE;
     };
 
     class BinaryEltwiseOp: public icdl::Operator{
     OP_ADD_OPTIONS(BinaryEltwiseOp);
+    OP_ADD_COMMON_FUNCTIONS(BinaryEltwiseOp);
     public:
-        BinaryEltwiseOp()
-    }
+        BinaryEltwiseOp(const BinaryEltwiseOpOptions& options,
+                        OpImplPtr impl = makeEmptyOperatorImpl()):
+                        _options(options){}
+    };
 
-}}//namespace icdl
+}
+    OP_FACTORY_REGISTER(BinaryEltwiseOp);
+}//namespace icdl

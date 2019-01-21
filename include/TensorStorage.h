@@ -10,7 +10,13 @@
 namespace icdl{
     class TensorStorage;
     using StoragePtr = std::shared_ptr<TensorStorage>;
-
+    /**
+     * @brief The StorageAuxInfoBase can be inherited to add some auxiliary info for a tensor storage,
+     * e.g., for a sparse Tensor, indices can be saved here. This virtual base class is just for 
+     * runtime polymorphism.
+     */
+    class StorageAuxInfoBase{
+    };
     ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ///                         TensorStorage
     ///~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -94,8 +100,8 @@ namespace icdl{
 
         // im not quite sure what this should be used.
         // but for sparse Storage this may be of some use.
-        virtual void* aux_info_ptr() const{
-            return aux_info_.get();
+        virtual std::shared_ptr<StorageAuxInfoBase> aux_info_ptr() const{
+            return aux_info_;
         }
 
        TensorStorage(size_t num_data, const TensorDataLocation& data_loc, const FixpointRepresent& fixp_data_repre): 
@@ -122,7 +128,7 @@ namespace icdl{
         TensorDataLocation data_location_{TensorDataLocation::INVALID_LOCATION}; 
         TensorDataDescriptor data_descriptor_{};
         
-        std::shared_ptr<void> aux_info_{nullptr}; 
+        std::shared_ptr<StorageAuxInfoBase> aux_info_{nullptr}; 
         // the own_memory_ means this storage should take care of memory deallocation.
         bool own_memory_{true};
         

@@ -2,14 +2,13 @@
 #include <gtest/gtest.h>
 #include <random>
 #include <memory>
-#include "operators/Impls.h"
-#include "Operator.h"
 #include "torch/torch.h"
+#include "icdl.h"
 TEST(OperatorTest, LinearPyTorchImplTest){
     int64_t batch_size = 8;
     int64_t in_size = 32;
     int64_t out_size = 128;
-
+    
     auto linear_opt = icdl::op::LinearOptions(in_size, out_size).param_descriptor(icdl::Float32Descriptor());
     icdl::OpImplPtr pytorch_linear_impl = icdl::op::makeLinearPytorchImpl();
     auto icdl_fc_layer = icdl::op::Linear(linear_opt, pytorch_linear_impl);
