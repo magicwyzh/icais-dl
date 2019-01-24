@@ -30,7 +30,9 @@ Here are something in the to-do list now:
     * ~~So that we dont need to always play with random/uninitialized params...~~
     * Python script that can transform dict as the GraphParams Protobuf to ICDL-recognizable protobuf file.
 * Provide more operators like Conv2d, Activation, etc. The first goal is to provide all operators in Yolo. 
-    * NN Ops: ~~Conv2d~~, ReLU, ~~BatchNorm2d~~, Yolo, Concat, ResAdd, BottleNeck
+    * NN Ops: ~~Conv2d~~, ~~ReLU~~, ~~BatchNorm2d~~, Yolo, ~~Concat~~, ~~ResAdd~~, BottleNeck
+    * ~~PytorchImpls for verification~~
+    * Use ResNet18 as test case for verification.
     * Utils Op: FixpointTensor Data Conversion, including fix-to-float and vice versa, and fixpoint with different decimal point.
     * Image PreProcessing Ops (and implementations): normalization, etc.
 * Dynamic backend APIs:

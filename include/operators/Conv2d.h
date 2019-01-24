@@ -19,7 +19,7 @@ namespace icdl{ namespace op{
 
         ICDL_ARG(ExpandingArray<2>, stride) = 1;
 
-        ICDL_ARG(ExpandingArray<2>, padding) = 1;
+        ICDL_ARG(ExpandingArray<2>, padding) = 0;
 
         ICDL_ARG(ExpandingArray<2>, dilation) = 1;
 

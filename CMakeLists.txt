@@ -28,7 +28,7 @@ link_directories(
 # the gtest with Old ABI. 
 # This comment here is to explain the reason for this macro, and if this project will be transplanted to other platform
 # the ABI issue should be taken into consideration.
-add_definitions(-DPYTORCH_BACKEND_ENABLE -D_GLIBCXX_USE_CXX11_ABI=0)
+add_definitions(-DPYTORCH_BACKEND_ENABLE -D_GLIBCXX_USE_CXX11_ABI=0 -DLIBBOOST_ENABLE)
 
 set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib")
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}/bin")

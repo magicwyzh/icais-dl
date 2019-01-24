@@ -94,14 +94,14 @@ namespace icdl{
         return apply(inputs);
     }
 
-    void DynamicComputeGraph::add_compute_node(const std::string& name, const ComputeNode& node){
-       _compute_nodes.insert(name, node);
+    ComputeNode& DynamicComputeGraph::add_compute_node(const std::string& name, const ComputeNode& node){
+       return _compute_nodes.insert(name, node);
     }
-    void DynamicComputeGraph::add_compute_node(const std::string& name, const std::shared_ptr<Operator>& op_ptr){
-        _compute_nodes.insert(name, ComputeNode(op_ptr));
+    ComputeNode& DynamicComputeGraph::add_compute_node(const std::string& name, const std::shared_ptr<Operator>& op_ptr){
+        return _compute_nodes.insert(name, ComputeNode(op_ptr));
     }
-    void DynamicComputeGraph::add_compute_node(const std::string& name, const std::shared_ptr<DynamicComputeGraph>& sub_graph_ptr){
-        _compute_nodes.insert(name, ComputeNode(sub_graph_ptr));
+    ComputeNode& DynamicComputeGraph::add_compute_node(const std::string& name, const std::shared_ptr<DynamicComputeGraph>& sub_graph_ptr){
+        return _compute_nodes.insert(name, ComputeNode(sub_graph_ptr));
     }
 
     std::vector<std::pair<std::string, std::shared_ptr<Operator>>> DynamicComputeGraph::get_ops_recursively() const{

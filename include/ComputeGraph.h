@@ -19,9 +19,9 @@ namespace icdl{
     protected:
         OrderedDict<std::string, ComputeNode> _compute_nodes;
     public:
-        virtual void add_compute_node(const std::string& name, const ComputeNode& node);
-        virtual void add_compute_node(const std::string& name, const std::shared_ptr<Operator>& op_ptr);
-        virtual void add_compute_node(const std::string& name, const std::shared_ptr<DynamicComputeGraph>& sub_graph_ptr);
+        virtual ComputeNode& add_compute_node(const std::string& name, const ComputeNode& node);
+        virtual ComputeNode& add_compute_node(const std::string& name, const std::shared_ptr<Operator>& op_ptr);
+        virtual ComputeNode& add_compute_node(const std::string& name, const std::shared_ptr<DynamicComputeGraph>& sub_graph_ptr);
         bool profile(bool is_profile);
         std::vector<std::pair<std::string,ProfileResults>> get_profiling_results() const;
         // to get ptrs to all operators inside a graph. use this to do something like serilization...

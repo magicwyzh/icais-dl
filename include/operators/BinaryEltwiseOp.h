@@ -21,6 +21,9 @@ namespace icdl{namespace op{
         BinaryEltwiseOp(const BinaryEltwiseOpOptions& options,
                         OpImplPtr impl = makeEmptyOperatorImpl()):
                         _options(options){}
+        virtual TensorSize output_size(const TensorSize& input_size) const override{
+            return input_size;
+        }
     };
 
 }
