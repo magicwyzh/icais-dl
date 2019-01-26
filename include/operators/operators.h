@@ -5,3 +5,4 @@
 #include "BatchNorm2d.h"
 #include "Aggregate.h"
 #include "BinaryEltwiseOp.h"
+#include "Pooling2d.h"

@@ -28,6 +28,7 @@ namespace icdl{
         // each operator should have its name... and the name should shows the nesting relationships in the _compute_nodes
         // name should be like: res1->block1->conv1
         std::vector<std::pair<std::string, std::shared_ptr<Operator>>> get_ops_recursively() const;
+        OrderedDict<std::string, Tensor*> get_all_saved_tensors() const;
         void deserialize(const icdl_proto::GraphParams& graph_proto);
         void deserialize(const std::string in_file_name);
         std::shared_ptr<icdl_proto::GraphParams> serialize() const;

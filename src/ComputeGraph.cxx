@@ -129,6 +129,22 @@ namespace icdl{
         return results;
     }
 
+    OrderedDict<std::string, Tensor*> DynamicComputeGraph::get_all_saved_tensors() const{
+        auto name_op_pairs = get_ops_recursively();
+        OrderedDict<std::string, Tensor*> results;
+        for(const auto& name_op_pair: name_op_pairs){
+            const auto& name = name_op_pair.first;
+            auto op = name_op_pair.second;
+            auto name_tensor_pairs = op->get_saved_tensors();
+            for(const auto &tensor: name_tensor_pairs){
+                std::string tensor_name = name + "." + tensor.first;
+                auto tensor_ptr = tensor.second;
+                results.insert(tensor_name, tensor_ptr);
+            }
+        }
+        return results;
+    }
+
     OrderedDict<std::string, ComputeNode>&  DynamicComputeGraph::get_children_nodes(){
         return _compute_nodes;
     }

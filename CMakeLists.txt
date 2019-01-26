@@ -13,6 +13,7 @@ include_directories(
 "${PROJECT_SOURCE_DIR}/deps/include/torch/csrc/api/include"
 "${PROJECT_SOURCE_DIR}/include"
 "${PROJECT_SOURCE_DIR}/include/protos"
+"${PROJECT_SOURCE_DIR}"
 )
 link_directories(
 "${PROJECT_SOURCE_DIR}/deps/lib"
@@ -36,6 +37,7 @@ set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}/bin")
 
 add_subdirectory(src)
 add_subdirectory(test)
+add_subdirectory(models)
 
 include(CTest)
 enable_testing()
