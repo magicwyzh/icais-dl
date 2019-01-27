@@ -5,8 +5,13 @@
 #include "protos/protobuf_utils.h"
 #include "icdl_exceptions.h"
 namespace icdl{
+    static bool is_little_endian(){
+        int n = 1;
+        return *(char*)&n == 1;
+    }
 
     void TensorStorage::deserialize(const icdl_proto::TensorStorage& storage_proto){
+        ICDL_ASSERT(is_little_endian(), "Currently only support little endian machine (as x86) when deserializing!");
         ICDL_ASSERT(data_location_ == kCPUMem, 
             "A TensorStorage for deserialization must be in CPUMem, but meets a " 
             << enum_to_string(data_location_));
