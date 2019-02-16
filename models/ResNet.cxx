@@ -1,4 +1,6 @@
 #include "ResNet.h"
+#include "icdl.h"
+#include <math.h>
 using namespace icdl::op;
 namespace icdl{namespace resnet{
 
@@ -13,15 +15,15 @@ namespace icdl{namespace resnet{
     }
 
     BasicBlock::BasicBlock(size_t inplanes, size_t planes, size_t stride, std::shared_ptr<DynamicComputeGraph> downsample)
-    :stride(stride),
-     conv1(add_compute_node("conv1", conv3x3(inplanes, planes, stride))),
-     bn1(add_compute_node("bn1", icdl::BatchNorm2dOpMake(planes))),
-     relu1(add_compute_node("relu1", icdl::ActivationOpMake(icdl::op::ActivationType::RELU))),
-     conv2(add_compute_node("conv2", conv3x3(planes, planes))),
-     bn2(add_compute_node("bn2", icdl::BatchNorm2dOpMake(planes))),
-     relu2(add_compute_node("relu2", icdl::ActivationOpMake(icdl::op::ActivationType::RELU))),
-     eltAdd(add_compute_node("eltAdd", icdl::BinaryEltwiseOpOpMake(icdl::op::BinaryEltwiseOpType::ADD)))
+    :stride(stride)
     {
+        add_compute_node("conv1", conv3x3(inplanes, planes, stride));
+        add_compute_node("bn1", icdl::BatchNorm2dOpMake(planes));
+        add_compute_node("relu1", icdl::ActivationOpMake(icdl::op::ActivationType::RELU));
+        add_compute_node("conv2", conv3x3(planes, planes));
+        add_compute_node("bn2", icdl::BatchNorm2dOpMake(planes));
+        add_compute_node("relu2", icdl::ActivationOpMake(icdl::op::ActivationType::RELU));
+        add_compute_node("eltAdd", icdl::BinaryEltwiseOpOpMake(icdl::op::BinaryEltwiseOpType::ADD));
         if(downsample){
             add_compute_node("downsample", downsample);
         }
@@ -30,11 +32,11 @@ namespace icdl{namespace resnet{
     TensorList BasicBlock::apply(TensorList& inputs){
         auto identity = inputs;
         // main path
-        auto out = conv1(inputs);
-        out = bn1(out);
-        out = relu1(out);
-        out = conv2(out);
-        out = bn2(out);
+        auto out = _compute_nodes["conv1"].apply(inputs);
+        out = _compute_nodes["bn1"].apply(out);
+        out = _compute_nodes["relu1"].apply(out);
+        out = _compute_nodes["conv2"].apply(out);
+        out = _compute_nodes["bn2"].apply(out);
         // residual path
         auto downsample_ptr = _compute_nodes.find("downsample");
         if(downsample_ptr){
@@ -49,22 +51,22 @@ namespace icdl{namespace resnet{
         );
 
         // ResAdd
-        out = eltAdd(out);
-        out = relu2(out);
+        out = _compute_nodes["eltAdd"].apply(out);
+        out = _compute_nodes["relu2"].apply(out);
         return out;
     }
 
     TensorList BottleNeck::apply(TensorList& inputs){
         auto identity = inputs;
         // main path
-        auto out = conv1(inputs);
-        out = bn1(out);
-        out = relu(out);
-        out = conv2(out);
-        out = bn2(out);
-        out = relu(out);
-        out = conv3(out);
-        out = bn3(out);
+        auto out = _compute_nodes["conv1"].apply(inputs);
+        out = _compute_nodes["bn1"].apply(out);
+        out = _compute_nodes["relu"].apply(out);
+        out = _compute_nodes["conv2"].apply(out);
+        out = _compute_nodes["bn2"].apply(out);
+        out = _compute_nodes["relu"].apply(out);
+        out = _compute_nodes["conv3"].apply(out);
+        out = _compute_nodes["bn3"].apply(out);
         // residual path
         auto downsample_ptr = _compute_nodes.find("downsample");
         if(downsample_ptr){
@@ -78,74 +80,94 @@ namespace icdl{namespace resnet{
         );
 
         // ResAdd
-        out = eltAdd(out);
-        out = relu(out);
+        out = _compute_nodes["eltAdd"].apply(out);
+        out = _compute_nodes["relu"].apply(out);
         return out;
     }
 
     BottleNeck::BottleNeck(size_t inplanes, size_t planes, size_t stride, std::shared_ptr<DynamicComputeGraph> downsample)
-    :stride(stride),
-     conv1(add_compute_node("conv1", conv1x1(inplanes, planes))),
-     bn1(add_compute_node("bn1", icdl::BatchNorm2dOpMake(planes))),
-     relu(add_compute_node("relu", icdl::ActivationOpMake(icdl::op::ActivationType::RELU))),
-     conv2(add_compute_node("conv2", conv3x3(planes, planes,stride))),
-     bn2(add_compute_node("bn2", icdl::BatchNorm2dOpMake(planes))),
-     conv3(add_compute_node("conv3", conv1x1(planes, planes*expansion))),
-     bn3(add_compute_node("bn3", icdl::BatchNorm2dOpMake(planes*expansion))),
-     eltAdd(add_compute_node("eltAdd", icdl::BinaryEltwiseOpOpMake(icdl::op::BinaryEltwiseOpType::ADD)))
+    :stride(stride)
     {
+        add_compute_node("conv1", conv1x1(inplanes, planes));
+        add_compute_node("bn1", icdl::BatchNorm2dOpMake(planes));
+        add_compute_node("relu", icdl::ActivationOpMake(icdl::op::ActivationType::RELU));
+        add_compute_node("conv2", conv3x3(planes, planes,stride));
+        add_compute_node("bn2", icdl::BatchNorm2dOpMake(planes));
+        add_compute_node("conv3", conv1x1(planes, planes*expansion));
+        add_compute_node("bn3", icdl::BatchNorm2dOpMake(planes*expansion));
+        add_compute_node("eltAdd", icdl::BinaryEltwiseOpOpMake(icdl::op::BinaryEltwiseOpType::ADD));
         if(downsample){
             add_compute_node("downsample", downsample);
         }
     }
 
-
-    ResNet::ResNet(BlockType block_type, const std::array<size_t, 4>& layers, size_t num_classes)
-        :inplanes(64),
-        conv1(add_compute_node("conv1", icdl::Conv2dOpMake(
-            Conv2dOptions(3, 64, 7).stride(2).padding(3).with_bias(false)
-        ))),
-        bn1(add_compute_node("bn1", icdl::BatchNorm2dOpMake(64))),
-        relu(add_compute_node("relu", icdl::ActivationOpMake(ActivationType::RELU))),
-        maxpool(add_compute_node("maxpool", icdl::Pooling2dOpMake(
-            Pooling2dOptions(PoolType::MAX).kernel_size(3).stride(2).padding(3)
-        ))),
-        /* never change the order of layer1~4 in class declaration !*/
-        layer1(_make_layer("layer1", block_type, 64, layers[0])),
-        layer2(_make_layer("layer2",block_type, 128, layers[1])),
-        layer3(_make_layer("layer3",block_type, 256, layers[2])),
-        layer4(_make_layer("layer4",block_type, 512, layers[3])),
-        avgpool(add_compute_node("avgpool", icdl::Pooling2dOpMake(
-            Pooling2dOptions(PoolType::ADAPTIVE_AVG).output_size({1,1})
-        ))),
-        fc(add_compute_node("fc", icdl::LinearOpMake(
-            512 * get_expansion(block_type), num_classes
-        ))){}
     
+    ResNet::ResNet(BlockType block_type, const std::array<size_t, 4>& layers, size_t num_classes){
+        inplanes = 64;
+        add_compute_node("conv1", icdl::Conv2dOpMake(
+            Conv2dOptions(3, 64, 7).stride(2).padding(3).with_bias(false)
+        ));
+        add_compute_node("bn1", icdl::BatchNorm2dOpMake(64));
+        add_compute_node("relu", icdl::ActivationOpMake(ActivationType::RELU));
+        add_compute_node("maxpool", icdl::Pooling2dOpMake(
+            Pooling2dOptions(PoolType::MAX).kernel_size(3).stride(2).padding(1)
+        ));
+        /* never change the order of layer1~4 in class declaration !*/
+        _make_layer("layer1", block_type, 64, layers[0]);
+        _make_layer("layer2",block_type, 128, layers[1]);
+        _make_layer("layer3",block_type, 256, layers[2]);
+        _make_layer("layer4",block_type, 512, layers[3]);
+        add_compute_node("avgpool", icdl::Pooling2dOpMake(
+            Pooling2dOptions(PoolType::ADAPTIVE_AVG).output_size({1,1})
+        ));
+        add_compute_node("fc", icdl::LinearOpMake(
+            512 * get_expansion(block_type), num_classes
+        ));
+    }
+
+    void display_tensor(const icdl::Tensor& tensor){
+        auto data_ptr = static_cast<float*>(tensor.data_ptr());
+        
+        for(size_t i = 0; i < tensor.nelement(); i++){
+            //std::cout << data_ptr[i] << " ";
+            if(isnan(data_ptr[i])){
+                std::cout << "NAN FOUND!" << std::endl;
+                return;
+            }
+        }
+        std::cout <<"All are numbers" << std::endl;
+        std::cout<<std::endl;
+    }
+    void display_tensor(const std::string& name, const TensorList& inputs){
+        auto t = inputs[0];
+        std::cout << name << ":" << std::endl;
+        display_tensor(t);
+    }
+
     TensorList ResNet::apply(TensorList& inputs) {
-        auto x = conv1(inputs);
-        x = bn1(x);
-        x = relu(x);
-        x = maxpool(x);
-        x = layer1(x);
-        x = layer2(x);
-        x = layer3(x);
-        x = layer4(x);
-        x = avgpool(x);
+        auto x = _compute_nodes["conv1"].apply(inputs);
+        x = _compute_nodes["bn1"](x);
+        x = _compute_nodes["relu"](x);
+        x = _compute_nodes["maxpool"](x);
+        
+        x = _compute_nodes["layer1"](x);
+        x = _compute_nodes["layer2"](x);
+        x = _compute_nodes["layer3"](x);
+        x = _compute_nodes["layer4"](x);
+        x = _compute_nodes["avgpool"](x);
         auto batch_size = x.at(0).size().at(0);
         ICDL_ASSERT(x.at(0).size().size() == 4, 
             "The output from conv layers in ResNet should be 4D");
         auto flatten_size = (x.at(0).nelement())/(batch_size);
         x[0] = x[0].view({batch_size, flatten_size});
-        x = fc(x);
+        x = _compute_nodes["fc"](x);
         return x;
     }
 
     ComputeNode& ResNet::_make_layer(std::string name, BlockType block_type, 
         size_t planes, size_t blocks, size_t stride){
         using name_op_pair_list = std::vector<std::pair<std::string, std::shared_ptr<Operator>>>;
-        std::cout << "make_layer begin, name = " << name << ", inplanes = "
-            << this->inplanes<<std::endl;
+
         std::shared_ptr<DynamicComputeGraph> downsample = nullptr;
         if(stride != 1 || this->inplanes != planes * get_expansion(block_type)){
             name_op_pair_list downsample_layers = 
@@ -164,8 +186,6 @@ namespace icdl{namespace resnet{
                 std::make_shared<BasicBlock>(this->inplanes, planes)
             );
         }
-        std::cout << "make_layer finish, name = " << name << ", inplanes = "
-            << this->inplanes<<std::endl;
         return add_compute_node(name, ComputeNode(sub_graph));
     }
 

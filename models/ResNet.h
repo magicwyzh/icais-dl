@@ -14,7 +14,7 @@ class BasicBlock: public ResNetBlock{
 public:
     static const size_t expansion = 1;
     size_t stride;
-    ComputeNode &conv1, &bn1, &relu1, &conv2, &bn2, &relu2, &eltAdd;
+    //ComputeNode &conv1, &bn1, &relu1, &conv2, &bn2, &relu2, &eltAdd;
     BasicBlock(size_t inplanes, size_t planes, size_t stride = 1, std::shared_ptr<DynamicComputeGraph> downsample = nullptr);
     virtual TensorList apply(TensorList& inputs) override;
 };
@@ -23,7 +23,7 @@ class BottleNeck: public ResNetBlock{
 public:
     static const size_t expansion = 4;
     size_t stride;
-    ComputeNode &conv1, &bn1, &relu, &conv2, &bn2, &conv3, &bn3, &eltAdd;
+    //ComputeNode &conv1, &bn1, &relu, &conv2, &bn2, &conv3, &bn3, &eltAdd;
     BottleNeck(size_t inplanes, size_t planes, size_t stride = 1, std::shared_ptr<DynamicComputeGraph> downsample = nullptr);
     virtual TensorList apply(TensorList& inputs) override;
 };
@@ -45,10 +45,11 @@ private:
         std::string name, BlockType block_type, size_t planes, size_t blocks, size_t stride=1
     );
     size_t inplanes;
-    ComputeNode &conv1, &bn1, &relu, &maxpool;
+    //ComputeNode &conv1, &bn1, &relu, &maxpool;
+    //ComputeNode  &bn1, &relu, &maxpool;
     /* never change the order of layers since they should be initialized in this order*/
-    ComputeNode &layer1, &layer2, &layer3, &layer4;
-    ComputeNode &avgpool, &fc;
+    //ComputeNode &layer1, &layer2, &layer3, &layer4;
+    //ComputeNode &avgpool, &fc;
 
 public:
     virtual TensorList apply(TensorList& inputs) override;
