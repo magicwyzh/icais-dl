@@ -9,13 +9,18 @@ namespace icdl{namespace op{
             };
             return out_size1d(
                 in_size[dim],
-                options.padding_->at(dim),
-                options.dilation_->at(dim),
-                options.kernel_size_->at(dim),
-                options.stride_->at(dim)
+                options.padding_->at(dim - 2), // first two dims are batch, in channels
+                options.dilation_->at(dim - 2),
+                options.kernel_size_->at(dim - 2),
+                options.stride_->at(dim - 2)
             );
         };
-        return {out_size1d_options(input_size, _options, 0), out_size1d_options(input_size, _options, 1)};
+
+        auto out_size = TensorSize{input_size[0], 
+                get_options().output_channels(),
+                out_size1d_options(input_size, _options, 2), 
+                out_size1d_options(input_size, _options, 3)};
+        return out_size;
     }
 
     Conv2d::Conv2d(const Conv2dOptions& options, 
