@@ -14,7 +14,7 @@ namespace  icdl{ namespace op{
         ICDL_ARG(bool, affine) = true;
         /// Whether to store and update batch statistics (mean and variance) in the
         /// module. 
-        ICDL_ARG(bool, stateful) = true;
+        ICDL_ARG(bool, stateful) = false;
         /// The epsilon value added for numerical stability.
         ICDL_ARG(float, eps) = 1e-5;
         /// A momentum multiplier for the mean and variance.

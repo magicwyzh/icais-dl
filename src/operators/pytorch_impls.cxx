@@ -78,7 +78,8 @@ TensorList Conv2dPytorchImpl::apply(Operator* op, TensorList& inputs){
     );
     auto icdl_output = icdl::Tensor(op_ptr->output_size(inputs[0].size()),
                                     Float32Descriptor());
-    ICDL_ASSERT(TensorSize_eq_at_IntList(icdl_output.size(), pytorch_output.sizes()), "Output size not matched in Conv2dPytorchImpl");
+    ICDL_ASSERT(TensorSize_eq_at_IntList(icdl_output.size(), pytorch_output.sizes()), 
+                "Output size not matched in Conv2dPytorchImpl");
     memcpy(icdl_output.data_ptr(), pytorch_output.data_ptr(), icdl_output.nelement()*sizeof(float));
     return TensorList{icdl_output};
 }
@@ -139,9 +140,22 @@ TensorList AggregatePytorchImpl::apply(Operator* op, TensorList& inputs){
     memcpy(icdl_output.data_ptr(), pytorch_output.data_ptr(), icdl_output.nelement()*sizeof(float));
     return {icdl_output};
 }
-
+    void display_tensor(const icdl::Tensor& tensor){
+        auto data_ptr = static_cast<float*>(tensor.data_ptr());
+        
+        for(size_t i = 0; i < tensor.nelement(); i++){
+            //std::cout << data_ptr[i] << " ";
+            if(isnan(data_ptr[i])){
+                std::cout << "NAN FOUND!" << std::endl;
+                return;
+            }
+        }
+        std::cout <<"All are numbers" ;
+        std::cout<<std::endl;
+    }
 TensorList BatchNorm2dPytorchImpl::apply(Operator* op, TensorList& inputs){
     auto op_ptr = dynamic_cast<BatchNorm2d*>(op);
+    
     ICDL_ASSERT(op_ptr!=nullptr, "Dynamic cast of BatchNorm2d op_ptr failed.");
     ICDL_ASSERT(inputs.size() == 1, "Inputs to BatchNorm2dPytorchImpl should of size=1");
     OP_SAVED_TENSOR_PYTORCH_COMPATIBLE_CHECK(op_ptr, BatchNorm2dPytorchImpl);
@@ -157,11 +171,14 @@ TensorList BatchNorm2dPytorchImpl::apply(Operator* op, TensorList& inputs){
                       false);
     auto icdl_output = icdl::Tensor(op_ptr->output_size(inputs[0].size()),
                                     Float32Descriptor());
-
+    ICDL_ASSERT(TensorSize_eq_at_IntList(icdl_output.size(), pytorch_output.sizes()), 
+                "Pytorch output size not matched Operator's in BatchNorm2dPytorchImpl");
+    memcpy(icdl_output.data_ptr(), pytorch_output.data_ptr(), icdl_output.nelement()*sizeof(float));
     CHECK_OUTPUT_SIZE_AND_RETURN(icdl_output, pytorch_output, BatchNorm2dPytorchImpl);
 }
+
 TensorList BinaryEltwiseOpPytorchImpl::apply(Operator* op, TensorList& inputs){
-    auto op_ptr = dynamic_cast<BatchNorm2d*>(op);
+    auto op_ptr = dynamic_cast<BinaryEltwiseOp*>(op);
     ICDL_ASSERT(op_ptr!=nullptr, "Dynamic cast of BinaryEltwiseOp op_ptr failed.");
     ICDL_ASSERT(inputs.size() == 2, "Inputs to BinaryEltwiseOpImpl should of size=2");
 
@@ -173,7 +190,62 @@ TensorList BinaryEltwiseOpPytorchImpl::apply(Operator* op, TensorList& inputs){
     auto pytorch_output = torch::add(input0_torch_tensor, input1_torch_tensor);
     auto icdl_output = icdl::Tensor(op_ptr->output_size(inputs[0].size()),
                                     Float32Descriptor());
+    ICDL_ASSERT(TensorSize_eq_at_IntList(icdl_output.size(), pytorch_output.sizes()), 
+                "Pytorch output size not matched Operator's in BinaryEltOpPytorchImpl");
+    memcpy(icdl_output.data_ptr(), pytorch_output.data_ptr(), icdl_output.nelement()*sizeof(float));
     CHECK_OUTPUT_SIZE_AND_RETURN(icdl_output, pytorch_output, BinaryEltwiseOpPytorchImpl);                          
+}
+
+TensorList Pooling2dPytorchImpl::apply(Operator* op, TensorList& inputs){
+    auto op_ptr = dynamic_cast<Pooling2d*>(op);
+    ICDL_ASSERT(op_ptr!=nullptr, "Dynamic cast of BinaryEltwiseOp op_ptr failed.");
+    ICDL_ASSERT(inputs.size() == 1, "Inputs TensorList to Pooling2dPytorchImpl should of size=1");
+    TENSOR_PYTORCH_COMPATIBLE_CHECK(inputs[0], Pooling2dPytorchImpl);
+    auto input0_torch_tensor = icdl_tensor_to_pytorch_tensor(inputs[0]);
+    auto icdl_output = icdl::Tensor(op_ptr->output_size(inputs[0].size()),
+                                    Float32Descriptor());
+    
+    torch::Tensor pytorch_output;
+
+    auto ksize = *(op_ptr->get_options().kernel_size());
+    auto stride = *(op_ptr->get_options().stride());
+    auto padding = *(op_ptr->get_options().padding());
+    auto dilation = *(op_ptr->get_options().dilation());
+    auto out_size = *(op_ptr->get_options().output_size());
+    auto pool_type = op_ptr->get_options().pool_type();
+    switch (pool_type)
+    {
+        case PoolType::MAX:
+            pytorch_output = torch::max_pool2d(
+                input0_torch_tensor, 
+                {ksize[0], ksize[1]}, 
+                {stride[0], stride[1]}, 
+                {padding[0], padding[1]},
+                {dilation[0], dilation[1]}
+            );
+            break;
+        case PoolType::AVG:
+            pytorch_output = torch::avg_pool2d(
+                input0_torch_tensor,
+                {ksize[0], ksize[1]}, 
+                {stride[0], stride[1]},
+                {padding[0], padding[1]}
+            );
+            break;
+        case PoolType::ADAPTIVE_AVG:
+            pytorch_output = torch::adaptive_avg_pool2d(
+                input0_torch_tensor,
+                {out_size[0], out_size[1]}
+            );
+            break;
+        default:
+            throw std::runtime_error("Unknown Pooling2d type!" + PoolType_to_str(pool_type));
+            break;
+    }
+    ICDL_ASSERT(TensorSize_eq_at_IntList(icdl_output.size(), pytorch_output.sizes()), 
+                "Pytorch output size not matched Operator's in Pooling2dPytorchImpl");
+    memcpy(icdl_output.data_ptr(), pytorch_output.data_ptr(), icdl_output.nelement()*sizeof(float));
+    CHECK_OUTPUT_SIZE_AND_RETURN(icdl_output, pytorch_output, Pooling2dPytorchImpl);
 }
 
 #undef CHECK_OUTPUT_SIZE_AND_RETURN

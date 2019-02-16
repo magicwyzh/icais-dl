@@ -4,3 +4,12 @@ deps/bin
 deps/lib
 deps/include
 deps.tar.gz
+python/__pycache__/*
+python/icdl/__pycache__/*
+python/icdl/__pycache__/ComputeGraph_pb2.cpython-37.pyc
+python/icdl/__pycache__/Tensor_pb2.cpython-37.pyc
+python/res18_float.icdl_model
+python/icdl/__pycache__/Tensor_pb2.cpython-37.pyc
+python/icdl/__pycache__/ComputeGraph_pb2.cpython-37.pyc
+python/icdl/__pycache__/Tensor_pb2.cpython-37.pyc
+python/icdl/__pycache__/ComputeGraph_pb2.cpython-37.pyc

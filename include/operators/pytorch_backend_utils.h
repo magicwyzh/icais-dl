@@ -4,6 +4,7 @@
 #include "torch/torch.h"
 #include "tensor_utils.h"
 #include "Tensor.h"
+#include "ComputeGraph.h"
 #endif
 namespace icdl{
 #ifdef PYTORCH_BACKEND_ENABLE
@@ -20,6 +21,13 @@ namespace icdl{
     bool TensorSize_eq_at_IntList(const TensorSize& icdl_size, const at::IntList& pytorch_size);
     // generate a pytorch tensor from blob.
     torch::Tensor icdl_tensor_to_pytorch_tensor(const icdl::Tensor& icdl_tensor);
+    class PytorchBackEndUtils{
+    private:
+        void set_op_backend(std::shared_ptr<Operator> op_ptr);
+    public:
+        void set_all_op_backends(DynamicComputeGraph &model);
+        void set_all_op_backends(ComputeNode &compute_node);
+    };
 #endif
 }
 #endif

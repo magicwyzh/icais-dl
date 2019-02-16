@@ -22,6 +22,7 @@ namespace icdl{namespace op{
     REGISTER_PYTORCH_IMPL(BinaryEltwiseOp);
     REGISTER_PYTORCH_IMPL(Conv2d);
     REGISTER_PYTORCH_IMPL(Linear);
+    REGISTER_PYTORCH_IMPL(Pooling2d);
 }}// namespace icdl::op
 #undef REGISTER_PYTORCH_IMPL
 #endif
