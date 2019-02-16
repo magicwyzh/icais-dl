@@ -1,3 +1,8 @@
+import sys
+import os
+csfp = os.path.abspath(os.path.dirname(__file__))
+if csfp not in sys.path:
+    sys.path.insert(0, csfp)
 import ComputeGraph_pb2 as cg_pb
 import Tensor_pb2 as tensor_pb
 import struct
@@ -58,7 +63,9 @@ class Serializer(object):
         super().__init__()
     
     def _float_list_to_bytes(self, float_list, half_prec = False):
-        assert isinstance(float_list, list) and isinstance(float_list[0], float)
+        #import ipdb;ipdb.set_trace() 
+        assert isinstance(float_list, list)
+        
         num_data = len(float_list)
         if(not half_prec):
             fmt = "<" + str(num_data) + "f"
@@ -67,7 +74,7 @@ class Serializer(object):
         data_bytes = struct.pack(fmt, *float_list)
         return data_bytes
     
-    def _integer_list_to_byte(self, integer_list, descriptor):
+    def _integer_list_to_bytes(self, integer_list, descriptor):
         assert isinstance(integer_list, list) and isinstance(float_list[0], int)
         c = ""
         if descriptor.data_represent.total_bits<=8 and descriptor.data_represent.is_signed:
@@ -86,41 +93,42 @@ class Serializer(object):
         return data_bytes
 
     def serialize_tensor_storage(self, data_descriptor, storage_data):
-    '''
-    @param descriptor : instance of TensorDataDescriptor
-    @param storage_data : list of floats...
-    return : protobuf object for TensorStorage
-    '''
+        '''
+        @param descriptor : instance of TensorDataDescriptor
+        @param storage_data : list of floats...
+        return : protobuf object for TensorStorage
+        '''
         descriptor = data_descriptor
-        assert isinstance(descriptor, TensorDataDescriptor)
-        assert isinstance(storage_data, str)
+        assert isinstance(descriptor, TensorDataDescriptor) 
+        assert isinstance(storage_data, list)
+        
         storage_pb = tensor_pb.TensorStorage()
-        storage_pb.data_descriptor.dtype = tensor_pb.TensorDataDescriptor.TensorDataType.Value(dtype)
+        storage_pb.data_descriptor.dtype = tensor_pb.TensorDataDescriptor.TensorDataType.Value(descriptor.dtype)
         if descriptor.dtype in {"FLOAT_32", "FLOAT_16"}:
-            storage_pb.flo_point.total_bits = descriptor.data_represent.total_bits
-            storage_pb.flo_point.is_signed = descriptor.data_represent.is_signed
-            storage_pb.flo_point.exp_bits = descriptor.data_represent.exp_bits
-            storage_pb.flo_point.mantissa_bits = descriptor.data_represent.mantissa_bits
+            storage_pb.data_descriptor.flo_point.total_bits = descriptor.data_represent.total_bits
+            storage_pb.data_descriptor.flo_point.is_signed = descriptor.data_represent.is_signed
+            storage_pb.data_descriptor.flo_point.exp_bits = descriptor.data_represent.exp_bits
+            storage_pb.data_descriptor.flo_point.mantissa_bits = descriptor.data_represent.mantissa_bits
             storage_pb.data = self._float_list_to_bytes(storage_data, descriptor.dtype == "FLOAT_16")
         else:
-            storage_pb.fix_point.total_bits = descriptor.data_represent.total_bits
-            storage_pb.fix_point.is_signed = descriptor.data_represent.is_signed
-            storage_pb.fix_point.frac_point_locs = descriptor.data_represent.frac_point_locs
-            storage_pb.fix_point.scalars = descriptor.data_represent.scalars
-            storage_pb.fix_point.zero_points = descriptor.data_represent.zero_points
-            storage_pb.data = self._integer_list_to_byte(storage_data, descriptor)
+            storage_pb.data_descriptor.fix_point.total_bits = descriptor.data_represent.total_bits
+            storage_pb.data_descriptor.fix_point.is_signed = descriptor.data_represent.is_signed
+            storage_pb.data_descriptor.fix_point.frac_point_locs = descriptor.data_represent.frac_point_locs
+            storage_pb.data_descriptor.fix_point.scalars = descriptor.data_represent.scalars
+            storage_pb.data_descriptor.fix_point.zero_points = descriptor.data_represent.zero_points
+            storage_pb.data = self._integer_list_to_bytes(storage_data, descriptor)
         return storage_pb
 
     def serialize_tensor(self, tensor_size, data_descriptor, storage_data, mem_layout="DENSE_LAYOUT"):
-    '''
-    @param mem_layout: one of  "DENSE_LAYOUT", "SPARSE_LAYOUT", "INVALID_LAYOUT"
-    @param tensor_size: sequence of int
-    '''
+        '''
+        @param mem_layout: one of  "DENSE_LAYOUT", "SPARSE_LAYOUT", "INVALID_LAYOUT"
+        @param tensor_size: sequence of int
+        '''
         # not use 'tensor_pb' here due to name conflict with the python module.
         tensor_message = tensor_pb.Tensor()
-        tensor_message.tensor_size = tensor_size
+        #tensor_message.tensor_size = tensor_size
         for dim in tensor_size:
-            tensor_message.append(dim)
+            tensor_message.tensor_size.append(dim)
         tensor_message.storage.CopyFrom(self.serialize_tensor_storage(data_descriptor, storage_data))
         tensor_message.mem_layout = tensor_pb.Tensor.TensorMemLayout.Value(mem_layout)
         
@@ -131,7 +139,7 @@ class Serializer(object):
         graph_param_pb = cg_pb.GraphParams()
         for param_name, data in name_data_map.items():
             size, data_descriptor, storage_data, mem_layout = data
-            graph_param_pb.graph_params[name].CopyFrom(self.serialize_tensor(size, data_descriptor, storage_data, mem_layout))
+            graph_param_pb.graph_params[param_name].CopyFrom(self.serialize_tensor(size, data_descriptor, storage_data, mem_layout))
         return graph_param_pb
     
     def serialize_compute_graph_to_file(self, file_name, name_data_map):
