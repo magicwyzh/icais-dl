@@ -30,10 +30,13 @@ namespace icdl{
                 "A protobuf object for FloatTensorStorage Must has float point data represent");
                 
             auto r = storage_proto.data_descriptor().flo_point();
-
+            auto my_flo = get_data_descriptor().get_represent().flo_point;
             ICDL_ASSERT(get_data_descriptor().get_represent().flo_point == 
-                FloatpointRepresent({r.total_bits(), r.is_signed(), r.exp_bits(), r.mantissa_bits()}),
-                "FloatStorage has different data represent with that in protobuf object when deserializing");
+                FloatpointRepresent(r.total_bits(), r.is_signed(), r.exp_bits(), r.mantissa_bits()),
+                "FloatStorage has different data represent with that in protobuf object when deserializing"
+                << r.total_bits() << std::endl << r.is_signed() << std::endl << r.exp_bits() << std::endl << r.mantissa_bits() << std::endl << my_flo.total_bits << std::endl<<my_flo.is_signed << std::endl
+                << my_flo.exp_bits << std::endl << my_flo.mantissa_bits << std::endl
+            );
         }
         else if(get_data_type() == kFixpoint){
             ICDL_ASSERT(storage_proto.data_descriptor().has_fix_point(), 

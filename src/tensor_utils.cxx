@@ -39,6 +39,14 @@ namespace icdl{
             return false;
         }
     }
+    FloatpointRepresent::FloatpointRepresent(bool fp16): total_bits(16), is_signed(true), exp_bits(5), mantissa_bits(11){
+        if(fp16 == false){
+            total_bits = 32;
+            exp_bits = 8;
+            mantissa_bits = 23;
+        }
+    }
+
     bool FloatpointRepresent::operator==(const FloatpointRepresent& rhs) const{
         if( total_bits==rhs.total_bits && 
             is_signed == rhs.is_signed && 
@@ -50,6 +58,8 @@ namespace icdl{
             return false;
         }
     }
+
+
     TensorDataDescriptor& TensorDataDescriptor::dtype(const TensorDataType& type_of_data){
         dtype_ = type_of_data;
         if(dtype_ != kFixpoint){
