@@ -19,10 +19,10 @@ namespace icdl{namespace resnet{
     {
         add_compute_node("conv1", conv3x3(inplanes, planes, stride));
         add_compute_node("bn1", icdl::BatchNorm2dOpMake(planes));
-        add_compute_node("relu1", icdl::ActivationOpMake(icdl::op::ActivationType::RELU));
+        add_compute_node("relu", icdl::ActivationOpMake(icdl::op::ActivationType::RELU));
         add_compute_node("conv2", conv3x3(planes, planes));
         add_compute_node("bn2", icdl::BatchNorm2dOpMake(planes));
-        add_compute_node("relu2", icdl::ActivationOpMake(icdl::op::ActivationType::RELU));
+        //add_compute_node("relu2", icdl::ActivationOpMake(icdl::op::ActivationType::RELU));
         add_compute_node("eltAdd", icdl::BinaryEltwiseOpOpMake(icdl::op::BinaryEltwiseOpType::ADD));
         if(downsample){
             add_compute_node("downsample", downsample);
@@ -34,7 +34,7 @@ namespace icdl{namespace resnet{
         // main path
         auto out = _compute_nodes["conv1"].apply(inputs);
         out = _compute_nodes["bn1"].apply(out);
-        out = _compute_nodes["relu1"].apply(out);
+        out = _compute_nodes["relu"].apply(out);
         out = _compute_nodes["conv2"].apply(out);
         out = _compute_nodes["bn2"].apply(out);
         // residual path
@@ -52,7 +52,7 @@ namespace icdl{namespace resnet{
 
         // ResAdd
         out = _compute_nodes["eltAdd"].apply(out);
-        out = _compute_nodes["relu2"].apply(out);
+        out = _compute_nodes["relu"].apply(out);
         return out;
     }
 
@@ -114,9 +114,9 @@ namespace icdl{namespace resnet{
         ));
         /* never change the order of layer1~4 in class declaration !*/
         _make_layer("layer1", block_type, 64, layers[0]);
-        _make_layer("layer2",block_type, 128, layers[1]);
-        _make_layer("layer3",block_type, 256, layers[2]);
-        _make_layer("layer4",block_type, 512, layers[3]);
+        _make_layer("layer2",block_type, 128, layers[1], 2);
+        _make_layer("layer3",block_type, 256, layers[2], 2);
+        _make_layer("layer4",block_type, 512, layers[3], 2);
         add_compute_node("avgpool", icdl::Pooling2dOpMake(
             Pooling2dOptions(PoolType::ADAPTIVE_AVG).output_size({1,1})
         ));
