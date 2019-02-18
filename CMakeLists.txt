@@ -19,7 +19,7 @@ link_directories(
 "${PROJECT_SOURCE_DIR}/deps/lib"
 "${PROJECT_BINARY_DIR}/lib"
 )
-
+option(USE_PYTORCH "Use pytorch backend for testing." ON)
 # We use the MACRO -D_GLIBCXX_USE_CXX11_ABI=0 is because: when we use the libtorch from binary package
 # rather than build from source, the libtorch is built with GCC4.9 and the C++11 ABI is the old version.
 # This makes us unable to use the new C++ABI to build ICDL in our GCC7.4. Meanwhile, the gtest used in this
@@ -29,7 +29,12 @@ link_directories(
 # the gtest with Old ABI. 
 # This comment here is to explain the reason for this macro, and if this project will be transplanted to other platform
 # the ABI issue should be taken into consideration.
-add_definitions(-DPYTORCH_BACKEND_ENABLE -D_GLIBCXX_USE_CXX11_ABI=0 -DLIBBOOST_ENABLE)
+if(USE_PYTORCH)
+    message("USE_PYTORCH: ON")
+    add_definitions(-DPYTORCH_BACKEND_ENABLE)
+else()
+endif()
+add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0 -DLIBBOOST_ENABLE)
 
 set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib")
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}/bin")
@@ -42,3 +47,9 @@ add_subdirectory(models)
 include(CTest)
 enable_testing()
 add_test(NAME test_run COMMAND bin/test_all)
+
+if(USE_PYTORCH)
+    execute_process(
+        COMMAND bash -c "cd ${PROJECT_SOURCE_DIR}/python && python test/serialize_resnet.py"
+    )
+endif()

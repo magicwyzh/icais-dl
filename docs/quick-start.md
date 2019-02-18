@@ -8,6 +8,8 @@ sudo apt-get install libboost-dev
 # build googletest & protobuf from
 $ git clone https://github.com/google/googletest
 $ git clone --recursive https://github.com/protocolbuffers/protobuf
+# for python protobuf package, just:
+pip install protobuf
 # get pytorch lib
 wget https://download.pytorch.org/libtorch/cpu/libtorch-win-shared-with-deps-latest.zip
 ```
