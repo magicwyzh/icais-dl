@@ -22,11 +22,21 @@ def serialize_pytorch_float_model(model, file_name):
     print("Start serializing Pytorch float model...")
     for name, state in model.state_dict().items():
         name = pytorch_tensor_name_to_icdl_tensor_name(name)
-        print("Serializing: " + name + " ...")
         size = list(state.size())
         if len(size) == 0:
             size = [1]
         params_map[name] = [size, FP32Descript(), list(state.storage()), "DENSE_LAYOUT"]
     print("Writting to file...")
     worker.serialize_compute_graph_to_file(file_name, params_map)
+    print("Done!")
+
+def serialize_pytorch_tensor(tensor, file_name):
+    assert isinstance(tensor, torch.Tensor)
+    worker = Serializer()
+    print("Start serializing to " + file_name + "...")
+    tensor_msg = worker.serialize_tensor(list(tensor.size()), FP32Descript(), list(tensor.storage()),"DENSE_LAYOUT")
+    print("Writting to file...")
+    with open(file_name, "wb") as f:
+        s = tensor_msg.SerializeToString()
+        f.write(s)
     print("Done!")

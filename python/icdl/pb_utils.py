@@ -139,11 +139,15 @@ class Serializer(object):
         graph_param_pb = cg_pb.GraphParams()
         for param_name, data in name_data_map.items():
             size, data_descriptor, storage_data, mem_layout = data
-            graph_param_pb.graph_params[param_name].CopyFrom(self.serialize_tensor(size, data_descriptor, storage_data, mem_layout))
+            print("Serializing: " + param_name + " ...")
+            serialized_tensor = self.serialize_tensor(size, data_descriptor, storage_data, mem_layout)
+            graph_param_pb.graph_params[param_name].CopyFrom(serialized_tensor)
+        
         return graph_param_pb
     
     def serialize_compute_graph_to_file(self, file_name, name_data_map):
         graph_pb = self.serialize_compute_graph(name_data_map)
+        #import ipdb; ipdb.set_trace()
         with open(file_name, "wb") as f:
             s = graph_pb.SerializeToString()
             f.write(s)
