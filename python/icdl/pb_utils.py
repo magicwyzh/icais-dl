@@ -139,7 +139,7 @@ class Serializer(object):
         graph_param_pb = cg_pb.GraphParams()
         for param_name, data in name_data_map.items():
             size, data_descriptor, storage_data, mem_layout = data
-            print("Serializing: " + param_name + " ...")
+            #print("Serializing: " + param_name + " ...")
             serialized_tensor = self.serialize_tensor(size, data_descriptor, storage_data, mem_layout)
             graph_param_pb.graph_params[param_name].CopyFrom(serialized_tensor)
         
