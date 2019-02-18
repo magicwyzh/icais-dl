@@ -138,11 +138,6 @@ namespace icdl{namespace resnet{
         std::cout <<"All are numbers" << std::endl;
         std::cout<<std::endl;
     }
-    void display_tensor(const std::string& name, const TensorList& inputs){
-        auto t = inputs[0];
-        std::cout << name << ":" << std::endl;
-        display_tensor(t);
-    }
 
     TensorList ResNet::apply(TensorList& inputs) {
         auto x = _compute_nodes["conv1"].apply(inputs);
@@ -178,13 +173,26 @@ namespace icdl{namespace resnet{
             downsample = std::make_shared<SeqDyGraph>(downsample_layers);
         }
         auto sub_graph = std::make_shared<SeqDyGraph>();
-        sub_graph->add_compute_node("0", std::make_shared<BasicBlock>(this->inplanes, planes, stride, downsample));
+        if(block_type == BlockType::BasicBlock){
+            sub_graph->add_compute_node("0", std::make_shared<BasicBlock>(this->inplanes, planes, stride, downsample));
+        }
+        else{
+            sub_graph->add_compute_node("0", std::make_shared<BottleNeck>(this->inplanes, planes, stride, downsample));
+        }
         this->inplanes = planes*get_expansion(block_type);
         for(size_t i = 1; i < blocks; i++){
-            sub_graph->add_compute_node(
-                std::to_string(i), //name, 1, 2, 3, ... ,
-                std::make_shared<BasicBlock>(this->inplanes, planes)
-            );
+            if(block_type == BlockType::BasicBlock){
+                sub_graph->add_compute_node(
+                    std::to_string(i), //name, 1, 2, 3, ... ,
+                    std::make_shared<BasicBlock>(this->inplanes, planes)
+                );
+            }
+            else{
+                sub_graph->add_compute_node(
+                    std::to_string(i), //name, 1, 2, 3, ... ,
+                    std::make_shared<BottleNeck>(this->inplanes, planes)
+                ); 
+            }
         }
         return add_compute_node(name, ComputeNode(sub_graph));
     }

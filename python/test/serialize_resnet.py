@@ -47,3 +47,17 @@ if __name__ == "__main__":
     serialize_named_tensors(layer_outputs, "../test/test_data/res18_layer_outs.icdl_model")
     s_utils.serialize_pytorch_tensor(output, "../test/test_data/output.icdl_tensor")
     print("Done!")
+    
+    # Res50 from now.
+    model = torchvision.models.resnet50()
+    model = model.eval()
+    s_utils.serialize_pytorch_float_model(model, "../test/test_data/res50_float.icdl_model")
+    layer_outputs.clear()
+    for name, module in model.named_modules():
+        if len(list(module.children())) == 0:
+            # leaf module
+            name = name.replace(".", "->")
+            partial_hook = partial(hook, module_name = name)
+            module.register_forward_hook(partial_hook)
+    output = model(images)
+    serialize_named_tensors(layer_outputs, "../test/test_data/res50_layer_outs.icdl_model")

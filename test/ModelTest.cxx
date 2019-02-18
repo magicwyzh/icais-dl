@@ -47,6 +47,7 @@ void LayerResultCheckHook::operator()(Operator *op, TensorList& inputs, TensorLi
     //auto correct_tensor = tensor_picker->all_tensors[op_name];
     std::shared_ptr<icdl::Tensor> correct_tensor;
     auto p = tensor_picker->all_tensors.find(op_name);
+
     if(p != nullptr){
         correct_tensor = *p;
     }
@@ -67,7 +68,37 @@ void LayerResultCheckHook::operator()(Operator *op, TensorList& inputs, TensorLi
     }
 }
 
-TEST(ResNetTest, LayerResultsTest){
+TEST(ResNetTest, Res50LayerResultsTest){
+    auto picker = std::make_shared<PBTensorPicker>();
+    picker->deserialize_tensors("/mnt/e/projects/icdl/test/test_data/res50_layer_outs.icdl_model");
+    auto model = icdl::resnet::resnet50(1000);
+    model->deserialize("/mnt/e/projects/icdl/test/test_data/res50_float.icdl_model");
+    auto back_util = icdl::PytorchBackEndUtils();
+    back_util.set_all_op_backends(*model);
+    // add hooks
+    for(auto& name_op_pair : model->get_ops_recursively()){
+        auto op_name = name_op_pair.first;
+        auto op = name_op_pair.second;
+        // eltAdd not exist in serialized results, and relu are shared, so the results are not correct.
+        if(op_name.find("eltAdd") != std::string::npos || op_name.find("relu") != std::string::npos)
+            continue;
+        OpHookPtr hook = std::make_shared<LayerResultCheckHook>(op_name, picker);
+        op->register_hook(hook);
+    }
+    // deserialize inputs
+    GOOGLE_PROTOBUF_VERIFY_VERSION;
+    std::fstream input("/mnt/e/projects/icdl/test/test_data/images.icdl_tensor", std::ios::in | std::ios::binary);
+    icdl_proto::Tensor image_pb;
+    image_pb.ParseFromIstream(&input);
+    auto images = icdl::Tensor({1,3,224,224}, Float32Descriptor());
+    images.deserialize(image_pb);
+    auto x = TensorList{images};
+    // forward and check by the hook
+    model->apply(x);
+    google::protobuf::ShutdownProtobufLibrary();
+}
+
+TEST(ResNetTest, Res18LayerResultsTest){
     auto picker = std::make_shared<PBTensorPicker>();
     picker->deserialize_tensors("/mnt/e/projects/icdl/test/test_data/res18_layer_outs.icdl_model");
     auto model = icdl::resnet::resnet18(1000);
@@ -210,7 +241,7 @@ TEST(ResNetTest, OpNameTest){
         EXPECT_TRUE(find != nullptr) << "Cannot find tensor in ICDL model:" << py_name;
     }
 }
-
+/* Since there already LayerOutTest, no need output test.
 TEST(ResNetTest, OutputTest){
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     auto model = icdl::resnet::resnet18(1000);
@@ -247,7 +278,7 @@ TEST(ResNetTest, OutputTest){
     EXPECT_TRUE(all_correct) << "Not all output are correct for ResNet.";
     google::protobuf::ShutdownProtobufLibrary();
 }
-
+*/
 /*
 TEST(ResNetTest, OutputTest){
     auto model = icdl::resnet::resnet18(10);
