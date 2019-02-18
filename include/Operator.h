@@ -2,6 +2,8 @@
 #define __ICDL_OPERATOR_H__
 #include "OperatorImpl.h"
 #include "Profiler.h"
+#include "OpHook.h"
+#include <list>
 namespace icdl{
     class Operator;
     class Profiler;
@@ -14,11 +16,14 @@ namespace icdl{
     protected:
         OpImplPtr _impl;
         std::vector<std::pair<std::string, Tensor*>> _saved_tensors;
+        std::list<OpHookPtr> _hooks;
         ProfileResults _prof_results;
         bool _profile{false};
         void _register_tensor(const std::string& tensor_name, Tensor* tensor_ptr);
     public:
         Operator(const OpImplPtr& impl = makeEmptyOperatorImpl()): _impl(impl){}
+        std::list<OpHookPtr>::iterator register_hook(OpHookPtr& hook);
+        void remove_all_hooks();
         TensorList operator()(TensorList & inputs);
         TensorList apply(TensorList& inputs);
         // would be better to override this function to give a pretty name.
