@@ -11,7 +11,7 @@ namespace icdl{
     void accelerator_memory_dealloc(T* ptr){
         delete [] ptr;
     }
-
+    void memcpy_cpu_to_acc(void* dst, void* src, size_t num_bytes);
     void accelerator_memory_copy(void * dst, void * src, size_t num_byte);
     void accelerator_memory_copy(void * dst, const void * src, const FixpointRepresent& data_represent, const size_t num_data);
 

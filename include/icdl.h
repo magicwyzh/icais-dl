@@ -11,3 +11,4 @@
 #include "StorageConverter.h"
 #include "ComputeGraph.h"
 #include "tensor_utils.h"
+#include "accelerator_memory.h"

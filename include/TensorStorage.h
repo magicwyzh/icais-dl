@@ -137,7 +137,7 @@ namespace icdl{
     // always dense! dont use aux_info
     class Float32TensorStorage: public TensorStorage{
     public:
-        virtual void * data_ptr() const{
+        virtual void * data_ptr() const override{
             return static_cast<void*>(data_ptr_);
         }
         virtual size_t get_total_bytes() const override{
@@ -149,7 +149,7 @@ namespace icdl{
         //from blob
         Float32TensorStorage(float* blob_ptr, const size_t num_element);
         Float32TensorStorage(const Float32TensorStorage& rhs) = delete; //dont copy it.
-        ~Float32TensorStorage();
+        virtual ~Float32TensorStorage();
 
     private:
         
@@ -178,7 +178,7 @@ namespace icdl{
         FixpointTensorStorage(const FixpointTensorStorage& rhs) = delete; // dont copy
         //from blob
         FixpointTensorStorage(int8_t* blob_ptr, const size_t num_element, const FixpointRepresent& data_represent);
-        ~FixpointTensorStorage();
+        virtual ~FixpointTensorStorage();
         
     private:
         int8_t* data_ptr_ = nullptr;
