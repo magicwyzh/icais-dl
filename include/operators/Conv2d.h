@@ -39,7 +39,6 @@ namespace icdl{ namespace op{
                 const ExpandingArray<2>& dilation = 1,
                 const bool with_bias = false,
                 OpImplPtr impl = makeEmptyOperatorImpl(), 
-                const TensorDataDescriptor& param_descriptor=Float32Descriptor(),
                 const TensorDataLocation& param_location = kCPUMem,
                 const TensorMemLayout& param_mem_layout = kDense
         );

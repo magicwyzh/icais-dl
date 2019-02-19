@@ -46,7 +46,6 @@ namespace icdl{namespace op{
             const ExpandingArray<2>& dilation,
             const bool with_bias,
             OpImplPtr impl, 
-            const TensorDataDescriptor& param_descriptor,
             const TensorDataLocation& param_location,
             const TensorMemLayout& param_mem_layout
     ): Conv2d(Conv2dOptions(input_channels, output_channels, kernel_size).stride(stride).padding(padding).dilation(dilation).with_bias(with_bias), 
