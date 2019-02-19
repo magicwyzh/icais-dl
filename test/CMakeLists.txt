@@ -1,7 +1,7 @@
 aux_source_directory(. DIR_SRCS)
 
 add_executable(test_all ${DIR_SRCS})
-
+add_executable(try main_src/try.cxx)
 target_include_directories(test_all 
 PRIVATE "${PROJECT_SOURCE_DIR}/include/protos"
 PRIVATE "${PROJECT_SOURCE_DIR}/include"

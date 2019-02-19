@@ -372,3 +372,49 @@ TEST(TensorTest, SeDeserializeTest){
     }
     google::protobuf::ShutdownProtobufLibrary();
 }
+
+TEST(TensorTest, FixpDeserializeTest){
+    auto correct = std::vector<int8_t>{ 
+                39,
+                7,
+                0,
+                -5,
+                -5,
+                60,
+                -52,
+                -124,
+                -53,
+                91,
+                46,
+                75,
+                -34,
+                55,
+                55,
+                -9,
+                -67,
+                51,
+                -98,
+                90,
+                -97,
+                25,
+                117,
+                0
+                };
+    GOOGLE_PROTOBUF_VERIFY_VERSION;
+    std::fstream input("/mnt/e/projects/icdl/test/test_data/fixp_tensor.icdl_tensor", std::ios::in | std::ios::binary);
+    icdl_proto::Tensor image_pb;
+    image_pb.ParseFromIstream(&input);
+    auto images = icdl::Tensor({1,3,2,4}, Float32Descriptor());
+    images.deserialize(image_pb);
+    EXPECT_EQ(images.get_data_descript().get_dtype(), icdl::kFixpoint);
+    EXPECT_EQ(images.get_data_descript().get_represent().fix_point, 
+    icdl::FixpointRepresent({8}, {true}, {0}, {0.1375}, {0}));
+    auto data_ptr = static_cast<int8_t*>(images.data_ptr());
+    int i = 0;
+    for(auto n : correct){
+        EXPECT_EQ(data_ptr[i], n);
+        i++;
+    }
+    // forward and check by the hook
+    google::protobuf::ShutdownProtobufLibrary();
+}

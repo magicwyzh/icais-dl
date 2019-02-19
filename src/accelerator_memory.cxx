@@ -3,6 +3,7 @@
 #include <cstring>
 #include <cstdint>
 #include "icdl_exceptions.h"
+#include "accelerator_memory.h"
 namespace icdl{
     void * accelerator_memory_malloc(size_t num_of_byte){
         //currently just use the cpu memory
@@ -18,6 +19,9 @@ namespace icdl{
     }
 
 
+    void memcpy_cpu_to_acc(void* dst, void* src, size_t num_bytes){
+        std::memcpy(dst, src, num_bytes);
+    }
 
     void accelerator_memory_copy(void * dst, void * src, size_t num_byte){
         //currently just work as cpu memory

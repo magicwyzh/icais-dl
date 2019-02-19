@@ -249,7 +249,7 @@ namespace icdl{
                    const TensorDataLocation& location,
                    const TensorMemLayout& mem_layout,
                    const OptionalTensorInfo optional_info)
-        : size_(tensor_size), mem_layout_(mem_layout),  opt_info_(optional_info){
+        : size_(tensor_size), mem_layout_(mem_layout), opt_info_(optional_info){
         
         if(mem_layout_ != kDense){
             std::cerr << "Try to create a Tensor with invalid memory layout: " << enum_to_string(mem_layout) << ". Only Dense layout is supported now!" << std::endl;

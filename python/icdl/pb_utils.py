@@ -75,15 +75,16 @@ class Serializer(object):
         return data_bytes
     
     def _integer_list_to_bytes(self, integer_list, descriptor):
-        assert isinstance(integer_list, list) and isinstance(float_list[0], int)
+        assert isinstance(integer_list, list) and isinstance(integer_list[0], int)
+        assert(len(descriptor.data_represent.total_bits) == 1)
         c = ""
-        if descriptor.data_represent.total_bits<=8 and descriptor.data_represent.is_signed:
+        if descriptor.data_represent.total_bits[0]<=8 and descriptor.data_represent.is_signed:
             c = "b"#signed char
-        elif descriptor.data_represent.total_bits<=8 and not descriptor.data_represent.is_signed:
+        elif descriptor.data_represent.total_bits[0]<=8 and not descriptor.data_represent.is_signed:
             c = "B" #unsigned char
-        elif descriptor.data_represent.total_bits<=16 and descriptor.data_represent.is_signed:
+        elif descriptor.data_represent.total_bits[0]<=16 and descriptor.data_represent.is_signed:
             c = "h" #signed short
-        elif descriptor.data_represent.total_bits<=16 and not descriptor.data_represent.is_signed:
+        elif descriptor.data_represent.total_bits[0]<=16 and not descriptor.data_represent.is_signed:
             c = "H" #unsigned short
         else:
             raise ValueError("Invalid data descriptor for integer_list_to_byte")
@@ -111,11 +112,11 @@ class Serializer(object):
             storage_pb.data_descriptor.flo_point.mantissa_bits = descriptor.data_represent.mantissa_bits
             storage_pb.data = self._float_list_to_bytes(storage_data, descriptor.dtype == "FLOAT_16")
         else:
-            storage_pb.data_descriptor.fix_point.total_bits = descriptor.data_represent.total_bits
-            storage_pb.data_descriptor.fix_point.is_signed = descriptor.data_represent.is_signed
-            storage_pb.data_descriptor.fix_point.frac_point_locs = descriptor.data_represent.frac_point_locs
-            storage_pb.data_descriptor.fix_point.scalars = descriptor.data_represent.scalars
-            storage_pb.data_descriptor.fix_point.zero_points = descriptor.data_represent.zero_points
+            storage_pb.data_descriptor.fix_point.total_bits.extend(descriptor.data_represent.total_bits)
+            storage_pb.data_descriptor.fix_point.is_signed.extend(descriptor.data_represent.is_signed)
+            storage_pb.data_descriptor.fix_point.frac_point_locations.extend(descriptor.data_represent.frac_point_locs)
+            storage_pb.data_descriptor.fix_point.scalars.extend(descriptor.data_represent.scalars)
+            storage_pb.data_descriptor.fix_point.zero_points.extend(descriptor.data_represent.zero_points)
             storage_pb.data = self._integer_list_to_bytes(storage_data, descriptor)
         return storage_pb
 

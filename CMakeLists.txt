@@ -52,4 +52,7 @@ if(USE_PYTORCH)
     execute_process(
         COMMAND bash -c "cd ${PROJECT_SOURCE_DIR}/python && python test/serialize_resnet.py"
     )
+    execute_process(
+        COMMAND bash -c "cd ${PROJECT_SOURCE_DIR}/python && python test/serialize_fixp_tensor.py"
+    )
 endif()
